@@ -1,0 +1,136 @@
+<%- include('../../partials/admin/header') %>
+
+    <div class="col-12 grid-margin stretch-card">
+        <%- include('../../partials/admin/sidePanel') %>
+
+            <div class="container-fluid mt-3">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Basic form elements</h4>
+                                <!-- <form class="forms-sample" action="/admin/categories" method="post"
+                                    enctype="multipart/form-data">
+                                    <div class="form-group">
+                                        <label for="exampleInputName1">Category Name</label>
+                                        <input type="text" class="form-control" name="name" id="exampleInputName1" placeholder="Name" required>
+                                      </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputName1">Description</label>
+                                        <textarea type="text" class="form-control" name="description" id="exampleInputName1" placeholder="description" required></textarea>
+                                      </div>
+                  
+                                   
+
+
+
+
+                                    <div class="form-group">
+                                        <label>Image upload</label>
+                                        <div class="input-group col-xs-12">
+                                            <input type="file" accept="image/*" name="photo"
+                                                class="form-control file-upload-info" placeholder="Upload Image"
+                                                id="preview-input" required />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" id="preview-group" style="display: none;">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                Preview Image
+                                            </div>
+                                            <div class="card-body">
+                                                <img src="" alt="img" class="preview" id="preview-img"
+                                                    style="max-width: 440px; object-fit: cover;" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                                                        <div class="form-footer">
+
+                                    <button type="submit" class="btn btn-primary mr-2">Add</button>
+                                    <button class="btn btn-dark">Cancel</button>
+                                                                        </div>
+                                </form> -->
+                                <% if(typeof message !=='undefined' ) { %>
+                                    <% if (status=== 'failed') { %>
+                                        <h5 style="color: red;"> <%- message %></h5>
+                                    <% } else { %>
+                                        <h5 style="color: green;"> <%- message %></h5>
+                                    <% } %>
+                                    <% } %> 
+                                <form action="/admin/categories" method="post" enctype="multipart/form-data">
+                                    <div class="form-group">
+                                        <label for="singin-email-2"> category name*</label>
+                                        <input type="text" class="form-control" id="singin-email-2" name="name">
+                                        <span class="error-message text-danger" id="signin-error"></span>
+                                    </div><!-- End .form-group -->
+
+                                    <div class="form-group">
+                                        <label for="singin-password-2">description</label>
+                                        <textarea type="description" class="form-control" id="singin-description-2"
+                                            name="description" rows="4"></textarea>
+                                        <span class="error-message text-danger" id="description-error"></span>
+                                    </div><!-- End .form-group -->
+
+                                    <div class="form-group">
+                                        <label>Image upload</label>
+                                        <!-- <input type="file" name="photo" class="file-upload-default"> -->
+                                        <div class="input-group col-xs-12">
+                                            <input type="file" accept="image/*" name="photo"
+                                                class="form-control file-upload-info" placeholder="Upload Image"
+                                                id="preview-input" required />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" id="preview-group" style="display: none;">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                Preview Image
+                                            </div>
+                                            <div class="card-body">
+                                                <img src="" alt="img" class="preview" id="preview-img"
+                                                    style="max-width: 440px; object-fit: cover;" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-footer">
+                                        <button type="submit" class="btn btn-outline-primary-2 bg-primary">
+                                            <span>Add</span>
+                                            <i class="icon-long-arrow-right"></i>
+                                        </button>
+
+
+
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                // function hideErrorMessage() {
+                //     var errorMessageElement = document.getElementById('error-message');
+                //     if (errorMessageElement) {
+                //         setTimeout(() => {
+                //             errorMessageElement.style.display = 'none';
+                //         }, 4000);
+
+                //     }
+                // }
+                // hideErrorMessage();
+
+                const previewArea = document.getElementById('preview-group')
+                const previewInput = document.getElementById('preview-input')
+                const previewImg = document.getElementById('preview-img')
+
+                previewInput.onchange = e => {
+                    if (e.target.files && e.target.files.length) {
+                        const imgSrc = URL.createObjectURL(e.target.files[0])
+                        previewImg.src = imgSrc
+                        previewArea.style.display = 'block'
+                    }
+                }
+            </script>
+            <%- include('../../partials/admin/footer') %>

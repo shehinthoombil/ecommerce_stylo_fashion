@@ -1,0 +1,57 @@
+<%- include('../../partials/admin/header') %>
+    <div class="container-scroller">
+        <%- include('../../partials/admin/sidePanel') %>
+            <div class="container-fluid page-body-wrapper">
+                <div class="main-panel">
+                    <div class="content-wrapper">
+                        <div class="row">
+                            <div class="col-12 grid-margin">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="display-flex justify-content-between">
+                                            <h4 class="card-title">Categories</h4>
+                                            <a href="/admin/category/addCategory" class="btn-primary" type="button">Add +</a>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <!-- <th></th> -->
+                                                        <th> S.No </th>
+                                                        <th> Image </th>
+                                                        <th> Category name</th>
+                                                        <th> Description</th>
+                                                        <th>Action</th>
+
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% categories.forEach((cat,index) => { %>
+                                                        <tr>
+                                                            <td><%=index+1 %></td>
+                                                          <td class="py-1">
+                                                            <img src="/images/category/<%= cat.image %>" width="20px" height="auto" alt="<%= cat.name %>" class="img-click" />
+                                                          </td>
+                                                          <td>
+                                                            <%= cat.name %>
+                                                          </td>
+                                                          <td>
+                                                            <%= cat.description %>
+                                                          </td>
+                                                          <td>
+                                                            <a href="/admin/category/editCategory?id=<%=cat._id%>">edit</a>
+                                                          </td>
+                                                          <% }) %>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    <%- include('../../partials/admin/footer') %>
