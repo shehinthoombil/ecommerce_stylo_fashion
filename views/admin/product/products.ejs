@@ -1,0 +1,100 @@
+<%- include('../../partials/admin/header') %>
+    <div class="container-scroller">
+        <%- include('../../partials/admin/sidePanel') %>
+            <div class="container-fluid page-body-wrapper">
+                <div class="main-panel">
+                    <div class="content-wrapper">
+                        <div class="row">
+                            <div class="col-12 grid-margin">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="display-flex justify-content-between">
+                                            <h4 class="card-title">Products</h4>
+                                            <a href="/admin/product/addProduct" class="btn-primary" type="button">Add +</a>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <!-- <th></th> -->
+                                                        <th> S.No </th>
+                                                        <th> Image </th>
+                                                        <th> Product Name</th>
+                                                        <th> Category</th>
+                                                        <th> Quantity/Stock</th>
+                                                        <th> Price</th>
+                                                        <th> Status</th>
+                                                        <th> Actions</th>
+
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% if(products.length>0){
+                                                        for(let i=0;i<products.length;i++){ %>
+                                                          <tr>
+                                                            <td>
+                                                              <%= i+1 %>
+                                                            </td>
+
+                                                            <td>
+                                                              <% for (let image of products[i].images) { %>
+                                                                <img src="/images/products/<%= image %>" width="20px" height="auto" alt="<%= products[i].name %>" class="img-click" />
+                                                              <% } %>
+                                                            </td>
+                                
+                                                            <td>
+                                                              <%= products[i].name %>
+                                                            </td>
+                                                           
+                                                            <td>
+                                                              <%= products[i].category %>
+                                                            </td>
+                                                            <td>
+                                                              <%= products[i].quantity %>
+                                                            </td>
+                                
+                                                            <td>
+                                                              <%= products[i].price %>
+                                                            </td>
+                                                            <% if(products[i].is_deleted==false){ %>
+                                                              <td class="text-success">Active</td>
+                                                              <td><a href="/admin/block-pro?id=<%= products[i]._id %>" class="badge badge-danger"
+                                                                  onclick="return confirm('Are you sure? Do you want to Block    <%= products[i].productname %>?')">UNLIST</a>
+                                                              </td>
+                                                              <% }else{ %>
+                                                                <td class="text-danger">Blocked</td>
+                                                                <td><a href="/admin/block-pro?id=<%= products[i]._id %>" class="badge badge-success"
+                                                                    onclick="return confirm('Are you sure you? Do you want to Unblock    <%= products[i].productname %>?')">LIST</a>
+                                                                </td>
+                                                                <% } %>
+                                                                  <td>
+                                                                    <a href="/admin/deletePro?id=<%= products[i]._id %>" class="delete-link">
+                                                                      <i class="bi bi-trash3"></i>
+                                                                    </a>
+                                                                  </td>
+                                                                  <td>
+                                                            <a href="/admin/product/editProduct?id=<%= products[i]._id%>" class="edit-link">Edit</a>
+                                                          </td>
+                                
+                                                          </tr>
+                                                          <% } %>
+                                
+                                                            <% }else{ %>
+                                                              <tr>
+                                                                <td colspan="5">products Not Found</td>
+                                                              </tr>
+                                
+                                                              <% } %>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    <%- include('../../partials/admin/footer') %>

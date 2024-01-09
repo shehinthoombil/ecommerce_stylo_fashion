@@ -1,0 +1,131 @@
+<%- include('../partials/admin/header') %>
+    <div class="container-scroller">
+        <%- include('../partials/admin/sidePanel') %>
+            <div class="container-fluid page-body-wrapper">
+                <div class="main-panel">
+                    <div class="content-wrapper">
+                        <div class="row">
+                            <div class="col-12 grid-margin">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Users</h4>
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <!-- <th></th> -->
+                                                        <th> S.No </th>
+                                                        <th> Username </th>
+                                                        <th> Email </th>
+                                                        <th> Mobile Number </th>
+                                                        <th> Status </th>
+
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% if (user.length> 0) { %>
+                                                        <% for (let i=0; i < user.length; i++) { %>
+                                                            <tr>
+
+                                                                <!-- <td>
+                                                                    <img src="/assets/images/faces/face1.jpg"
+                                                                        alt="image" />
+                                                                </td> -->
+                                                                <td>
+                                                                    <%= i+1 %>
+                                                                </td>
+                                                                <td>
+                                                                    <%= user[i].name %>
+                                                                </td>
+                                                                <td>
+                                                                    <%= user[i].email %>
+                                                                </td>
+                                                                <td>
+                                                                    <%= user[i].mobile %>
+                                                                </td>
+
+                                                                <td>
+                                                                    <% if(user[i].is_block==0){ %>
+                                                                        <p><a id="user-action_<%= user[i].id %>"
+                                                                                class="badge badge-outline-danger"
+                                                                                onclick="handleUserAction('<%= user[i].id %>', 'block')">BLOCK</a>
+                                                                        </p>
+                                                                        <% }else{ %>
+                                                                            <p><a id="user-action_<%= user[i].id %>"
+                                                                                    class="badge badge-outline-success"
+                                                                                    onclick="handleUserAction('<%= user[i].id %>', 'unblock')">UNBLOCK</a>
+                                                                            </p>
+                                                                            <% } %>
+                                                                </td>
+                                                            </tr>
+                                                            <% } %>
+                                                                <% } else{ %>
+                                                                    <tr>
+                                                                        <td colspan="5">User Not Found</td>
+                                                                    </tr>
+                                                                    <% } %>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+    <script>
+        function handleUserAction(userId, actionType) {
+
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: "Your file has been deleted.",
+                        icon: "success"
+                    }).then(()=>{
+                        performUserAction(userId, actionType)
+                    })
+                }
+            });
+        }
+
+        function performUserAction(userId, actionType) {
+            var url = "/admin/block-user?id=" + userId;
+
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+
+                    // Reload the page after successful action
+                    location.reload();
+                })
+                .then(data => {
+                    console.log('Success:', data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    </script>
+
+
+    <%- include('../partials/admin/footer') %>
