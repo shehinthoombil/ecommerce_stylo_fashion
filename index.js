@@ -36,6 +36,12 @@ app.use(session({
 }));
 
 
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something went wrong!');
+});
+
 const PORT = process.env.PORT
 
 app.listen(PORT, () => { console.log(`Server is running at http://localhost:${PORT}`) })

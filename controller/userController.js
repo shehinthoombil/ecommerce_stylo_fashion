@@ -35,6 +35,7 @@ const loadRegister = async (req, res) => {
 
 const loadHome = async (req, res) => {
     try {
+
         let user
         const userDB = await User.findOne({ _id: req.session.user_id })
         if (user) {
@@ -211,21 +212,65 @@ const verifyLogin = async (req, res) => {
     }
 }
 
+//logout user
+
 const logoutUser = async (req, res) => {
 
     req.session.user_id = false
     res.render('register');
 }
 
+//product list or category page or shop
 const productList = async (req, res) => {
     try {
-        const ProductDB = await Product.find({ is_deleted: false })
-        res.render('productList', { ProductDB })
+
+        // Search product
+        var search = '';
+        if (req.query.search) {
+            search = req.query.search;
+        }
+
+        // Pagination in product
+        var page = 1;
+        if (req.query.page) {
+            page = req.query.page;
+        }
+
+        const limit = 2;
+
+        const ProductDB = await Product.find({
+            is_deleted: false,
+            $or: [
+                { name: { $regex: new RegExp(search, 'i') } },
+                { category: { $regex: new RegExp(search, 'i') } },
+            ]
+        })
+            .limit(limit * 1)
+            .skip((page - 1) * limit)
+            .exec();
+
+        //count of pages
+        const count = await Product.find({
+            is_deleted: false,
+            $or: [
+                { name: { $regex: new RegExp(search, 'i') } },
+                { category: { $regex: new RegExp(search, 'i') } },
+            ]
+        }).countDocuments();
+
+        res.render('productList', {
+            ProductDB,
+            totalPages: Math.ceil(count / limit),  //Ex:- count of document/limit (9/6 = 1.5 => 2)
+            currentPage: page,  //page 1
+            title: 'productList'
+        });
+
     } catch (error) {
         console.log(error.message);
     }
-}
+};
 
+//product details
 const productDetails = async (req, res) => {
     try {
         const id = req.query.id
@@ -238,8 +283,7 @@ const productDetails = async (req, res) => {
 
 }
 
-// cart
-
+// load cart
 const loadCart = async (req, res) => {
     try {
         const userId = req.session.user_id;
@@ -247,7 +291,7 @@ const loadCart = async (req, res) => {
             const user = await User.findById(userId);
             if (user) {
                 const cart = await Cart.find({ userId: userId }).populate('products.productId');
-                console.log(cart[0].products[0].productId)    
+                console.log(cart[0].products[0].productId)
                 if (cart) {
                     res.render('cart', { cartItems: cart });
                 }
@@ -258,6 +302,7 @@ const loadCart = async (req, res) => {
     }
 };
 
+// cart
 const addToCart = async (req, res) => {
     const { productId } = req.body
     const userId = req.session.user_id
@@ -269,26 +314,26 @@ const addToCart = async (req, res) => {
             sum: productDetails.price * 1,
             price: productDetails.price
         }
-        const hasCart = await Cart.findOne({userId})
-        if(hasCart){
+        const hasCart = await Cart.findOne({ userId })
+        if (hasCart) {
             const productDB = await Product.findOne({ _id: productId })
             hasCart.products.push(product)
             await hasCart.save()
             if (hasCart) {
-                return res.render('productDetails',{productDB})
+                return res.render('productDetails', { productDB })
             }
-        }else{
+        } else {
 
             const newCartItem = new Cart({
-               userId:userId,
-               userName:user.name,
+                userId: userId,
+                userName: user.name,
             })
             const productDB = await Product.findOne({ _id: productId })
-           newCartItem.products.push(product)
-           const addedCart = await  newCartItem.save()
-           if (addedCart) {
-               return res.render('productDetails',{productDB})
-           }
+            newCartItem.products.push(product)
+            const addedCart = await newCartItem.save()
+            if (addedCart) {
+                return res.render('productDetails', { productDB })
+            }
         }
 
 
