@@ -1,6 +1,5 @@
 <%-include('../partials/user/header.ejs') %>
 
-
     <body>
         <div class="page-wrapper">
             <main class="main">
@@ -85,10 +84,6 @@
                                                 Sed lectus. </p>
                                         </div><!-- End .product-content -->
 
-
-
-
-
                                         <div class="details-filter-row details-row-size">
                                             <label for="qty">Qty : <b>
                                                     <%= productDB.quantity %>
@@ -97,7 +92,7 @@
                                         </div><!-- End .details-filter-row -->
 
                                         <div class="product-details-action">
-                                            <form action="/cart/<%= productDB._id %>" method="post">
+                                            <form action="/addToCart/<%= productDB._id %>" method="post">
                                                 <input type="hidden" name="productId" value="<%= productDB._id %>">
                                                 <button type="submit" class="btn-product btn-cart"><span>add to
                                                         cart</span></button>

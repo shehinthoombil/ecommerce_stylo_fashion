@@ -35,7 +35,7 @@ userRoute.get('/productDetails', userController.productDetails)
 
 //cart
 userRoute.get('/cart',isLogin, userController.loadCart)
-userRoute.post('/cart/:productId',isLogin, userController.addToCart)
+userRoute.post('/addToCart/:productId',isLogin, userController.addToCart)
 
 
 

@@ -5,7 +5,7 @@ const nodemailer = require("nodemailer");
 const { env } = require('process');
 const randormstring = require("randomstring");
 const Product = require('../model/productModel')
-
+const Category = require('../model/categoryModel')
 // ++++++++++++++++++++++++++++++++++++++adding secure password bcrypt++++++++++++++++++++++++++++++++++++++++++++++
 
 const securePassword = async (password) => {
@@ -223,7 +223,7 @@ const logoutUser = async (req, res) => {
 //product list or category page or shop
 const productList = async (req, res) => {
     try {
-
+        const categories = await Category.find()
         // Search product
         var search = '';
         if (req.query.search) {
@@ -236,7 +236,7 @@ const productList = async (req, res) => {
             page = req.query.page;
         }
 
-        const limit = 2;
+        const limit = 3;
 
         const ProductDB = await Product.find({
             is_deleted: false,
@@ -260,6 +260,7 @@ const productList = async (req, res) => {
 
         res.render('productList', {
             ProductDB,
+            categories,
             totalPages: Math.ceil(count / limit),  //Ex:- count of document/limit (9/6 = 1.5 => 2)
             currentPage: page,  //page 1
             title: 'productList'
@@ -283,6 +284,7 @@ const productDetails = async (req, res) => {
 
 }
 
+
 // load cart
 const loadCart = async (req, res) => {
     try {
@@ -304,43 +306,49 @@ const loadCart = async (req, res) => {
 
 // cart
 const addToCart = async (req, res) => {
-    const { productId } = req.body
-    const userId = req.session.user_id
-    const user = await User.findById(userId)
-    const productDetails = await Product.findById(productId)
     try {
+        const { productId } = req.body;
+        const userId = req.session.user_id;
+
+
+
+        // Retrieve user and product details
+        const user = await User.findById(userId);
+        const productDetails = await Product.findById(productId);
+
+
+
         const product = {
             productId,
-            sum: productDetails.price * 1,
+            sum: productDetails.price, // No need to multiply by 1
             price: productDetails.price
-        }
-        const hasCart = await Cart.findOne({ userId })
+        };
+
+        const hasCart = await Cart.findOne({ userId });
+
         if (hasCart) {
-            const productDB = await Product.findOne({ _id: productId })
-            hasCart.products.push(product)
-            await hasCart.save()
-            if (hasCart) {
-                return res.render('productDetails', { productDB })
-            }
+            // Add product to existing cart
+            hasCart.products.push(product);
+            await hasCart.save();
         } else {
-
+            // Create a new cart if it doesn't exist
             const newCartItem = new Cart({
-                userId: userId,
+                userId,
                 userName: user.name,
-            })
-            const productDB = await Product.findOne({ _id: productId })
-            newCartItem.products.push(product)
-            const addedCart = await newCartItem.save()
-            if (addedCart) {
-                return res.render('productDetails', { productDB })
-            }
+                products: [product]
+            });
+            await newCartItem.save();
         }
 
-
+        // After updating the cart, redirect or render the view
+        res.redirect('/productList');
     } catch (error) {
-        console.log(error.message)
+        console.error(error.message);
+        return res.status(500).json({ error: 'Internal Server Error' });
     }
-}
+};
+
+
 
 
 
