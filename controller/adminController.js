@@ -24,19 +24,19 @@ const loadDashboard = async (req, res) => {
 //category management
 const loadCategories = async (req, res) => {
     try {
-        const categories = await Category.find({})
-        res.render('admin/category/categories', { categories });
+        const categories = await Category.find() //fetch categories from database
+        res.render('admin/category/categories', { categories }); // passing categoryData
     } catch (error) {
         console.log(error.message);
     }
 };
 
-// load category page
+// load add category page
 const loadAddCategories = async (req, res) => {
     try {
         res.render('admin/category/addCategory');
     } catch (error) {
-        console.log(error.message); 
+        console.log(error.message);
     }
 }
 
@@ -232,13 +232,16 @@ const loadEditproduct = async (req, res) => {
 
 // edit product
 const editProduct = async (req, res) => {
-    const { id, name, quantity, photo } = req.body;
     console.log(req.body);
+    const { id, name, category, price, quantity, photos } = req.body;
+
     try {
         const updatedCategory = await Product.findByIdAndUpdate(id, {
-            name: name,
-            quantity: quantity,
-            images: photo
+            name,
+            quantity,
+            price,
+            category,
+            images: photos
         }, { new: true }); // { new: true } returns the modified document rather than the original
 
         if (!updatedCategory) {
