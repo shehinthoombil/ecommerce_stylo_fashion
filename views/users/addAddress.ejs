@@ -1,0 +1,263 @@
+<%-include('../partials/user/header.ejs') %>
+
+<main class="main">
+    <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+        <div class="container">
+            <h1 class="page-title">My Address<span>Shop</span></h1>
+        </div><!-- End .container -->
+    </div><!-- End .page-header -->
+    <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="#">Shop</a></li>
+                <li class="breadcrumb-item active" aria-current="page">My Address</li>
+            </ol>
+        </div><!-- End .container -->
+    </nav><!-- End .breadcrumb-nav -->
+
+    <div class="page-content">
+        <div class="dashboard">
+            <div class="container">
+                <div class="row">
+                    <aside class="col-md-4 col-lg-3">
+                        <ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link " id="tab-dashboard-link" data-toggle="tab" href="#tab-dashboard"
+                                    role="tab" aria-controls="tab-dashboard" aria-selected="false">Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-orders"
+                                    role="tab" aria-controls="tab-orders" aria-selected="false">Orders</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="tab-downloads-link" data-toggle="tab" href="#tab-downloads"
+                                    role="tab" aria-controls="tab-downloads" aria-selected="false">Downloads</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" id="tab-address-link" data-toggle="tab"
+                                    href="#tab-address" role="tab" aria-controls="tab-address"
+                                    aria-selected="true">Address</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="tab-account-link" data-toggle="tab" href="#tab-account"
+                                    role="tab" aria-controls="tab-account" aria-selected="false">Account Details</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Sign Out</a>
+                            </li>
+                        </ul>
+                    </aside><!-- End .col-lg-3 -->
+
+                    <div class="col-md-8 col-lg-9">
+                        <p>Hey <b>
+                                <%= userName %>
+                            </b>! Please Provide your Accurate Information.</p>
+                        <div class="tab-content">
+
+                            <form action="/addAddress" method="post" id="addressForm">
+                                <div class="mb-3">
+                                    <label for="fullNameInput" class="form-label">Full Name</label>
+                                    <input type="text" class="form-control" id="fullNameInput"
+                                        aria-describedby="fullNameError" name="fullname">
+                                    <span class="error-message" id="fullNameError"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="mobileInput" class="form-label">Mobile Number</label>
+                                    <input type="text" class="form-control" id="mobileInput"
+                                        aria-describedby="mobileError" name="mobile">
+                                    <span class="error-message" id="mobileError" style="color: red;"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="emailInput" class="form-label">Email Address</label>
+                                    <input type="text" class="form-control" id="emailInput"
+                                        aria-describedby="emailError" name="email">
+                                    <span class="error-message" id="emailError" style="color: red;"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="houseNoInput" class="form-label">House Number</label>
+                                    <input type="text" class="form-control" id="houseNoInput"
+                                        aria-describedby="houseNoError" name="houseNo">
+                                    <span class="error-message" id="houseNoError" style="color: red;"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="cityInput" class="form-label">City</label>
+                                    <input type="text" class="form-control" id="cityInput"
+                                        aria-describedby="cityError" name="city">
+                                    <span class="error-message" id="cityError" style="color: red;"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="stateInput" class="form-label">State</label>
+                                    <input type="text" class="form-control" id="stateInput"
+                                        aria-describedby="stateError" name="state">
+                                    <span class="error-message" id="stateError" style="color: red;"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="zipcodeInput" class="form-label">Zipcode</label>
+                                    <input type="text" class="form-control" id="zipcodeInput"
+                                        aria-describedby="zipcodeError" name="zipcode">
+                                    <span class="error-message" id="zipcodeError" style="color: red;"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="additionalDetailsInput" class="form-label">Additional
+                                        Details</label>
+                                    <input type="text" class="form-control" id="additionalDetailsInput"
+                                        aria-describedby="additionalDetailsError" name="additionalDetails"
+                                        style="height: 80px;">
+                                    <span class="error-message" id="additionalDetailsError"
+                                        style="color: red;"></span>
+                                </div>
+
+                                <button type="submit" class="btn btn-outline-primary-2">
+                                    <span>SUBMIT</span>
+                                    <i class="icon-long-arrow-right"></i>
+                                </button>
+                            </form>
+
+                        </div>
+                    </div><!-- End .col-lg-9 -->
+                </div><!-- End .row -->
+            </div><!-- End .container -->
+        </div><!-- End .dashboard -->
+    </div><!-- End .page-content -->
+</main><!-- End .main -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('addressForm');
+
+        form.addEventListener('submit', function (event) {
+            // Validate full name
+            const fullNameInput = document.getElementById('fullNameInput');
+            const fullNameError = document.getElementById('fullNameError');
+            if (!validateFullName(fullNameInput.value)) {
+                displayError('fullName', 'Full name must be between 1 to 20 characters without leading or trailing spaces.');
+                event.preventDefault();
+            } else {
+                fullNameError.textContent = '';
+            }
+
+            // Validate mobile number
+            const mobileInput = document.getElementById('mobileInput');
+            const mobileError = document.getElementById('mobileError');
+            if (!validateMobileNumber(mobileInput.value)) {
+                displayError('mobile', 'Mobile number must be 10 digits and cannot contain negative values.');
+                event.preventDefault();
+            } else {
+                mobileError.textContent = '';
+            }
+
+            // Validate email address
+            const emailInput = document.getElementById('emailInput');
+            const emailError = document.getElementById('emailError');
+            if (!validateEmail(emailInput.value)) {
+                displayError('email', 'Please enter a valid email address (gmail, yahoo, hotmail, outlook).');
+                event.preventDefault();
+            } else {
+                emailError.textContent = '';
+            }
+
+            // Validate house number
+            const houseNoInput = document.getElementById('houseNoInput');
+            const houseNoError = document.getElementById('houseNoError');
+            if (!validateHouseNumber(houseNoInput.value)) {
+                displayError('houseNo', 'House number must contain only numbers.');
+                event.preventDefault();
+            } else {
+                houseNoError.textContent = '';
+            }
+
+            // Validate city
+            const cityInput = document.getElementById('cityInput');
+            const cityError = document.getElementById('cityError');
+            if (!validateCity(cityInput.value)) {
+                displayError('city', 'City must be between 1 to 20 characters.');
+                event.preventDefault();
+            } else {
+                cityError.textContent = '';
+            }
+
+            // Validate state
+            const stateInput = document.getElementById('stateInput');
+            const stateError = document.getElementById('stateError');
+            if (!validateState(stateInput.value)) {
+                displayError('state', 'State must be between 1 to 20 characters.');
+                event.preventDefault();
+            } else {
+                stateError.textContent = '';
+            }
+
+            // Validate zipcode
+            const zipcodeInput = document.getElementById('zipcodeInput');
+            const zipcodeError = document.getElementById('zipcodeError');
+            if (!validateZipcode(zipcodeInput.value)) {
+                displayError('zipcode', 'Zipcode must contain at least 6 numbers and cannot be larger than 6.');
+                event.preventDefault();
+            } else {
+                zipcodeError.textContent = '';
+            }
+
+            // Validate additional details
+            const additionalDetailsInput = document.getElementById('additionalDetailsInput');
+            const additionalDetailsError = document.getElementById('additionalDetailsError');
+            if (!validateAdditionalDetails(additionalDetailsInput.value)) {
+                displayError('additionalDetails', 'Additional details must be between 1 to 20 characters.');
+                event.preventDefault();
+            } else {
+                additionalDetailsError.textContent = '';
+            }
+
+            // If all validations pass, the form will submit
+        });
+
+        function validateFullName(fullName) {
+            return /^[^\s].{1,18}[^\s]$/.test(fullName);
+        }
+
+        function validateMobileNumber(mobileNumber) {
+            return /^\d{10}$/.test(mobileNumber) && !/^-/.test(mobileNumber);
+        }
+
+        function validateEmail(email) {
+            return /^[^\s@]+([@_.][^\s@]+)*@(gmail|yahoo|hotmail|outlook)\.[^\s@]+$/.test(email);
+        }
+
+        function validateHouseNumber(houseNo) {
+            return /^\d+$/.test(houseNo);
+        }
+
+        function validateCity(city) {
+            return /^[a-zA-Z\s]{1,20}$/.test(city);
+        }
+
+        function validateState(state) {
+            return /^[a-zA-Z\s]{1,20}$/.test(state);
+        }
+
+        function validateZipcode(zipcode) {
+            return /^\d{6}$/.test(zipcode);
+        }
+
+        function validateAdditionalDetails(additionalDetails) {
+            return /^[a-zA-Z\s]{1,20}$/.test(additionalDetails);
+        }
+
+        // Function to display error messages
+        function displayError(fieldId, errorMessage) {
+            const errorSpan = document.getElementById(fieldId + 'Error');
+            errorSpan.textContent = errorMessage;
+        }
+    });
+</script>
+
+<%- include('../partials/user/footer.ejs') %>
+
+
+

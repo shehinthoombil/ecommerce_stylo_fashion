@@ -219,7 +219,7 @@ const addProduct = async (req, res) => {
     }
 };
 
-// load page of edit categories
+// load page of edit product
 const loadEditproduct = async (req, res) => {
     try {
         const foundProduct = await Product.findById(req.query.id);
@@ -255,6 +255,28 @@ const editProduct = async (req, res) => {
     }
 }
 
+// delete Existing image from edit product
+
+const deleteExistImage = async (req, res) => {
+    try {
+      console.log('334');
+  
+      const productid = req.body.productid
+      const imageid = req.body.imageid
+      console.log(productid+"    "+imageid);
+      const productimage = await Product.updateOne({ _id: productid }, { $pull: { images: imageid } })
+      if (productimage) {
+        res.json({ result: true })
+      }
+      else {
+        res.json({ result: false })
+      }
+      console.log(productimage);
+    } catch (error) {
+      console.error('Error deleting image:', error);
+      res.render('500')
+    }
+  }
 
 
 module.exports = {
@@ -275,4 +297,5 @@ module.exports = {
     loadEditproduct,
     editProduct,
     listUnlistProduct,
+    deleteExistImage,
 }

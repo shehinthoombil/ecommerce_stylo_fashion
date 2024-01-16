@@ -1,0 +1,184 @@
+<%-include('../partials/user/header.ejs') %>
+
+	<main class="main">
+		<div class="page-header text-center" style="background-image: url('userAssets/images/page-header-bg.jpg')">
+			<div class="container">
+				<h1 class="page-title">My Account<span>Shop</span></h1>
+			</div><!-- End .container -->
+		</div><!-- End .page-header -->
+		<nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
+			<div class="container">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a href="/">Home</a></li>
+					<li class="breadcrumb-item active" aria-current="page">My Account</li>
+				</ol>
+			</div><!-- End .container -->
+		</nav><!-- End .breadcrumb-nav -->
+
+		<div class="page-content">
+			<div class="dashboard">
+				<div class="container">
+					<div class="row">
+						<aside class="col-md-4 col-lg-3">
+							<ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
+								<li class="nav-item">
+									<a class="nav-link active" id="tab-dashboard-link" data-toggle="tab"
+										href="#tab-dashboard" role="tab" aria-controls="tab-dashboard"
+										aria-selected="true">Dashboard</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-orders"
+										role="tab" aria-controls="tab-orders" aria-selected="false">Orders</a>
+								</li>
+								<!-- <li class="nav-item">
+									<a class="nav-link" id="tab-downloads-link" data-toggle="tab" href="#tab-downloads"
+										role="tab" aria-controls="tab-downloads" aria-selected="false">Downloads</a>
+								</li> -->
+								<li class="nav-item">
+									<a class="nav-link" id="tab-address-link" data-toggle="tab" href="#tab-address"
+										role="tab" aria-controls="tab-address" aria-selected="false">Adresses</a>
+								</li>
+								
+								<li class="nav-item">
+									<a class="nav-link" href="/logout">Sign Out</a>
+								</li>
+							</ul>
+						</aside><!-- End .col-lg-3 -->
+
+						<div class="col-md-8 col-lg-9">
+							<div class="tab-content">
+								<div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel" aria-labelledby="tab-dashboard-link">
+									<form method="post" action="/updateDetails">
+										<h3>Account Info</h3>
+										
+										<div class="text-right">
+											<i class="fas fa-edit" id="editButton"></i>
+										</div>
+								
+										<div class="form-group">
+											<label for="name">Name:</label>
+											<input type="text" class="form-control" id="name" name="name" value="<%= userDB.name %>" disabled>
+										</div>
+								
+										<div class="form-group">
+											<label for="email">Email:</label>
+											<input type="email" class="form-control" name="email" value="<%= userDB.email %>" id="email" disabled>
+										</div>
+								
+										<div class="form-group">
+											<label for="mobile">Mobile:</label>
+											<input type="tel" class="form-control" id="mobile" name="mobile" value="<%= userDB.mobile %>" disabled>
+										</div>
+								
+										<div class="form-group" id="passwordGroup" style="display: none;">
+											<label for="currpassword">New Password:</label>
+											<input type="password" class="form-control" id="currpassword" disabled>
+										</div>
+								
+										<div class="form-group" id="confirmPasswordGroup" style="display: none;">
+											<label for="newpassword">Confirm Password:</label>
+											<input type="password" class="form-control" name="confirmPassword" id="newpassword" disabled>
+										</div>
+								
+										<button type="submit" class="btn btn-primary" id="submitButton" style="display: none;">Submit</button>
+									</form>
+								</div><!-- .End .tab-pane -->	
+
+								<div class="tab-pane fade" id="tab-orders" role="tabpanel"
+									aria-labelledby="tab-orders-link">
+									<p>No order has been made yet.</p>
+									<a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i
+											class="icon-long-arrow-right"></i></a>
+								</div><!-- .End .tab-pane -->
+
+								<div class="tab-pane fade" id="tab-downloads" role="tabpanel"
+									aria-labelledby="tab-downloads-link">
+									<p>No downloads available yet.</p>
+									<a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i
+											class="icon-long-arrow-right"></i></a>
+								</div><!-- .End .tab-pane -->
+
+								<div class="tab-pane fade" id="tab-address" role="tabpanel"
+									aria-labelledby="tab-address-link">
+									<p>The following addresses will be used on the checkout page by default.</p>
+									<!-- add address -->
+									<a href="/addAddress">
+									<button type="submit" class="btn btn-outline-primary-2 float-right">
+										<span>+ ADD ADDRESS</span>
+										<i class="icon-long-arrow-right"></i>
+									</button>
+								</a>
+									<div class="row">
+
+										<% if (UserAddress && UserAddress.length> 0) { %>
+											<% for (let i=0; i < UserAddress.length; i++) { %>
+												<div class="col-lg-6">
+													<div class="card card-dashboard">
+														<div class="card-body">
+															<!-- PENDING                 -->
+															<a href="/deleteAddress?id=<%= UserAddress[i]._id %>"><i
+																	class="bi bi-trash3 float-right"></i></a>
+
+															<h3 class="card-title">Billing Address</h3>
+															<!-- End .card-title -->
+															<!-- Use a for loop to iterate through the address array -->
+															<% if (UserAddress[i].address &&
+																UserAddress[i].address.length> 0) { %>
+																	
+																	
+
+																<% for (let j=0; j < UserAddress[i].address.length; j++)
+																	{ %>
+																	<p>
+																		<%= UserAddress[i].address[j].fullname %><br>
+																			<%= UserAddress[i].address[j].mobile %><br>
+																				<%= UserAddress[i].address[j].email %>
+																					<br>
+																					<%= UserAddress[i].address[j].houseNo
+																						%><br>
+																						<%= UserAddress[i].address[j].city
+																							%><br>
+																							<%= UserAddress[i].address[j].state
+																								%><br>
+																								<%= UserAddress[i].address[j].zipcode
+																									%><br>
+																									<%= UserAddress[i].address[j].additionalDetails
+																										%><br>
+																	</p>
+																	<a href="/editAddress?id=<%= UserAddress[i]._id %>">Edit
+																		<i class="icon-edit"></i></a>
+																	<% } %>
+																		<% } else { %>
+																			<p>No billing address found.</p>
+																			<% } %>
+														</div>
+													</div>
+												</div>
+												<% } %>
+													<% } else { %>
+														<p>No user addresses found.</p>
+														<% } %>
+
+
+									</div>
+
+									
+								</div>
+							</div><!-- End .col-lg-9 -->
+						</div><!-- End .row -->
+					</div><!-- End .container -->
+				</div><!-- End .dashboard -->
+			</div><!-- End .page-content -->
+	</main><!-- End .main -->
+
+
+	<script>
+    document.getElementById('editButton').addEventListener('click', function () {
+        document.getElementById('name').removeAttribute('disabled');
+        document.getElementById('email').removeAttribute('disabled');
+        document.getElementById('mobile').removeAttribute('disabled');
+    });
+</script>
+
+
+	<%- include('../partials/user/footer.ejs') %>
