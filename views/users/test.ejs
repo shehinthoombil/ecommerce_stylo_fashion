@@ -1,0 +1,252 @@
+<%- include('../layout/header.ejs') -%>
+
+
+
+
+
+    <main class="main">
+        <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+            <div class="container">
+                <h1 class="page-title">Shopping Cart<span>Shop</span></h1>
+            </div><!-- End .container -->
+        </div><!-- End .page-header -->
+        <nav aria-label="breadcrumb" class="breadcrumb-nav">
+            <div class="container">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item"><a href="#">Shop</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Shopping Cart</li>
+                </ol>
+            </div><!-- End .container -->
+        </nav><!-- End .breadcrumb-nav -->
+
+        <div class="page-content" id="Cart">
+            <div class="cart">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-9">
+                            <table class="table table-cart table-mobile">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>Total</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <% if(cartData) {%>
+                                        <% let product=cartData.products %>
+                                            <% for (let i=0; i < product.length; i++) { %>
+                                                <% const value=product[i].productId; %>
+                                                    <% const qcount=product[i]; %>
+
+                                                        <tr>
+                                                            <td class="product-col">
+                                                                <div class="product">
+                                                                    <figure class="product-media">
+                                                                        <a href="#">
+                                                                            <img src="/products/images/<%= value.image[0]%>"
+                                                                                alt="Product image">
+
+                                                                        </a>
+                                                                    </figure>
+                                                                    <h3 class="product-title">
+                                                                        <a href="#">
+                                                                            <%= value.productname %>
+                                                                        </a>
+
+                                                                    </h3>
+
+                                                                </div>
+                                                            </td>
+                                                            <td class="price-col">₹<%= value.price %>
+                                                            </td>
+                                                            <td class="quantity-col">
+
+                                                                <div class="cart-product-quantity">
+                                                                    <div class="input-group input-spinner">
+                                                                        <div class="input-group-prepend">
+
+
+                                                                            <button
+                                                                                class="btn btn-decrement btn-spinner"
+                                                                                type="button"
+                                                                                data-product-id="<%= value._id %>"
+                                                                                onclick="updateCount(-1,'<%= value._id %>')">-</button>
+                                                                        </div>
+                                                                        <input type="text" class="form-control"
+                                                                            id="quantity-<%= value._id %>"
+                                                                            value="<%= qcount.count %>" readonly>
+
+                                                                        <div class="input-group-append">
+                                                                            <button
+                                                                                class="btn btn-increment btn-spinner"
+                                                                                type="button"
+                                                                                data-product-id="<%= value._id %>"
+                                                                                onclick="updateCount(1,'<%= value._id %>')">+</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </td>
+                                                            <td class="total-col" data-product-id="<%= value._id %>"
+                                                                id="total-<%= value._id %>">₹<%= datatotal[i] %>
+                                                            </td>
+
+
+                                                            <td class="remove-col"><a
+                                                                    href="/deleteCartProduct?id=<%= value._id %>"><i
+                                                                        class="icon-close"></i></a></td>
+
+                                                        </tr>
+                                                        <% if (value.quantity===0) { %>
+                                                            <tr>
+                                                                <td colspan="5">
+                                                                    <p style="color: red"><b>Out of Stock !</b></p>
+                                                                </td>
+                                                            </tr>
+                                                            <% } %>
+                                                                <% } %>
+
+                                </tbody>
+                                <%} else {%>
+                                    <h4 style="color: rgb(252, 0, 0);"> I AM EMPTY ! PLEASE ADD SOME PRODUCTS !</h4>
+                                    <% } %>
+                            </table>
+
+
+                        </div>
+                        <aside class="col-lg-3">
+                            <div class="summary summary-cart">
+                                <h3 class="summary-title">Cart Total</h3><!-- End .summary-title -->
+
+                                <table class="table table-summary">
+                                    <tbody>
+                                        <tr class="summary-subtotal">
+                                            <td>Subtotal:</td>
+                                            <td>₹<%= totalamount %>
+                                            </td>
+                                        </tr><!-- End .summary-subtotal -->
+
+                                    </tbody>
+                                </table><!-- End .table table-summary -->
+                                <% if (cartData && cartData.products && cartData.products.length> 0) { %>
+                                    <a href="/checkout" class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO
+                                        CHECKOUT</a>
+                            </div><!-- End .summary -->
+                            <%}%>
+                                <a href="/" class="btn btn-outline-dark-2 btn-block mb-3"><span>CONTINUE
+                                        SHOPPING</span><i class="icon-refresh"></i></a>
+                        </aside><!-- End .col-lg-3 -->
+                    </div><!-- End .row -->
+                </div><!-- End .container -->
+            </div><!-- End .cart -->
+        </div><!-- End .page-content -->
+    </main><!-- End .main -->
+
+
+
+
+
+    <script>
+
+        function updateCount(val, productId) {
+            $.ajax({
+                method: "post",
+                url: "/updateCartQuantity",
+                data: JSON.stringify({ id: productId, val: val }),
+                contentType: 'application/json',
+                success: function (response) {
+                    if (response.result === true) {
+                        $('#Cart').load('/cart #Cart');
+                        $('#downCart').load('/cart #downCart');
+                    } else if (response.result === 'stock_exceeded') {
+                        // Show SweetAlert indicating the product quantity exceeds stock availability
+                        Swal.fire({
+                            title: 'Stock Exceeded',
+                            text: 'The product quantity exceeds stock availability.',
+                            icon: 'error',
+                            confirmButtonText: 'OK',
+                        });
+                    } else if (response.result === false) {
+                        // Show SweetAlert indicating the product is out of stock
+                        Swal.fire({
+                            title: 'Out of Stock',
+                            text: 'This product is currently out of stock.',
+                            icon: 'error',
+                            confirmButtonText: 'OK',
+                        });
+                    } else if (response.result === 'quantity_below_1' && val === -1) {
+                        // Show SweetAlert indicating the quantity cannot go below 1
+                        Swal.fire({
+                            title: 'Invalid Quantity',
+                            text: 'The quantity cannot go below 1.',
+                            icon: 'error',
+                            confirmButtonText: 'OK',
+                        });
+                    }
+                }
+            });
+        }
+
+
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <%- include('../layout/footer.ejs') -%>
+
+
+
+
+    <script>
+        
+const updateCartQuantity = async (req, res) => {
+  try {
+    const userId = req.session.user_id;
+    const productId = req.body.id;
+    const val = req.body.val;
+
+    const productData = await product.findOne({ _id: productId });
+
+    if (productData.quantity > 0) {
+      const cartData = await Cart.findOne({ userid: userId, "products.productId": productId });
+      const currentCount = cartData.products.find(item => item.productId === productId).count;
+
+      if (val === 1) {
+        if (currentCount < productData.quantity) {
+          await Cart.updateOne(
+            { userid: userId, "products.productId": productId },
+            { $inc: { "products.$.count": 1 } });
+
+          console.log("Count increased");
+          res.json({ result: true });
+        } else {
+          // Display a "stock exceeded" alert
+          res.json({ result: "stock_exceeded" });
+        }
+      } else if (val === -1) {
+        if (currentCount > 1) {
+          await Cart.updateOne(
+            { userid: userId, "products.productId": productId },
+            { $inc: { "products.$.count": -1 } });
+
+          console.log("Count decreased");
+          res.json({ result: true });
+        } else {
+          // Handle the case when the count is already 1
+          res.json({ result: "quantity_below_1" });
+        }
+      }
+    } else {
+      // Display SweetAlert if the product is out of stock
+      res.json({ result: "out_of_stock" });
+    }
+  } catch (error) {
+    console.error(error.message);
+    res.render('500');
+  }
+};
+    </script>

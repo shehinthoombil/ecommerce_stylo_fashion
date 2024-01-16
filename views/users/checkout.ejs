@@ -1,0 +1,239 @@
+<%-include('../partials/user/header.ejs') %>
+
+        <main class="main">
+        	<div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+        		<div class="container">
+        			<h1 class="page-title">Checkout<span>Shop</span></h1>
+        		</div><!-- End .container -->
+        	</div><!-- End .page-header -->
+            <nav aria-label="breadcrumb" class="breadcrumb-nav">
+                <div class="container">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                        <li class="breadcrumb-item"><a href="#">Shop</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+                    </ol>
+                </div><!-- End .container -->
+            </nav><!-- End .breadcrumb-nav -->
+
+            <div class="page-content">
+            	<div class="checkout">
+	                <div class="container">
+						<!-- add address -->
+						<a href="/addAddress">
+							<button type="submit" class="btn btn-outline-primary-2 float-right">
+							  <span>+ ADD ADDRESS</span>
+							  <i class="icon-long-arrow-right"></i>
+							</button>
+						  </a>
+						  <!-- add coupons -->
+            			<div class="checkout-discount">
+            				<form action="#">
+        						<input type="text" class="form-control" required id="checkout-discount-input">
+            					<label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to enter your code</span></label>
+            				</form>
+            			</div><!-- End .checkout-discount -->
+            			<form action="/orderPlace?id=<%= %>" method="post" id="myform">
+		                	<div class="row">
+		                		<div class="col-lg-9">
+									<p>The following addresses will be used on the checkout page by default.</p>
+
+									<!-- billing address -->
+									<div class="row">
+										<% if (UserAddress && UserAddress.length> 0) { %>
+										  <% for (let i=0; i < UserAddress.length; i++) { %>
+											<div class="col-lg-6">
+											  <div class="card card-dashboard">
+												<div class="card-body">
+												  <input type="radio" name="selectedAddress" value="<%= UserAddress[i]._id %>"
+													id="address<%= i %>" class="address-checkbox">
+												  <label for="address<%= i %>" class="address-label">Billing Address</label>
+												  <% if (UserAddress[i].address && UserAddress[i].address.length> 0) { %>
+													<% for (let j=0; j < UserAddress[i].address.length; j++) { %>
+													  <p>
+														<%= UserAddress[i].address[j].fullname %><br>
+														  <%= UserAddress[i].address[j].mobile %><br>
+															<%= UserAddress[i].address[j].email %><br>
+															  <%= UserAddress[i].address[j].houseNo %><br>
+																<%= UserAddress[i].address[j].city %><br>
+																  <%= UserAddress[i].address[j].state %><br>
+																	<%= UserAddress[i].address[j].zipcode %><br>
+																	  <%= UserAddress[i].address[j].additionalDetails %><br>
+													  </p>
+													  <a href="/editAddress?id=<%= UserAddress[i]._id %>">Edit <i class="icon-edit"></i></a>
+													  <% } %>
+														<% } else { %>
+														  <p>No billing address found.</p>
+														  <% } %>
+												</div>
+											  </div>
+											</div>
+											<% } %>
+											  <% } else { %>
+												<p>No user addresses found.</p>
+												<% } %>
+									  </div>
+		                		</div><!-- End .col-lg-9 -->
+
+		                		<aside class="col-lg-3">
+		                			<div class="summary">
+		                				<h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
+										<!-- order summary -->
+		                				<table class="table table-summary">
+		                					<thead>
+		                						<tr>
+		                							<th>Product</th>
+		                							<th>Total</th>
+		                						</tr>
+		                					</thead>
+
+		                					<tbody>
+		                						<tr>
+		                							<td><a href="#">Shirt</a></td>
+		                							<td>$84.00</td>
+		                						</tr>
+
+		                						<tr>
+		                							<td><a href="#">Blue jeans </a></td>
+		                							<td>$76,00</td>
+		                						</tr>
+		                						<tr class="summary-subtotal">
+		                							<td>Subtotal:</td>
+		                							<td>$160.00</td>
+		                						</tr><!-- End .summary-subtotal -->
+		                						<tr>
+		                							<td>Coupon Discount</td>
+		                							<td>- ₹</td>
+		                						</tr>
+		                						<tr class="summary-total">
+		                							<td>Total:</td>
+		                							<td>$160.00</td>
+		                						</tr><!-- End .summary-total -->
+		                					</tbody>
+		                				</table><!-- End .table table-summary -->
+
+		                				<div class="accordion-summary" id="accordion-payment">
+												<!-- Your payment options here -->
+												<div class="payment-options">
+												  <h3 class="summary-title">Select Payment Method</h3><!-- End .summary-title -->
+											<!-- Payment methods -->
+
+										    <div class="card">
+										        <div class="card-header" id="heading-3">
+										            <h2 class="card-title">
+										                <a class="collapsed" role="button" data-toggle="collapse" id="payment-cod" name="payment-method" href="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
+										                    Cash on delivery
+										                </a>
+										            </h2>
+										        </div><!-- End .card-header -->
+												<div id="collapse-3" class="collapse" aria-labelledby="heading-3" data-parent="#accordion-payment"></div>
+										    </div><!-- End .card -->
+
+										    <div class="card">
+										        <div class="card-header" id="heading-4">
+										            <h2 class="card-title">
+										                <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-4" aria-expanded="false" aria-controls="collapse-4">
+										                    Online Payment (Razorpay) <small class="float-right paypal-link">What is Razor Pay?</small>
+										                </a>
+										            </h2>
+										        </div><!-- End .card-header -->
+										        <div id="collapse-4" class="collapse" aria-labelledby="heading-4" data-parent="#accordion-payment">
+										            <div class="card-body">
+										                Free payment gateway for you* Fastest Checkout Experience With 100+ Payment Modes - All Cards, UPI, EMI, Wallets & More.
+										            </div><!-- End .card-body -->
+										        </div><!-- End .collapse -->
+										    </div><!-- End .card -->
+
+										    <div class="card">
+										        <div class="card-header" id="heading-5">
+										            <h2 class="card-title">
+										                <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-5" aria-expanded="false" aria-controls="collapse-5">
+										                    Wallet
+										                </a>
+										            </h2>
+										        </div><!-- End .card-header -->
+												<div id="collapse-5" class="collapse" aria-labelledby="heading-5" data-parent="#accordion-payment"></div>
+										    </div><!-- End .card -->
+										</div><!-- End .accordion -->
+
+										<input type="hidden" id="total" name="total" >
+										<% if (cartData) { %>
+		                				<button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
+		                					<span class="btn-text">Place Order</span>
+		                					<span class="btn-hover-text">Order Now</span>
+		                				</button>
+										<% } %>
+		                			</div><!-- End .summary -->
+		                		</aside><!-- End .col-lg-3 -->
+		                	</div><!-- End .row -->
+            			</form>
+	                </div><!-- End .container -->
+                </div><!-- End .checkout -->
+            </div><!-- End .page-content -->
+        </main><!-- End .main -->
+		<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+		<script>
+
+	$(document).ready(function () {
+      $('#myform').submit(function (event) {
+        event.preventDefault();
+        var formData = $(this).serializeArray();
+
+        // Check if an address and payment method are selected
+        var selectedAddress = $('input[name="selectedAddress"]:checked').val();
+        var selectedPaymentMethod = $('input[name="payment-method"]:checked').val();
+    console.log(selectedPaymentMethod)
+        if (!selectedAddress) {
+          // Show a SweetAlert if an address is not selected
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Please select an address!',
+          });
+        } else if (!selectedPaymentMethod) {
+          // Show a different SweetAlert if a payment method is not selected
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Please select a payment method!',
+          });
+        } else {
+          $.ajax({
+            url: '/orderPlace',
+            method: 'POST',
+            data: formData,
+            success: function (response) {
+              console.log(response);
+              if (response.success === true) {
+                console.log('hi');
+                window.location.href = '/orderSuccess';
+              } else if (response.online === true) {
+                console.log('online');
+                // razorpayPayment(response.order);
+                window.location.href = '/orderSuccess';
+              } else if (response.error === 'Insufficient funds in wallet') {
+                // Display SweetAlert for insufficient funds
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Insufficient funds in wallet. Please add funds.',
+                });
+              } else {
+                console.log('HO');
+                // razorpayPayment(response.order);
+              }
+            },
+            error: function (error) {
+              console.error('Error:', error);
+            }
+          });
+        }
+      });
+
+	})
+			
+			
+			</script>
+
+<%- include('../partials/user/footer.ejs') %>

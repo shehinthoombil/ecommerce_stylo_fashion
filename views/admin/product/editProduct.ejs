@@ -63,8 +63,11 @@
                                                         alt="Product Image <%= index + 1 %>" class="img-thumbnail"
                                                         style="max-width: 100px; max-height: 100px;">
                                                     <input type="hidden" name="existingImages[]" value="<%= image %>">
-                                                    <button type="button"
-                                                        class="btn btn-danger btn-sm remove-existing-image">Remove</button>
+                                                    <!-- <button type="button"
+                                                        class="btn btn-danger btn-sm remove-existing-image">Remove</button> -->
+                                                        <button type="button" onclick="deleteExistImage('<%= foundProduct._id %>', '<%= image %>')"
+                                                            class="btn btn-sm btn-danger">Delete</button>
+
                                                 </div>
                                                 <% }) %>
                                         </div>
@@ -149,4 +152,36 @@
                 }
 
             </script>
+
+<!-- for delete exist image function -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+  function deleteExistImage(productid, imageid) {
+    console.log(productid, "pppp", imageid);
+    $.ajax({
+      method: 'delete',
+      url: '/admin/deleteExistImage',
+      data: JSON.stringify({ productid: productid, imageid: imageid }),
+      contentType: 'application/json',
+      success: function (response) {
+        if (response.result == true) {
+
+          window.location.reload()
+
+
+        } else {
+          console.log('Error');
+        }
+      }
+    })
+
+  }
+
+  function updateImage(productid, imageid) {
+    console.log(productid, imageid);
+
+  }
+</script>
+
+
             <%- include('../../partials/admin/footer') %>

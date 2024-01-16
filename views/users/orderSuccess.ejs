@@ -1,0 +1,36 @@
+<%- include('../partials/user/header.ejs') %>
+
+<div id="site-main" class="site-main">
+    <div id="main-content" class="main-content">
+        <div id="primary" class="content-area">
+            <div id="title" class="page-title">
+                <div class="section-container">
+                    <div class="content-title-heading">
+                        <h1 class="text-title-heading"></h1>
+                    </div>
+                    <div class="breadcrumbs"></div>
+                </div>
+            </div>
+
+            <div id="content" class="site-content" role="main">
+                <div class="section-padding">
+                    <div class="section-container p-l-r">
+                        <div class="shop-checkout">
+                            <div style="background-color: rgb(236, 236, 236); color: white; padding: 15px; text-align: center; width: 80%; margin: 0 auto;">
+                                <h2>Your order has been placed successfully!</h2>
+                                <div class="celebration-container" style="display: inline-block;">
+                                    <img src="/userAssets/images/Animation - order success.gif" alt="Order Placed Animation">
+                                    <img src="/userAssets/images/Animation - order success.gif" alt="Order Placed Animation">
+                                </div>
+                                <p class="text-dark">Thank you for shopping with us.</p>
+                                <button onclick="window.location.href='/productList'" style="background-color: #c96; color: rgb(0, 0, 0); padding: 10px 20px; border: none; cursor: pointer;">Continue Shopping</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- #content -->
+        </div><!-- #primary -->
+    </div><!-- #main-content -->
+</div>
+
+<%- include('../partials/user/footer.ejs') %>

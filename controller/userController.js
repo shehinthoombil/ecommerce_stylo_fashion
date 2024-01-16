@@ -5,7 +5,10 @@ const nodemailer = require("nodemailer");
 const { env } = require('process');
 const randormstring = require("randomstring");
 const Product = require('../model/productModel')
-const Category = require('../model/categoryModel')
+const Category = require('../model/categoryModel');
+const mongoose = require('mongoose');
+const { log } = require('console');
+
 // ++++++++++++++++++++++++++++++++++++++adding secure password bcrypt++++++++++++++++++++++++++++++++++++++++++++++
 
 const securePassword = async (password) => {
@@ -42,7 +45,7 @@ const loadHome = async (req, res) => {
             user = userDB.name
             res.render('home', { user })
         }
-        res.render('home', { user })
+        res.render('home')
 
     } catch (error) {
         console.log(error.message);
@@ -276,7 +279,7 @@ const productDetails = async (req, res) => {
     try {
         const id = req.query.id
         const productDB = await Product.findOne({ _id: id })
-        console.log(productDB);
+        // console.log(productDB);
         res.render('productDetails', { productDB })
     } catch (error) {
         console.log(error.message);
@@ -289,13 +292,28 @@ const productDetails = async (req, res) => {
 const loadCart = async (req, res) => {
     try {
         const userId = req.session.user_id;
+   
         if (userId) {
             const user = await User.findById(userId);
             if (user) {
-                const cart = await Cart.find({ userId: userId }).populate('products.productId');
-                console.log(cart[0].products[0].productId)
-                if (cart) {
-                    res.render('cart', { cartItems: cart });
+                const hasCart = await Cart.find({ userId: userId }).populate('products.productId');
+
+                let totalSum = 0;
+                if (hasCart.length > 0 && Array.isArray(hasCart[0].products)) {
+
+                    hasCart[0].products.forEach(product => {
+                        product.sum = product.count * product.price;
+                      
+                        totalSum += product.sum;
+                       
+                    });
+                }
+
+                
+                if (hasCart) {
+                    
+                  
+                    res.render('cart', { cartItems: hasCart,totalSum });
                 }
             }
         }
@@ -325,7 +343,7 @@ const addToCart = async (req, res) => {
         };
 
         const hasCart = await Cart.findOne({ userId });
-
+        console.log(hasCart);
         if (hasCart) {
             // Add product to existing cart
             hasCart.products.push(product);
@@ -348,6 +366,95 @@ const addToCart = async (req, res) => {
     }
 };
 
+//add quantity to cart
+const updateCartQuantity = async (req, res) => {
+    try {
+
+        // const { productId } = req.body;
+        const userId = req.session.user_id;
+
+        //   const userId = req.session.user_id;
+        const productId = req.body.id;
+        const val = req.body.val;
+       
+        const productData = await Product.findOne({ _id: productId });
+       
+        if (productData.quantity > 0) {
+            const cartData = await Cart.findOne({ userid: userId, "products.productId": productId });
+            const currentCount = cartData.products.find(product => product.productId.toString() === productId.toString()).count;
+           
+              
+            if (val === 1) {
+                console.log("1");
+                if (currentCount < productData.quantity) {
+                    console.log("i am shehin thoombil");
+                    const newCount = await Cart.updateOne(
+                        { userId: userId, "products.productId": productId },
+                        { $inc: { "products.$.count": 1 } },
+                    );
+                    console.log(newCount + "qqqq");
+                    console.log("Count increased");
+                    res.json({ result: true });
+                } else {
+                    // Display a "stock exceeded" alert
+                    res.json({ result: "stock_exceeded" });
+                }
+            } else if (val === -1) {
+                if (currentCount > 1) {
+                    await Cart.updateOne(
+                        { userid: userId, "products.productId": productId },
+                        { $inc: { "products.$.count": -1 } });
+
+                    console.log("Count decreased");
+                    res.json({ result: true });
+                } else {
+                    // Handle the case when the count is already 1
+                    res.json({ result: "quantity_below_1" });
+                }
+            }
+        } else {
+            // Display SweetAlert if the product is out of stock
+            res.json({ result: "out_of_stock" });
+        }
+    } catch (error) {
+        console.error(error.message);
+        res.render('500');
+    }
+};
+
+
+//removing a product from cart
+const removeCartProduct = async (req, res) => {
+    try {
+        const productId = req.query.id; // Keep this line for GET request
+        const userId = req.session.user_id;
+        const cartData = await Cart.findOneAndUpdate(
+            { userId },
+            {
+                $pull: {
+                    products: { productId: new mongoose.Types.ObjectId(productId) }
+                }
+            },
+            { new: true }
+        );
+
+        console.log(productId);
+        console.log(cartData);
+
+        if (cartData) {
+            res.json({ success: true, message: 'Product removed from the cart.' });
+        } else {
+            console.log("No matching items found in the cart.");
+            res.json({ success: false, message: 'No matching items found in the cart.' });
+        }
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: 'An error occurred while removing the product from the cart.' });
+    }
+};
+
+
+
 
 
 
@@ -365,5 +472,7 @@ module.exports = {
     productList,
     productDetails,
     loadCart,
-    addToCart
+    addToCart,
+    updateCartQuantity,
+    removeCartProduct,
 }

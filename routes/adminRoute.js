@@ -34,5 +34,6 @@ adminRoute.get('/product/editproduct', adminController.loadEditproduct)
 adminRoute.post('/product/editProduct', imageUpload.uploadProductImages, imageUpload.resizeProductImages, adminController.editProduct)
 adminRoute.post('/product/addProduct', imageUpload.uploadProductImages, imageUpload.resizeProductImages, adminController.addProduct)
 adminRoute.get('/block-pro', adminController.listUnlistProduct)
+adminRoute.delete('/deleteExistImage', adminController.deleteExistImage);
 
 module.exports = adminRoute
