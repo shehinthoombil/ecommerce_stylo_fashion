@@ -1,15 +1,6 @@
-<!DOCTYPE html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<%-include('../partials/user/header.ejs') %>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <title>Stylo</title>
-    <link rel="stylesheet" href="userAssets/css/style.css"> 
-</head>
-<body>
+
     <div class="full-page">
         <div class="container">
             <div class="text-center  center-div">
@@ -21,6 +12,7 @@
 
                     <form action="/verify" method="post">
                         <div class="form-group mt-3">
+                            <label>OTP Code</label>
                             <input type="text" class="form-control" name="otp" placeholder="Enter OTP" id="otp" required>
                             <input type="hidden" id="total" name="usermon" value="<%= user %>">
                         </div>
@@ -29,10 +21,10 @@
                             <% } %> 
                         <br>
                     <input type="submit" class="btn btn-primary" value="Verify & Proceed">
-                        <!-- <p class="text-danger mt-3">Time left: <span id="timer">60</span></p>
+                        <p class="text-danger mt-3">Time left: <span id="timer">120</span></p>
                         <button class="btn btn-dander" id="resendButton" onclick="resendOTP()" disabled>
                             <a id="resendButtonLink" href="javascript:void(0);">Resend OTP</a>
-                        </button> --> 
+                        </button> 
                     </form>
                     <br>
 
@@ -41,12 +33,12 @@
         </div>
     </div>
 
-    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
 
-        let countdown = 60; // Initial countdown value in seconds
+        let countdown = 120; // Initial countdown value in seconds
         let timerElement = document.getElementById('timer');
         let resendButton = document.getElementById('resendButton');
         let countdownInterval;
@@ -90,52 +82,52 @@
   }, 3000);
 
 
-  $(document).ready(function () {
-        $("form").submit(function (event) {
-            event.preventDefault();  
-            const otp = $("#otp").val();
+//   $(document).ready(function () {
+//         $("form").submit(function (event) {
+//             event.preventDefault();  
+//             const otp = $("#otp").val();
 
-            // Make an AJAX request to verify the OTP
-            $.ajax({
-                type: "POST",
-                url: "/verify",
-                data: { otp: otp },
-                success: function (data) {
-                    if (data.success) {
-                        // OTP verification was successful
-                        Swal.fire({
-                            title: 'Registered Successfully',
-                            text: 'You have successfully verified your OTP and registered.',
-                            icon: 'success',
-                            timer: 2500, 
-                            showConfirmButton: false 
-                        }).then(function () {
-                            window.location.href = '/login';
-                        });
-                    } else {
-                        // OTP verification failed
-                        Swal.fire({
-                            title: 'Error',
-                            text: data.message || 'Invalid OTP',
-                            icon: 'error',
-                        });
-                    }
-                },
-                error: function () {
-                    Swal.fire({
-                        title: 'Error',
-                        text: 'An error occurred while processing your request',
-                        icon: 'error',
-                    });
-                }
-            });
-        });
-    });
+//             // Make an AJAX request to verify the OTP
+//             $.ajax({
+//                 type: "POST",
+//                 url: "/verify",
+//                 data: { otp: otp },
+//                 success: function (data) {
+//                     if (data.success) {
+//                         // OTP verification was successful
+//                         Swal.fire({
+//                             title: 'Registered Successfully',
+//                             text: 'You have successfully verified your OTP and registered.',
+//                             icon: 'success',
+//                             timer: 2500, 
+//                             showConfirmButton: false 
+//                         }).then(function () {
+//                             window.location.href = '/login';
+//                         });
+//                     } else {
+//                         // OTP verification failed
+//                         Swal.fire({
+//                             title: 'Error',
+//                             text: data.message || 'Invalid OTP',
+//                             icon: 'error',
+//                         });
+//                     }
+//                 },
+//                 error: function () {
+//                     Swal.fire({
+//                         title: 'Error',
+//                         text: 'An error occurred while processing your request',
+//                         icon: 'error',
+//                     });
+//                 }
+//             });
+//         });
+//     });
            
 
         
 
 
-    </script> -->
-</body>
-</html>
+    </script>
+
+    <%- include('../partials/user/footer.ejs') %>

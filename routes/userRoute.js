@@ -30,6 +30,7 @@ userRoute.get('/logout', isLogin, userController.logoutUser)
 
 //EMAIL VERIFY OR OTP 
 userRoute.post('/verify', userController.verifyMail)
+userRoute.post('/resendOtp', userController.resendOTP)
 
 //shop or product list
 userRoute.get('/productList',isLogin, userController.productList)
@@ -53,6 +54,8 @@ userRoute.post('/updateDetails',isLogin,accountController.userDetails)
 userRoute.get('/checkout',isLogin, orderController.loadCheckout)
 userRoute.post('/orderPlace', isLogin, orderController.placeOrder)
 userRoute.get('/orderSuccess', isLogin, orderController.orderSuccess)
-
+userRoute.get('/order-Cancel', isLogin, orderController.OrderCancelPage)
+userRoute.post('/cancelOrder', isLogin, orderController.cancelOrder)
+userRoute.get('/orderCancel', isLogin, orderController.OrderCancelPage)
 
 module.exports = userRoute

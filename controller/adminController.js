@@ -2,6 +2,8 @@ const Admin = require("../model/adminModel")
 const User = require('../model/userModel')
 const Category = require('../model/categoryModel')
 const Product = require('../model/productModel');
+const Order = require('../model/orderModel')
+const Address = require('../model/addressModel')
 const { log } = require("console");
 
 
@@ -278,6 +280,41 @@ const deleteExistImage = async (req, res) => {
     }
   }
 
+  //load order page
+
+  const loadOrder = async (req,res) => {
+    try {
+        const orderDat = await Order.find({})
+        .populate({
+          path: 'userId',
+          select: 'name'
+        })
+        .populate('products.product')
+        .sort({ purchaseDate: -1 });
+      
+      
+
+    if (orderDat) {
+      res.render('admin/orderManagement', { orderDat })
+    } else {
+      res.render('admin/orderManagement', { orderDat: {} })
+    }
+    } catch (error) {
+        console.log(error.message);
+    }
+  }
+
+  // updating order status
+  const updateOrderStatus = async (req, res) => {
+    try {
+      const { orderId, newStatus } = req.body;
+      console.log("here");
+      const orderStatus = await Order.updateOne({ _id: orderId }, { status: newStatus });
+      console.log(orderStatus);
+    } catch (error) {
+        console.log(error.mesaage);
+    }
+  }
 
 module.exports = {
     loadLogin,
@@ -298,4 +335,6 @@ module.exports = {
     editProduct,
     listUnlistProduct,
     deleteExistImage,
+    loadOrder,
+    updateOrderStatus,
 }

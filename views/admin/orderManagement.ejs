@@ -1,0 +1,216 @@
+<%- include('../partials/admin/header') %>
+  <div class="container-scroller">
+    <%- include('../partials/admin/sidePanel') %>
+      <div class="container-fluid page-body-wrapper">
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="row">
+              <div class="col-12 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Orders</h4>
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <!-- <th></th> -->
+                            <th> S.No </th>
+                            <th> Username </th>
+                            <th> Product Name </th>
+                            <th> Date </th>
+                            <th> Status </th>
+                            <th> Action </th>
+
+
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% if (orderDat.length> 0) { %>
+                            <% for (let j=0; j < orderDat.length; j++) { %>
+                              <% let products=orderDat[j].products; %>
+                                <% const username=orderDat[j].userId; %>
+                                  <% for (let i=0; i < products.length; i++){ %>
+                                    <% const Product=products[i].product; %>
+                                      <tr>
+                                        <td>
+                                          <%= i+1 %>
+                                        </td>
+                                        <td class="product-name-cell">
+                                          <%= username.name %>
+                                        </td>
+                                        <td>
+                                          <span class="pl-2 product-name">
+                                            <%= Product.name %>
+                                          </span>
+                                        </td>
+
+                                        <td>
+                                          <%= orderDat[j].purchaseDate.toLocaleString('en-US', { year: 'numeric' ,
+                                            month: 'short' , day: '2-digit' , hour: '2-digit' , minute: '2-digit' ,
+                                            second: '2-digit' }).replace(/,/, '' ).replace(/\//g, '-' ) %>
+                                        </td>
+                                        <td>
+                                          <%= orderDat[j].status %>
+                                        </td>
+                                        <td>
+                                          <!-- Order Status Select -->
+                                          <div class="form-group">
+                                            <select class="form-control order-status-select"
+                                              data-order-id="<%= orderDat[j]._id %>">
+                                              <option value="Pending" <%=orderDat[j].status==="Pending" ? 'selected'
+                                                : '' %>
+                                                >Pending</option>
+                                              <option value="Processing" <%=orderDat[j].status==="Processing"
+                                                ? 'selected' : '' %>>Processing</option>
+                                              <option value="Shipped" <%=orderDat[j].status==="Shipped" ? 'selected'
+                                                : '' %>
+                                                >Shipped</option>
+                                              <option value="Delivered" <%=orderDat[j].status==="Delivered" ? 'selected'
+                                                : '' %>>Delivered</option>
+                                              <option value="cancelled" <%=orderDat[j].status==="cancelled" ? 'selected'
+                                                : '' %>>cancelled</option>
+                                              <option value="Returned" <%=orderDat[j].status==="Returned" ? 'selected'
+                                                : '' %>>Returned</option>
+                                              <!-- Add more options as needed -->
+                                            </select>
+                                          </div>
+                                        </td>
+                                        <td>
+
+
+                                          <!-- Open modal button -->
+                                          <button type="button" class="btn btn-outline-primary-2" data-toggle="modal"
+                                            data-target="#orderDetailsModal<%= j %>">
+                                            View Details
+                                          </button>
+
+                                          <!-- Modal -->
+                                          <div class="modal fade" id="orderDetailsModal<%= j %>" tabindex="-1"
+                                            role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                              <div class="modal-content">
+                                                <div class="modal-header">
+                                                  <h5 class="modal-title" id="exampleModalLabel">Order Details</h5>
+                                                  <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                  </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                  <!-- Display order details here -->
+                                                  <p><strong>User Name:</strong>
+                                                    <%= username.name %>
+                                                  </p>
+                                                  <p><strong>Product Name:</strong>
+                                                    <%= Product.name %>
+                                                  </p>
+                                                  <p><strong>Price:</strong>
+                                                    <%= Product.price %>
+                                                  </p>
+                                                  <p><strong>Date:</strong>
+                                                    <%= orderDat[j].purchaseDate.toLocaleString('en-US', {
+                                                      year: 'numeric' , month: 'short' , day: '2-digit' ,
+                                                      hour: '2-digit' , minute: '2-digit' , second: '2-digit'
+                                                      }).replace(/,/, '' ).replace(/\//g, '-' ) %>
+                                                  </p>
+                                                  <p><strong>Order Status:</strong>
+                                                    <%= orderDat[j].status %>
+                                                  </p>
+                                                  <p><strong>Payment Method:</strong>
+                                                    <%= orderDat[j].paymentMethod %>
+                                                  </p>
+
+                                                  <h3>Address Details</h3>
+                                                  <br>
+                                                  <p><strong>Full Name:</strong>
+                                                    <%= orderDat[j].deliveryDetails.address.address[0].fullname %>
+                                                  </p>
+                                                  <p><strong>Mobile Number:</strong>
+                                                    <%= orderDat[j].deliveryDetails.address.address[0].mobile %>
+                                                  </p>
+                                                  <p><strong>Email:</strong>
+                                                    <%= orderDat[j].deliveryDetails.address.address[0].email %>
+                                                  </p>
+                                                  <p><strong>House No:</strong>
+                                                    <%= orderDat[j].deliveryDetails.address.address[0].houseNo %>
+                                                  </p>
+                                                  <p><strong>City:</strong>
+                                                    <%= orderDat[j].deliveryDetails.address.address[0].city %>
+                                                  </p>
+                                                  <p><strong>State:</strong>
+                                                    <%= orderDat[j].deliveryDetails.address.address[0].state %>
+                                                  </p>
+                                                  <p><strong>Zipcode:</strong>
+                                                    <%= orderDat[j].deliveryDetails.address.address[0].zipcode %>
+                                                  </p>
+                                                  <p><strong>AdditionalDetails:</strong>
+                                                    <%= orderDat[j].deliveryDetails.address.address[0].additionalDetails
+                                                      %>
+                                                  </p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                  <button type="button" class="btn btn-secondary"
+                                                    data-dismiss="modal">Close</button>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </td>
+                                      </tr>
+                                      <% } %>
+                                        <% } %>
+                                          <% } %>
+
+
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+  <%- include('../partials/admin/footer') %>
+
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@2.1.2"></script>
+    <script>
+      $(document).ready(function () {
+        $('.order-status-select').change(function () {
+          const newStatus = $(this).val();
+          const orderId = $(this).data('order-id');
+          console.log(newStatus);
+          $.ajax({
+            type: 'POST',
+            url: '/admin/updateOrderStatus',
+            data: {
+              orderId: orderId,
+              newStatus: newStatus,
+            },
+            success: function (data) {
+              console.log("hi");
+              Swal.fire({
+                icon: 'success',
+                title: 'Order Status Updated Successfully!',
+              });
+            },
+            error: function () {
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Error updating order status.',
+              });
+            },
+          });
+        });
+      });
+    </script>
+    

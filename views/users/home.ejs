@@ -50,11 +50,15 @@
                                     <a href="/myAccount" class="sf-with-ul">MY ACCOUNT</a>
                                 </li>
                                 <% if(typeof user !=='undefined'){%>
-                                    <li><a href="/login" class="sf-with-ul">Login</a></li>
-                                     
-                                     <% }else{%>
-                                        <li><a href="/logout" class="sf-with-ul">Logout</a></li>
-                                    <% } %>
+                                    <li>
+                                        <a href="/logout" class="sf-with-ul">LOGOUT</a>
+                                </li>
+                                <% }else{%>    
+                                <li>
+                                    
+                                    <a href="/login" class="sf-with-ul">LOGIN</a>
+                                </li>
+                                <% } %>    
                             </ul><!-- End .menu -->
                         </nav><!-- End .main-nav -->
 
@@ -95,60 +99,6 @@
                                 <span class="cart-count">2</span>
                             </a>
 
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <div class="dropdown-cart-products">
-                                    <div class="product">
-                                        <div class="product-cart-details">
-                                            <h4 class="product-title">
-                                                <a href="product.html">Beige knitted elastic runner shoes</a>
-                                            </h4>
-
-                                            <span class="cart-product-info">
-                                                <span class="cart-product-qty">1</span>
-                                                x $84.00
-                                            </span>
-                                        </div><!-- End .product-cart-details -->
-
-                                        <figure class="product-image-container">
-                                            <a href="product.html" class="product-image">
-                                                <img src="userAssets/images/products/cart/product-1.jpg" alt="product">
-                                            </a>
-                                        </figure>
-                                        <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
-                                    </div><!-- End .product -->
-
-                                    <div class="product">
-                                        <div class="product-cart-details">
-                                            <h4 class="product-title">
-                                                <a href="product.html">Blue utility pinafore denim dress</a>
-                                            </h4>
-
-                                            <span class="cart-product-info">
-                                                <span class="cart-product-qty">1</span>
-                                                x $76.00
-                                            </span>
-                                        </div><!-- End .product-cart-details -->
-
-                                        <figure class="product-image-container">
-                                            <a href="product.html" class="product-image">
-                                                <img src="userAssets/images/products/cart/product-2.jpg" alt="product">
-                                            </a>
-                                        </figure>
-                                        <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
-                                    </div><!-- End .product -->
-                                </div><!-- End .cart-product -->
-
-                                <div class="dropdown-cart-total">
-                                    <span>Total</span>
-
-                                    <span class="cart-total-price">$160.00</span>
-                                </div><!-- End .dropdown-cart-total -->
-
-                                <div class="dropdown-cart-action">
-                                    <a href="/cart" class="btn btn-primary">View Cart</a>
-                                    <a href="checkout.html" class="btn btn-outline-primary-2"><span>Checkout</span><i class="icon-long-arrow-right"></i></a>
-                                </div><!-- End .dropdown-cart-total -->
-                            </div><!-- End .dropdown-menu -->
                         </div><!-- End .cart-dropdown -->
                     </div><!-- End .header-right -->
                 </div><!-- End .container -->
@@ -174,7 +124,7 @@
                         </div><!-- End .intro-content -->
                     </div><!-- End .intro-slide -->
 
-                    <div class="intro-slide" style="background-image: url(assets/images/demos/demo-18/slider/slide-2.jpg);">
+                    <div class="intro-slide" style="background-image: url(userAssets/images/demos/demo-18/slider/slide-2.jpg);">
                         <div class="container">
                             <div class="intro-content text-center">
                                 <h3 class="intro-subtitle text-primary cross-txt">Women's Accessories</h3><!-- End .h3 intro-subtitle -->
@@ -727,74 +677,13 @@
                         </div><!-- End .sidebar sidebar-home -->
                     </aside><!-- End .col-lg-3 -->
                 </div><!-- End .row -->
-
-                <hr class="mt-0 mb-4">
-                <h2 class="title text-center brands">Shop by Brands</h2><!-- End .title -->
-
-                <div class="owl-carousel mt-3 mb-4 owl-simple" data-toggle="owl" 
-                    data-owl-options='{
-                        "nav": false, 
-                        "dots": true,
-                        "margin": 30,
-                        "loop": false,
-                        "responsive": {
-                            "0": {
-                                "items":2
-                            },
-                            "420": {
-                                "items":3
-                            },
-                            "600": {
-                                "items":4
-                            },
-                            "900": {
-                                "items":5
-                            },
-                            "1024": {
-                                "items":6
-                            },
-                            "1200": {
-                                "items":6,
-                                "nav": true,
-                                "dots": false
-                            }
-                        }
-                    }'>
-                    <a href="#" class="brand">
-                        <img src="userAssets/images/brands/1.png" alt="Brand Name">
-                    </a>
-
-                    <a href="#" class="brand">
-                        <img src="userAssets/images/brands/2.png" alt="Brand Name">
-                    </a>
-
-                    <a href="#" class="brand">
-                        <img src="userAssets/images/brands/3.png" alt="Brand Name">
-                    </a>
-
-                    <a href="#" class="brand">
-                        <img src="userAssets/images/brands/4.png" alt="Brand Name">
-                    </a>
-
-                    <a href="#" class="brand">
-                        <img src="userAssets/images/brands/5.png" alt="Brand Name">
-                    </a>
-
-                    <a href="#" class="brand">
-                        <img src="userAssets/images/brands/6.png" alt="Brand Name">
-                    </a>
-
-                    <a href="#" class="brand">
-                        <img src="userAssets/images/brands/7.png" alt="Brand Name">
-                    </a>
-                </div><!-- End .owl-carousel -->
             </div><!-- End .container -->
 
             <div class="bg-lighter pt-5 pb-5">
                 <div class="container">
                     <div class="heading text-center">
                         <h2 class="title instagram">Let Us Inspire You On Instagram</h2><!-- End .title -->
-                        <p class="title-desc">Donec nec justo eget felis facilisis fermentum.</p><!-- End .title-desc -->
+                        <p class="title-desc">Wear your style.</p><!-- End .title-desc -->
                     </div><!-- End .heading -->
 
                     <div class="owl-carousel owl-simple mb-3" data-toggle="owl" 
@@ -867,7 +756,7 @@
                     </div><!-- End .owl-carousel -->
 
                     <div class="more-container text-center">
-                        <a href="#" class="btn btn-outline-primary-2 btn-more">@Molla Instagram</a>
+                        <a href="#" class="btn btn-outline-primary-2 btn-more">@Stylo Instagram</a>
                     </div><!-- End .more-container -->
                 </div><!-- End .container -->
             </div><!-- End .bg-lighter pt-5 pb-5 -->
