@@ -38,7 +38,7 @@
 									<a class="nav-link" id="tab-address-link" data-toggle="tab" href="#tab-address"
 										role="tab" aria-controls="tab-address" aria-selected="false">Adresses</a>
 								</li>
-								
+
 								<li class="nav-item">
 									<a class="nav-link" href="/logout">Sign Out</a>
 								</li>
@@ -47,48 +47,129 @@
 
 						<div class="col-md-8 col-lg-9">
 							<div class="tab-content">
-								<div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel" aria-labelledby="tab-dashboard-link">
-									<form method="post" action="/updateDetails">
+								<div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel"
+									aria-labelledby="tab-dashboard-link">
+									<form method="post" action="/updateDetails" id="accountForm">
 										<h3>Account Info</h3>
-										
+									
 										<div class="text-right">
-											<i class="fas fa-edit" id="editButton"></i>
+											<i class="fas fa-edit" id="editIcon"></i>
 										</div>
-								
+									
 										<div class="form-group">
 											<label for="name">Name:</label>
 											<input type="text" class="form-control" id="name" name="name" value="<%= userDB.name %>" disabled>
 										</div>
-								
+									
 										<div class="form-group">
 											<label for="email">Email:</label>
 											<input type="email" class="form-control" name="email" value="<%= userDB.email %>" id="email" disabled>
 										</div>
-								
+									
 										<div class="form-group">
 											<label for="mobile">Mobile:</label>
 											<input type="tel" class="form-control" id="mobile" name="mobile" value="<%= userDB.mobile %>" disabled>
 										</div>
-								
+									
 										<div class="form-group" id="passwordGroup" style="display: none;">
 											<label for="currpassword">New Password:</label>
 											<input type="password" class="form-control" id="currpassword" disabled>
 										</div>
-								
+									
 										<div class="form-group" id="confirmPasswordGroup" style="display: none;">
 											<label for="newpassword">Confirm Password:</label>
 											<input type="password" class="form-control" name="confirmPassword" id="newpassword" disabled>
 										</div>
-								
+									
 										<button type="submit" class="btn btn-primary" id="submitButton" style="display: none;">Submit</button>
 									</form>
-								</div><!-- .End .tab-pane -->	
+								</div><!-- .End .tab-pane -->
 
 								<div class="tab-pane fade" id="tab-orders" role="tabpanel"
 									aria-labelledby="tab-orders-link">
-									<p>No order has been made yet.</p>
-									<a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i
-											class="icon-long-arrow-right"></i></a>
+									<table class="table table-cart table-mobile">
+										<thead>
+											<tr>
+												<th style="width: 40%;">Product</th>
+												<th style="width: 15%;">Price</th>
+												<th style="width: 20%;">Order Status</th>
+												<th style="width: 20%;"></th>
+												<th style="width: 20%;"></th>
+											</tr>
+										</thead>
+
+										<tbody>
+											 <!-- if (orderData) {  -->
+												<% for (let j=0; j < orderData.length; j++) { %>
+													<% let product=orderData[j].products %>
+														<% for (let i=0; i < product.length; i++) { %>
+															<% const value=product[i].product; %>
+
+																<tr>
+
+																	<td class="product-col">
+																		<div class="product">
+																			<figure class="product-media">
+																				<a href="#">
+																					<img src="/images/products/<%= value.images[0] %> "
+																						alt="Product image">
+																				</a>
+																			</figure>
+																			<h3 class="product-title">
+																				<a href="#">
+																					<%= value.name %>
+																				</a>
+																			</h3>
+																		</div>
+																	</td>
+
+																	<td class="price-col">₹<%= value.price %>
+																	</td>
+
+																	<td class="status-col">
+																		<%= orderData[j].status %>
+
+
+																			<i data-toggle="modal"
+																				data-target="#transparentModal"
+																				class="bi bi-caret-up-square"
+																				data-order-id="<%= orderData[j]._id %>"
+																				data-product-name="<%= value.productname %>"
+																				data-quantity="<%= product[i].count %>"
+																				data-mrp="<%= value.price %>"
+																				data-final-price="<%= product[i].total %>"
+																				data-delivery-fullname="<%= orderData[j].deliveryDetails.address.address[0].fullname %>"
+																				data-delivery-mobile="<%= orderData[j].deliveryDetails.address.address[0].mobile %>"
+																				data-delivery-email="<%= orderData[j].deliveryDetails.address.address[0].email %>"
+																				data-delivery-houseNo="<%= orderData[j].deliveryDetails.address.address[0].houseNo %>"
+																				data-delivery-city="<%= orderData[j].deliveryDetails.address.address[0].city %>"
+																				data-delivery-state="<%= orderData[j].deliveryDetails.address.address[0].state %>"
+																				data-delivery-zip="<%= orderData[j].deliveryDetails.address.address[0].zipcode %>"
+																				data-delivery-addetails="<%= orderData[j].deliveryDetails.address.address[0].additionalDetails %>"
+																				data-order-status="<%= orderData[j].status %>"
+																				data-date-of-order="<%= orderData[j].purchaseDate %>"
+																				data-payment-method="<%= orderData[j].paymentMethod %>"
+																				data-product-image="/images/products/<%= value.images[0] %>">
+
+																			</i>
+																	</td>
+
+																	</td>
+
+
+																	<td class="remove-col">
+
+																		<a href="#" data-type="order"
+																			data-id="<%= orderData[j]._id %>"
+																			class="btn btn-outline-primary-2 cancel-button">CANCEL<i
+																				class="icon-long-arrow-right"></i></a>
+																	</td>
+
+																</tr>
+																<% } %>
+																	<% } %>		
+																	</tbody>															
+									</table>
 								</div><!-- .End .tab-pane -->
 
 								<div class="tab-pane fade" id="tab-downloads" role="tabpanel"
@@ -98,16 +179,18 @@
 											class="icon-long-arrow-right"></i></a>
 								</div><!-- .End .tab-pane -->
 
+								<!-- Add address in my account -->
+
 								<div class="tab-pane fade" id="tab-address" role="tabpanel"
 									aria-labelledby="tab-address-link">
 									<p>The following addresses will be used on the checkout page by default.</p>
 									<!-- add address -->
 									<a href="/addAddress">
-									<button type="submit" class="btn btn-outline-primary-2 float-right">
-										<span>+ ADD ADDRESS</span>
-										<i class="icon-long-arrow-right"></i>
-									</button>
-								</a>
+										<button type="submit" class="btn btn-outline-primary-2 float-right">
+											<span>+ ADD ADDRESS</span>
+											<i class="icon-long-arrow-right"></i>
+										</button>
+									</a>
 									<div class="row">
 
 										<% if (UserAddress && UserAddress.length> 0) { %>
@@ -115,7 +198,7 @@
 												<div class="col-lg-6">
 													<div class="card card-dashboard">
 														<div class="card-body">
-															<!-- PENDING                 -->
+															<!-- PENDING -->
 															<a href="/deleteAddress?id=<%= UserAddress[i]._id %>"><i
 																	class="bi bi-trash3 float-right"></i></a>
 
@@ -124,8 +207,8 @@
 															<!-- Use a for loop to iterate through the address array -->
 															<% if (UserAddress[i].address &&
 																UserAddress[i].address.length> 0) { %>
-																	
-																	
+
+
 
 																<% for (let j=0; j < UserAddress[i].address.length; j++)
 																	{ %>
@@ -162,7 +245,7 @@
 
 									</div>
 
-									
+
 								</div>
 							</div><!-- End .col-lg-9 -->
 						</div><!-- End .row -->
@@ -172,13 +255,94 @@
 	</main><!-- End .main -->
 
 
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script>
-    document.getElementById('editButton').addEventListener('click', function () {
-        document.getElementById('name').removeAttribute('disabled');
-        document.getElementById('email').removeAttribute('disabled');
-        document.getElementById('mobile').removeAttribute('disabled');
+    document.getElementById('editIcon').addEventListener('click', function () {
+        toggleFormVisibility();
     });
+
+    function toggleFormVisibility() {
+        var form = document.getElementById('accountForm').elements;
+
+        for (var i = 0; i < form.length; i++) {
+            if (form[i].type !== 'button' && form[i].type !== 'submit') {
+                form[i].disabled = !form[i].disabled;
+            }
+        }
+
+        var submitButton = document.getElementById('submitButton');
+        submitButton.style.display = submitButton.style.display === 'none' ? 'block' : 'none';
+
+        // Toggle the display style of password fields
+        var passwordGroup = document.getElementById('passwordGroup');
+        passwordGroup.style.display = passwordGroup.style.display === 'none' ? 'block' : 'none';
+
+        var confirmPasswordGroup = document.getElementById('confirmPasswordGroup');
+        confirmPasswordGroup.style.display = confirmPasswordGroup.style.display === 'none' ? 'block' : 'none';
+    }
 </script>
 
+	<script>
+        $(document).ready(function () {
+            // Handle the cancel button click event
+            $('.cancel-button').click(function () {
+                const $button = $(this);
+                const type = $button.data('type');
+                const id = $button.data('id');
+
+                // Display SweetAlert confirmation dialog
+                Swal.fire({
+                    title: 'Cancel Order',
+                    html:
+                        '<div>Select a reason for cancellation:<br>' +
+                        '<input type="radio" id="reason1" name="cancelReason" value="OverPriced"> <label for="reason1">OverPriced</label><br>' +
+                        '<input type="radio" id="reason2" name="cancelReason" value="Not Satisfied"> <label for="reason2">Not Satisfied</label><br>' +
+                        '<input type="radio" id="reason3" name="cancelReason" value="Looking for a Different Product"> <label for="reason3">Looking for a Different Product</label></div>',
+                    showCancelButton: true,
+                    confirmButtonText: 'Proceed',
+                    cancelButtonText: 'Cancel',
+                    showLoaderOnConfirm: true,
+                    preConfirm: async () => {
+                        // Get the selected cancel reason
+                        const cancelReason = $("input[name='cancelReason']:checked").val();
+
+                        // Return an object with the cancel reason
+                        return { cancelReason };
+                    }
+                })
+                    .then(async (result) => {
+                        if (result.isConfirmed) {
+                            // Perform the cancel action with the selected reason
+                            const response = await $.ajax({
+                                type: 'POST',
+                                url: '/cancelOrder',
+                                data: {
+                                    type: type,
+                                    id: id,
+                                    reason: result.value.cancelReason
+                                }
+                            });
+
+                            if (response.success) {
+                                // Update the status column without reloading the page
+                                $button.parent().find('.status-col').text(type === 'order' ? 'Order Status: cancelled' : 'Product Status: cancelled');
+
+                                // Redirect to the order cancel page
+                                window.location.href = '/orderCancel';
+                            } else {
+                                Swal.fire('Error!', 'Failed to cancel ' + type, 'error');
+                            }
+                        }
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                        Swal.fire('Error!', 'An error occurred.', 'error');
+                    });
+            });
+        });
+		</script>
 
 	<%- include('../partials/user/footer.ejs') %>

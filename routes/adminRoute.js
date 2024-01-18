@@ -36,4 +36,9 @@ adminRoute.post('/product/addProduct', imageUpload.uploadProductImages, imageUpl
 adminRoute.get('/block-pro', adminController.listUnlistProduct)
 adminRoute.delete('/deleteExistImage', adminController.deleteExistImage);
 
+//orders
+adminRoute.get('/orderManagement', adminController.loadOrder);
+adminRoute.post('/updateOrderStatus', adminController.updateOrderStatus);
+
+
 module.exports = adminRoute

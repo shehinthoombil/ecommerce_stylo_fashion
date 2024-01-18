@@ -38,19 +38,27 @@ const loadRegister = async (req, res) => {
 
 const loadHome = async (req, res) => {
     try {
+        let user 
 
-        let user
-        const userDB = await User.findOne({ _id: req.session.user_id })
-        if (user) {
-            user = userDB.name
-            res.render('home', { user })
+        const userDB = await User.findOne({ _id: req.session.user_id });
+
+        if (userDB) {
+           
+            user = userDB.name;
+           return res.render('home', { user });
+        }else{
+            res.render('home', { user });
         }
-        res.render('home')
+
+        
 
     } catch (error) {
         console.log(error.message);
+        // Handle the error appropriately, e.g., send an error response
+        res.status(500).send('Internal Server Error');
     }
-}
+};
+
 
 // inserting or create new user in database
 
@@ -129,6 +137,25 @@ const sendVerifyMail = async (name, email) => {
 
     }
 };
+
+//resend OTP
+
+const resendOTP = async (req, res) => {
+    try {
+  
+     const otp = await Math.floor(10000 + Math.random() * 90000);
+      console.log(otp)
+      sendVerifyMail(nameResend, email2, user_id);
+      res.render('userOTP', { message: 'A new OTP has been sent to your email.' });
+
+  
+    }
+  
+    catch (error) {
+      console.log(error);
+      res.render('500')
+    }
+  }
 
 // email verifying or OTP verify
 
@@ -292,35 +319,35 @@ const productDetails = async (req, res) => {
 const loadCart = async (req, res) => {
     try {
         const userId = req.session.user_id;
-   
+
         if (userId) {
             const user = await User.findById(userId);
             if (user) {
-                const hasCart = await Cart.find({ userId: userId }).populate('products.productId');
+                const hasCart = await Cart.findOne({ userId: userId }).populate('products.productId');
 
-                let totalSum = 0;
-                if (hasCart.length > 0 && Array.isArray(hasCart[0].products)) {
+                if (hasCart && Array.isArray(hasCart.products)) {
+                    let totalSum = 0;
 
-                    hasCart[0].products.forEach(product => {
+                    // Calculate totalSum outside the loop
+                    hasCart.products.forEach(product => {
                         product.sum = product.count * product.price;
-                      
                         totalSum += product.sum;
-                       
                     });
-                }
-
-                
-                if (hasCart) {
-                    
-                  
-                    res.render('cart', { cartItems: hasCart,totalSum });
+                    let datatotal = hasCart.products.map((products) => {
+                        return products.price * products.count;
+                      });
+                    res.render('cart', { cartItems: hasCart, totalSum,datatotal });
+                } else {
+                    res.render('cart', { cartItems: [] }); // Render with an empty cart if no products are found
                 }
             }
         }
     } catch (error) {
         console.log(error.message);
+        res.status(500).send('Internal Server Error');
     }
 };
+
 
 // cart
 const addToCart = async (req, res) => {
@@ -366,7 +393,8 @@ const addToCart = async (req, res) => {
     }
 };
 
-//add quantity to cart
+//update quantity to cart
+
 const updateCartQuantity = async (req, res) => {
     try {
 
@@ -376,14 +404,16 @@ const updateCartQuantity = async (req, res) => {
         //   const userId = req.session.user_id;
         const productId = req.body.id;
         const val = req.body.val;
-       
+
+
         const productData = await Product.findOne({ _id: productId });
-       
+        console.log(productData, "123");
+
         if (productData.quantity > 0) {
             const cartData = await Cart.findOne({ userid: userId, "products.productId": productId });
             const currentCount = cartData.products.find(product => product.productId.toString() === productId.toString()).count;
-           
-              
+
+
             if (val === 1) {
                 console.log("1");
                 if (currentCount < productData.quantity) {
@@ -391,8 +421,8 @@ const updateCartQuantity = async (req, res) => {
                     const newCount = await Cart.updateOne(
                         { userId: userId, "products.productId": productId },
                         { $inc: { "products.$.count": 1 } },
-                    );
-                    console.log(newCount + "qqqq");
+                    );                    
+                    console.log(newCount + "count onn maathram koodunnu");
                     console.log("Count increased");
                     res.json({ result: true });
                 } else {
@@ -465,6 +495,7 @@ module.exports = {
     insertUser,
     securePassword,
     sendVerifyMail,
+    resendOTP,
     verifyMail,
     loginLoad,
     verifyLogin,

@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const orderDetails = new mongoose.Schema({
     userId: {
-        type: String,
+      type:  mongoose.Schema.Types.ObjectId,
         required: true,
         ref: "user",
     },
@@ -11,10 +11,10 @@ const orderDetails = new mongoose.Schema({
     
       },
       products: [{
-        productId: {
-          type: String,
+        product: {
+          type:  String,
           required: true,
-          ref: "product",
+          ref: "Product",
         },
         count: {
           type: Number,
@@ -36,7 +36,7 @@ const orderDetails = new mongoose.Schema({
       },
       totalAmount: {
         type: Number,
-        required: true,
+        
       },
       status: {
         type: String,
