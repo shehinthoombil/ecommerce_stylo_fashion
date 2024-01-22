@@ -19,6 +19,7 @@ app.use(nocache())
 //for user routes
 const userRoute = require('./routes/userRoute')
 
+//for admin routes
 const adminRoute = require('./routes/adminRoute')
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -30,7 +31,7 @@ app.set('view engine', 'ejs');
 app.use('/', userRoute)
 app.use('/admin',adminRoute)
 
-
+//session 
 app.use(session({
   secret: 'fhdsjfhdgbvmn',
   resave: false,
@@ -44,6 +45,7 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something went wrong!');
 });
 
+//port
 const PORT = process.env.PORT
 
 app.listen(PORT, () => { console.log(`Server is running at http://localhost:${PORT}`) })
