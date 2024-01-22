@@ -103,7 +103,9 @@
 												<% for (let i=0; i < product.length; i++) { %>
 													<% const value=product[i].productId; %>
 														<tr>
-															<td><a href="#"><%= value.name %></a></td>
+															<td><a href="#">
+																	<%= value.name %>
+																</a></td>
 															<td>$<%= datatotal[i] %>
 															</td>
 														</tr>
@@ -120,10 +122,12 @@
 															</tr>
 															<tr class="summary-total">
 																<td>Total:</td>
-																<td>$<%= totalSum %></td>
+																<td>$<%= totalSum %>
+																</td>
 															</tr><!-- End .summary-total -->
 										</tbody>
 									</table><!-- End .table table-summary -->
+
 
 									<div class="accordion-summary" id="accordion-payment">
 										<!-- Your payment options here -->
@@ -133,52 +137,30 @@
 											<!-- Payment methods -->
 
 											<div class="card">
-												<div class="card-header" id="heading-3">
-													<h2 class="card-title">
-														<a class="collapsed" role="button" data-toggle="collapse"
-															id="payment-cod" name="payment-method" href="#collapse-3"
-															aria-expanded="false" aria-controls="collapse-3">
-															Cash on delivery
-														</a>
-													</h2>
-												</div><!-- End .card-header -->
-												<div id="collapse-3" class="collapse" aria-labelledby="heading-3"
-													data-parent="#accordion-payment"></div>
+												<div class="custom-control custom-radio">
+													<input type="radio" id="payment-cod" name="payment-method"
+														class="custom-control-input" value="cod">
+													<label class="custom-control-label" for="payment-cod">Cash on
+														Delivery</label>
+												</div>
 											</div><!-- End .card -->
 
 											<div class="card">
-												<div class="card-header" id="heading-4">
-													<h2 class="card-title">
-														<a class="collapsed" role="button" data-toggle="collapse"
-															href="#collapse-4" aria-expanded="false"
-															aria-controls="collapse-4">
-															Online Payment (Razorpay) <small
-																class="float-right paypal-link">What is Razor
-																Pay?</small>
-														</a>
-													</h2>
-												</div><!-- End .card-header -->
-												<div id="collapse-4" class="collapse" aria-labelledby="heading-4"
-													data-parent="#accordion-payment">
-													<div class="card-body">
-														Free payment gateway for you* Fastest Checkout Experience With
-														100+ Payment Modes - All Cards, UPI, EMI, Wallets & More.
-													</div><!-- End .card-body -->
-												</div><!-- End .collapse -->
+												<div class="custom-control custom-radio">
+													<input type="radio" id="payment-online" name="payment-method"
+														class="custom-control-input" value="online">
+													<label class="custom-control-label" for="payment-online">Online
+														Payment (Razorpay)</label>
+												</div>
 											</div><!-- End .card -->
 
 											<div class="card">
-												<div class="card-header" id="heading-5">
-													<h2 class="card-title">
-														<a class="collapsed" role="button" data-toggle="collapse"
-															href="#collapse-5" aria-expanded="false"
-															aria-controls="collapse-5">
-															Wallet
-														</a>
-													</h2>
-												</div><!-- End .card-header -->
-												<div id="collapse-5" class="collapse" aria-labelledby="heading-5"
-													data-parent="#accordion-payment"></div>
+												<div class="custom-control custom-radio">
+													<input type="radio" id="payment-Wallet" name="payment-method"
+														class="custom-control-input" value="Wallet">
+													<label class="custom-control-label"
+														for="payment-Wallet">Wallet</label>
+												</div>
 											</div><!-- End .card -->
 										</div><!-- End .accordion -->
 
@@ -197,10 +179,11 @@
 			</div><!-- End .checkout -->
 		</div><!-- End .page-content -->
 	</main><!-- End .main -->
-	<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-	<script>
 
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+	<script>
 		$(document).ready(function () {
 			$('#myform').submit(function (event) {
 				event.preventDefault();
@@ -236,7 +219,7 @@
 								window.location.href = '/orderSuccess';
 							} else if (response.online === true) {
 								console.log('online');
-								// razorpayPayment(response.order);
+								razorpayPayment(response.order);
 								window.location.href = '/orderSuccess';
 							} else if (response.error === 'Insufficient funds in wallet') {
 								// Display SweetAlert for insufficient funds
@@ -247,7 +230,7 @@
 								});
 							} else {
 								console.log('HO');
-								// razorpayPayment(response.order);
+								razorpayPayment(response.order);
 							}
 						},
 						error: function (error) {
@@ -256,6 +239,13 @@
 					});
 				}
 			});
+
+			function razorpayPayment(order) {
+				console.log(order);
+				var options = {
+					
+				}
+			}
 
 		})
 

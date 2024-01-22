@@ -207,10 +207,12 @@ const verifyLogin = async (req, res) => {
         const password = req.body.password;
 
         const userData = await User.findOne({ email: email });
+        
 
         if (userData) {
 
             const passwordMatch = await bcrypt.compare(password, userData.password);
+            console.log(passwordMatch);
             if (passwordMatch) {
                 if (userData.is_verified === 0) {
                     res.render('register', { status: 'success', message: "Please verify your email." });
@@ -483,6 +485,16 @@ const removeCartProduct = async (req, res) => {
     }
 };
 
+//load contactUs page
+
+const loadContactUs = async (req, res) => {
+    try {
+        res.render('contactUs')
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 
 
 
@@ -506,4 +518,5 @@ module.exports = {
     addToCart,
     updateCartQuantity,
     removeCartProduct,
+    loadContactUs,
 }

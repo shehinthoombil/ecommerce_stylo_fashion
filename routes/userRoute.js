@@ -10,6 +10,8 @@ userRoute.set('view engine', 'ejs')
 userRoute.set('views', './views/users')
 const { isLogin, isLogout } = require('../middlewares/userAuth')
 
+
+
 userRoute.use(session({
     secret: "sessionSecret",
     resave: false,
@@ -57,5 +59,13 @@ userRoute.get('/orderSuccess', isLogin, orderController.orderSuccess)
 userRoute.get('/order-Cancel', isLogin, orderController.OrderCancelPage)
 userRoute.post('/cancelOrder', isLogin, orderController.cancelOrder)
 userRoute.get('/orderCancel', isLogin, orderController.OrderCancelPage)
+
+//contactUs
+
+userRoute.get('/contactUs', isLogin, userController.loadContactUs)
+
+//payment papal
+
+
 
 module.exports = userRoute
