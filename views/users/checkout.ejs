@@ -182,6 +182,7 @@
 
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 	<script>
 		$(document).ready(function () {
@@ -193,6 +194,7 @@
 				var selectedAddress = $('input[name="selectedAddress"]:checked').val();
 				var selectedPaymentMethod = $('input[name="payment-method"]:checked').val();
 				console.log(selectedPaymentMethod)
+
 				if (!selectedAddress) {
 					// Show a SweetAlert if an address is not selected
 					Swal.fire({
@@ -213,13 +215,13 @@
 						method: 'POST',
 						data: formData,
 						success: function (response) {
-							console.log(response);
+							console.log(response,"responseorder vann");
 							if (response.success === true) {
 								console.log('hi');
 								window.location.href = '/orderSuccess';
 							} else if (response.online === true) {
 								console.log('online');
-								razorpayPayment(response.order);
+								// razorpayPayment(response.order);
 								window.location.href = '/orderSuccess';
 							} else if (response.error === 'Insufficient funds in wallet') {
 								// Display SweetAlert for insufficient funds
@@ -241,10 +243,59 @@
 			});
 
 			function razorpayPayment(order) {
-				console.log(order);
+				console.log(order,"hello");
 				var options = {
-					
-				}
+					"key": "rzp_test_ykdEV4zuE7mjJQ", // Enter the Key ID generated from the Dashboard
+					"amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+					"currency": "INR",
+					"name": "Stylo Fashion", //your business name
+					"description": "Test Transaction",
+					"image": "userAssets/images/stylologo.png",
+					"order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+					handler: function (response) {
+						verifyPayment(response, order);
+					},
+					"prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
+						"name": "Stylo Fashion", //your customer's name
+						"email": "info@stylo.com",
+						"contact": "9000090000" //Provide the customer's phone number for better conversion rates 
+					},
+					"notes": {
+						"address": "Stylo Fashion"
+					},
+					"theme": {
+						"color": "#3399cc"
+					}
+				};
+				var rzp1 = new Razorpay(options);
+				rzp1.open();
+			}
+			function verifyPayment(payment, order) {
+				console.log("verifyPayment kk keri");
+				const amount2 = document.getElementById("total").value;
+				console.log(amount2,"amount 2 :");
+				$.ajax({
+					url: '/verifyPayment',
+					method: "post",
+					data: {
+						payment: payment,
+						order: order,
+						amount2: amount2,
+					},
+					success: (response) => {
+						if (response.placed == true) {
+							window.location.href = '/orderSuccess';
+						} else {
+							swal.fire({
+								positon: "center",
+								icon: "error",
+								title: "Payment failed",
+								showConfirmButton: false,
+								timer: 1500,
+							});
+						}
+					}
+				})
 			}
 
 		})
