@@ -64,7 +64,8 @@ userRoute.get('/orderCancel', isLogin, orderController.OrderCancelPage)
 
 userRoute.get('/contactUs', isLogin, userController.loadContactUs)
 
-//payment papal
+//payment 
+userRoute.post('/verifyPayment', isLogin, orderController.verifyPayment)
 
 
 

@@ -13,7 +13,6 @@ app.use((req, res, next) => {
   res.header('Cache-Control', 'no-cache, no-store, must-revalidate');
   next();
 });
-
 app.use(nocache())
 
 //for user routes
@@ -30,6 +29,10 @@ app.set('view engine', 'ejs');
 
 app.use('/', userRoute)
 app.use('/admin',adminRoute)
+
+//payment route
+const paymentRoute = require('./routes/userRoute');
+app.use('/',paymentRoute);
 
 //session 
 app.use(session({

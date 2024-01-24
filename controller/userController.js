@@ -419,7 +419,6 @@ const updateCartQuantity = async (req, res) => {
             if (val === 1) {
                 console.log("1");
                 if (currentCount < productData.quantity) {
-                    console.log("i am shehin thoombil");
                     const newCount = await Cart.updateOne(
                         { userId: userId, "products.productId": productId },
                         { $inc: { "products.$.count": 1 } },
