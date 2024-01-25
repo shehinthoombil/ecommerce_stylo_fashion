@@ -17,9 +17,45 @@ const loadLogin = async (req, res) => {
 };
 const loadDashboard = async (req, res) => {
     try {
-        res.render('admin/dashboard');
+        const newProduct = await Product.find({}).sort({ _id: -1 }).limit(1)
+
+        const orderCount = await Order.countDocuments();
+        const userCount = await User.countDocuments();
+        // Fetch total revenue
+        const totalRevenue = await Order.aggregate([
+            {
+                $group: {
+                    _id: null,
+                    totalRevenue: { $sum: '$totalAmount' }
+                }
+            }
+        ])
+
+        let totalCod = await Order.aggregate([
+            { $match: { status: 'Delivered', paymentMethod: 'cod' } },
+
+            { $group: { _id: null, total1: { $sum: 1 } } }
+        ])
+
+        let totalOnline = await Order.aggregate([
+            { $match: { status: 'Delivered', paymentMethod: 'online' } },
+
+            { $group: { _id: null, total2: { $sum: 1 } } }
+        ])
+
+        totalCod = totalCod.length > 0 ? totalCod[0].total1 : 0;
+        totalOnline = totalOnline.length > 0 ? totalOnline[0].total2 : 0;
+        
+
+        const formattedTotalRevenue = totalRevenue.length > 0 ? totalRevenue[0].totalRevenue : 0;
+        if (newProduct.length > 0) {
+            res.render('admin/dashboard', { totalRevenue: formattedTotalRevenue, orderCount, userCount, totalCod, totalOnline, newProduct });
+        } else {
+            res.render('admin/dashboard', { totalRevenue: formattedTotalRevenue, orderCount, userCount, totalCod, totalOnline, newProduct: {} });
+        }
     } catch (error) {
         console.log(error.message);
+        res.render('500')
     }
 };
 
@@ -261,60 +297,60 @@ const editProduct = async (req, res) => {
 
 const deleteExistImage = async (req, res) => {
     try {
-      console.log('334');
-  
-      const productid = req.body.productid
-      const imageid = req.body.imageid
-      console.log(productid+"    "+imageid);
-      const productimage = await Product.updateOne({ _id: productid }, { $pull: { images: imageid } })
-      if (productimage) {
-        res.json({ result: true })
-      }
-      else {
-        res.json({ result: false })
-      }
-      console.log(productimage);
+        console.log('334');
+
+        const productid = req.body.productid
+        const imageid = req.body.imageid
+        console.log(productid + "    " + imageid);
+        const productimage = await Product.updateOne({ _id: productid }, { $pull: { images: imageid } })
+        if (productimage) {
+            res.json({ result: true })
+        }
+        else {
+            res.json({ result: false })
+        }
+        console.log(productimage);
     } catch (error) {
-      console.error('Error deleting image:', error);
-      res.render('500')
+        console.error('Error deleting image:', error);
+        res.render('500')
     }
-  }
+}
 
-  //load order page
+//load order page
 
-  const loadOrder = async (req,res) => {
+const loadOrder = async (req, res) => {
     try {
         const orderDat = await Order.find({})
-        .populate({
-          path: 'userId',
-          select: 'name'
-        })
-        .populate('products.product')
-        .sort({ purchaseDate: -1 });
-      
-      
+            .populate({
+                path: 'userId',
+                select: 'name'
+            })
+            .populate('products.product')
+            .sort({ purchaseDate: -1 });
 
-    if (orderDat) {
-      res.render('admin/orderManagement', { orderDat })
-    } else {
-      res.render('admin/orderManagement', { orderDat: {} })
-    }
+
+
+        if (orderDat) {
+            res.render('admin/orderManagement', { orderDat })
+        } else {
+            res.render('admin/orderManagement', { orderDat: {} })
+        }
     } catch (error) {
         console.log(error.message);
     }
-  }
+}
 
-  // updating order status
-  const updateOrderStatus = async (req, res) => {
+// updating order status
+const updateOrderStatus = async (req, res) => {
     try {
-      const { orderId, newStatus } = req.body;
-      console.log("here");
-      const orderStatus = await Order.updateOne({ _id: orderId }, { status: newStatus });
-      console.log(orderStatus);
+        const { orderId, newStatus } = req.body;
+        console.log("here");
+        const orderStatus = await Order.updateOne({ _id: orderId }, { status: newStatus });
+        console.log(orderStatus);
     } catch (error) {
         console.log(error.mesaage);
     }
-  }
+}
 
 module.exports = {
     loadLogin,
