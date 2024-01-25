@@ -16,14 +16,13 @@
                                             <div class="row">
                                                 <div class="col-8 col-sm-12 col-xl-8 my-auto">
                                                     <div class="d-flex d-sm-block d-md-flex align-items-center">
-                                                        <h2 class="mb-0">$32123</h2>
-                                                        <p class="text-success ml-2 mb-0 font-weight-medium">+3.5%</p>
+                                                        <h2 class="mb-0">$<%= totalRevenue %>.01</h2>
+                                                        <!-- <p class="text-success ml-2 mb-0 font-weight-medium">+3.5%</p> -->
                                                     </div>
-                                                    <h6 class="text-muted font-weight-normal">11.38% Since last month
-                                                    </h6>
                                                 </div>
                                                 <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
-                                                    <i class="icon-lg mdi mdi-codepen text-primary ml-auto"></i>
+                                                    <!-- <i class="icon-lg mdi mdi-codepen text-primary ml-auto"></i> -->
+                                                    <i class="icon-lg mdi mdi-currency-usd text-primary ml-auto"></i>
                                                 </div>
                                             </div>
                                         </div>
@@ -32,18 +31,20 @@
                                 <div class="col-sm-4 grid-margin">
                                     <div class="card">
                                         <div class="card-body">
-                                            <h5>Sales</h5>
+                                            <h5>Total Sales</h5>
                                             <div class="row">
                                                 <div class="col-8 col-sm-12 col-xl-8 my-auto">
                                                     <div class="d-flex d-sm-block d-md-flex align-items-center">
-                                                        <h2 class="mb-0">$45850</h2>
-                                                        <p class="text-success ml-2 mb-0 font-weight-medium">+8.3%</p>
+                                                        <h2 class="mb-0">
+                                                            <%= orderCount %>
+                                                        </h2>
+                                                        <!-- <p class="text-success ml-2 mb-0 font-weight-medium">+8.3%</p> -->
                                                     </div>
-                                                    <h6 class="text-muted font-weight-normal"> 9.61% Since last month
-                                                    </h6>
+
                                                 </div>
                                                 <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
-                                                    <i class="icon-lg mdi mdi-wallet-travel text-danger ml-auto"></i>
+                                                    <!-- <i class="icon-lg mdi mdi-wallet-travel text-danger ml-auto"></i> -->
+                                                    <i class="icon-lg mdi mdi-cart text-warning ml-auto"></i>
                                                 </div>
                                             </div>
                                         </div>
@@ -52,108 +53,60 @@
                                 <div class="col-sm-4 grid-margin">
                                     <div class="card">
                                         <div class="card-body">
-                                            <h5>Users</h5>
+                                            <h5>Total Users</h5>
                                             <div class="row">
                                                 <div class="col-8 col-sm-12 col-xl-8 my-auto">
                                                     <div class="d-flex d-sm-block d-md-flex align-items-center">
-                                                        <h2 class="mb-0">$2039</h2>
-                                                        <p class="text-danger ml-2 mb-0 font-weight-medium">-2.1% </p>
+                                                        <h2 class="mb-0">
+                                                            <%= userCount %>
+                                                        </h2>
+                                                        <!-- <p class="text-danger ml-2 mb-0 font-weight-medium">-2.1% </p> -->
                                                     </div>
-                                                    <h6 class="text-muted font-weight-normal">2.27% Since last month
-                                                    </h6>
+
                                                 </div>
                                                 <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
-                                                    <i class="icon-lg mdi mdi-monitor text-success ml-auto"></i>
+                                                    <!-- <i class="icon-lg mdi mdi-monitor text-success ml-auto"></i> -->
+                                                    <i class="icon-lg mdi mdi-account text-success ml-auto"></i>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
 
                             <div class="row">
-                                <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+
+
+                                <div class="col-lg-6 grid-margin stretch-card">
                                     <div class="card">
                                         <div class="card-body">
-                                            <div class="row">
-                                                <div class="col-9">
-                                                    <div class="d-flex align-items-center align-self-start">
-                                                        <h3 class="mb-0">$12.34</h3>
-                                                        <p class="text-success ml-2 mb-0 font-weight-medium">+3.5%</p>
-                                                    </div>
-                                                </div>
-                                                <div class="col-3">
-                                                    <div class="icon icon-box-success ">
-                                                        <span class="mdi mdi-arrow-top-right icon-item"></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <h6 class="text-muted font-weight-normal">Potential growth</h6>
+                                            <h4 class="card-title">Sales Report</h4>
+                                            <canvas id="myChart" class="chart embed-responsive-item" style="height:200px"></canvas>
+
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col-9">
-                                                    <div class="d-flex align-items-center align-self-start">
-                                                        <h3 class="mb-0">$17.34</h3>
-                                                        <p class="text-success ml-2 mb-0 font-weight-medium">+11%</p>
-                                                    </div>
-                                                </div>
-                                                <div class="col-3">
-                                                    <div class="icon icon-box-success">
-                                                        <span class="mdi mdi-arrow-top-right icon-item"></span>
-                                                    </div>
-                                                </div>
+
+                                        <div class="d-flex justify-content-mt-3">
+                                            <h6 class="mb-3">Filter Report :</h6>
+                                            <div>
+                                                <button id="daily" onclick="filterData('day')"
+                                                    class="btn btn-inverse-info ml-0 px-4">Daily</button>
+                                                <button id="weekly" onclick="filterData('week')"
+                                                    class="btn btn-inverse-info ml-3 px-4">Weekly</button>
+                                                <button id="yearly" onclick="filterData('year')"
+                                                    class="btn btn-inverse-info ml-3 px-4">Yearly</button>
                                             </div>
-                                            <h6 class="text-muted font-weight-normal">Revenue current</h6>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col-9">
-                                                    <div class="d-flex align-items-center align-self-start">
-                                                        <h3 class="mb-0">$12.34</h3>
-                                                        <p class="text-danger ml-2 mb-0 font-weight-medium">-2.4%</p>
-                                                    </div>
-                                                </div>
-                                                <div class="col-3">
-                                                    <div class="icon icon-box-danger">
-                                                        <span class="mdi mdi-arrow-bottom-left icon-item"></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <h6 class="text-muted font-weight-normal">Daily Income</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col-9">
-                                                    <div class="d-flex align-items-center align-self-start">
-                                                        <h3 class="mb-0">$31.53</h3>
-                                                        <p class="text-success ml-2 mb-0 font-weight-medium">+3.5%</p>
-                                                    </div>
-                                                </div>
-                                                <div class="col-3">
-                                                    <div class="icon icon-box-success ">
-                                                        <span class="mdi mdi-arrow-top-right icon-item"></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <h6 class="text-muted font-weight-normal">Expense current</h6>
-                                        </div>
+
+
                                     </div>
                                 </div>
                             </div>
+
+
+
+
+
+
                             <div class="row">
                                 <div class="col-md-4 grid-margin stretch-card">
                                     <div class="card">
@@ -264,9 +217,96 @@
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
+
+                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+                        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                        <script>
+                            let COD = '<%= totalCod %>',
+                                Online = '<%= totalOnline %>'
+                            console.log(COD);
+                            console.log(Online);
+
+                            var data = {
+                                labels: ['COD', 'Online'],
+                                datasets: [{
+                                    data: [COD, Online],
+                                    backgroundColor: ['#FF6384', '#36A2EB']
+                                }]
+                            };
+
+                            var ctx = document.getElementById('myChart').getContext('2d');
+
+                            var myPieChart = new Chart(ctx, {
+                                type: 'pie',
+                                data: data
+                            });
+
+                        </script>
+                        <script>
+                            const filterData = async (range) => {
+                                try {
+                                    // Update your logic to fetch data based on the selected range
+                                    let totalData;
+
+                                    if (range === 'week') {
+                                        console.log("hii week");
+                                        totalData = await fetchWeekData();
+                                    } else if (range === 'month') {
+                                        totalData = await fetchMonthData();
+                                    } else if (range === 'year') {
+                                        totalData = await fetchYearData();
+                                    }
+
+                                    // Update the chart with the new data
+                                    updateChart(totalData);
+                                } catch (error) {
+                                    console.log(error.message);
+                                }
+                            };
+                            const updateChart = (totalData) => {
+                                var data = {
+                                    labels: ['COD', 'Online'],
+                                    datasets: [{
+                                        data: totalData,
+                                        backgroundColor: ['#FF6384', '#36A2EB']
+                                    }]
+                                };
+
+                                // Get the context of the canvas element
+                                var ctx = document.getElementById('myChart').getContext('2d');
+
+                                // Update the pie chart
+                                myPieChart.data = data;
+                                myPieChart.update();
+                            };
+
+                                const fetchWeekData = async () => {
+                                    const response = await fetch('/admin/chartWeek');
+                                    const data = await response.json();
+                                    console.log(data);
+                                    return data;
+                                };
+                                const fetchMonthData = async () => {
+                                    const response = await fetch('/admin/chartMonth');
+                                    const data = await response.json();
+                                    console.log(data);
+                                    return data;
+                                };
+                                const fetchYearData = async () => {
+                                    const response = await fetch('/admin/chartYear');
+                                    const data = await response.json();
+                                    console.log(data);
+                                    return data;
+                                };
+
+                        </script>
+
+
+
+
+
                         <!-- content-wrapper ends -->
                         <!-- partial:partials/_footer.html -->
                         <footer class="footer">
@@ -285,6 +325,7 @@
                 </div>
                 <!-- page-body-wrapper ends -->
     </div>
+
     <!-- container-scroller -->
     <!-- plugins:js -->
     <script src="/assets/vendors/js/vendor.bundle.base.js"></script>
