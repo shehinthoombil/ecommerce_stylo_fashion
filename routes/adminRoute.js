@@ -40,5 +40,13 @@ adminRoute.delete('/deleteExistImage', adminController.deleteExistImage);
 adminRoute.get('/orderManagement', adminController.loadOrder);
 adminRoute.post('/updateOrderStatus', adminController.updateOrderStatus);
 
+//filter chart
+adminRoute.get('/chartWeek', adminController.chartFilterWeek);
+adminRoute.get('/chartMonth', adminController.chartFilterMonth);
+adminRoute.get('/chartYear', adminController.chartFilterYear);
+
+//sales
+adminRoute.get('/salesSummary', adminController.loadSalesSummary);
+adminRoute.get('/sales',adminController.filterSaleYear)
 
 module.exports = adminRoute

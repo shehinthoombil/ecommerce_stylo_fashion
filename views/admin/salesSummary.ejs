@@ -1,0 +1,160 @@
+<%- include('../partials/admin/header') %>
+    <div class="container-scroller">
+        <%- include('../partials/admin/sidePanel') %>
+            <div class="container-fluid page-body-wrapper">
+
+                <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+
+
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+
+
+                <div class="main-panel">
+                    <div class="content-wrapper">
+                        <div class="row">
+                            <div class="col-12 grid-margin">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">All Sales</h4>
+
+                                        <!-- filter sales report -->
+                                        <div class="text-right">
+                                            <a href="#" data-toggle="modal" data-target="#reportModal">
+                                                <button type="button" class="btn btn-success ml-auto"
+                                                    data-toggle="button" aria-pressed="false" autocomplete="off">
+                                                    FILTER REPORT
+                                                </button>
+                                            </a>
+                                        </div>
+
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th> User Name</th>
+                                                        <th> Product Name</th>
+                                                        <th> Price</th>
+                                                        <th> Date</th>
+                                                        <th> Order Status</th>
+                                                        <th> Payment</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% if (orderDat) { %>
+                                                        <% for (let j=0; j < orderDat.length; j++) { %>
+                                                            <% let products=orderDat[j].products; %>
+                                                                <% const username=orderDat[j].userId.name; %>
+                                                                    <% for (let i=0; i < products.length; i++) { %>
+                                                                        <% const product=products[i].product; %>
+                                                                            <tr>
+
+                                                                                <td>
+
+                                                                                    <%= username %>
+                                                                                </td>
+                                                                                <td class="product-name-cell">
+                                                                                    <img src="/images/products/<%= product?.images[0] %>"
+                                                                                        alt="image" />
+                                                                                    <span class="pl-2 product-name">
+                                                                                        <%= product?.name %>
+                                                                                    </span>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <!-- Product Price -->
+                                                                                    <%= product?.price %>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <!-- Purchase Date -->
+                                                                                    <%= orderDat[j].purchaseDate.toLocaleString('en-US',
+                                                                                        { year: 'numeric' ,
+                                                                                        month: 'short' , day: '2-digit'
+                                                                                        , hour: '2-digit' ,
+                                                                                        minute: '2-digit' ,
+                                                                                        second: '2-digit'
+                                                                                        }).replace(/,/, ''
+                                                                                        ).replace(/\//g, '-' ) %>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <!-- Order Status -->
+                                                                                    <%= orderDat[j].status %>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <!-- Payment Method -->
+                                                                                    <%= orderDat[j].paymentMethod %>
+                                                                                </td>
+
+                                                                            </tr>
+                                                                            <% } %>
+                                                                                <% } %>
+                                                                                    <% } %>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="modal fade" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="reportModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="reportModalLabel">Download Report</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Three buttons below each other -->
+
+                            <a href="/admin/sales?filter=week"> <button type="button" class="btn btn-primary"
+                                    id="generateWeek">Last
+                                    Week</button></a>
+                            <a href="/admin/sales?filter=month"><button type="button" class="btn btn-primary"
+                                    id="generateMonth">Last
+                                    Month</button></a>
+                            <a href="/admin/sales?filter=year"><button type="button" class="btn btn-primary"
+                                    id="generateYear">Last
+                                    Year</button></a>
+                            <br>
+
+                            <form action="/admin/sales" method="get" id="reportForm" class="mt-3">
+
+                                <div class="form-group">
+                                    <label for="fromDate">From Date</label>
+                                    <input type="date" class="form-control" id="fromDate" name="fromDate" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="toDate">To Date</label>
+                                    <input type="date" class="form-control" id="toDate" name="toDate" required>
+                                </div>
+
+                                <span id="dateError" style="color: red;"></span>
+                                <br>
+                                <button type="submit" class="btn btn-success" name="filter" value="custom"
+                                    id="submitDateRangeBtn">Submit
+                                    Date Range</button>
+                            </form>
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+
+
+            <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+            <%- include('../partials/admin/footer') %>

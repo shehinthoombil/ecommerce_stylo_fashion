@@ -5,6 +5,7 @@ const Product = require('../model/productModel');
 const Order = require('../model/orderModel')
 const Address = require('../model/addressModel')
 const { log } = require("console");
+const { name } = require("ejs");
 
 
 //load login
@@ -58,6 +59,72 @@ const loadDashboard = async (req, res) => {
         res.render('500')
     }
 };
+
+// dashboard chart filter(weekly)
+
+const chartFilterWeek = async (req,res) => {
+    try {
+        const totalCodWeek = await Order.countDocuments({
+            status: 'Delivered',
+            paymentMethod: 'cod',
+            purchaseDate: { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)}
+        });
+
+        const totalOnlineWeek = await Order.countDocuments({
+            status: 'Delivered',
+            paymentMethod: 'online',
+            purchaseDate: { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)}
+        });
+
+        res.json([totalCodWeek , totalOnlineWeek]);
+
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
+// dashboard chart filter(monthly)
+
+const chartFilterMonth = async (req,res) => {
+    try {
+        const totalCodMonth = await Order.countDocuments({
+            status: 'Delivered',
+            paymentMethod: 'cod',
+            purchaseDate: { $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)}
+        });
+
+        const totalOnlineMonth = await Order.countDocuments({
+            status: 'Delivered',
+            paymentMethod: 'online',
+            purchaseDate: { $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)}
+        });
+        res.json([totalCodMonth , totalOnlineMonth]);
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+// dashboard chart filter(yearly)
+
+const chartFilterYear = async (req,res) => {
+    try {
+        const totalCodYear = await Order.countDocuments({
+            status: 'Delivered',
+            paymentMethod: 'cod',
+            purchaseDate: { $gte: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000)}
+        });
+
+        const totalOnlineYear = await Order.countDocuments({
+            status: 'Delivered',
+            paymentMethod: 'online',
+            purchaseDate: { $gte: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000)}
+        });
+        res.json([totalCodYear , totalOnlineYear]);
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
 //category management
 const loadCategories = async (req, res) => {
@@ -352,10 +419,135 @@ const updateOrderStatus = async (req, res) => {
     }
 }
 
+// load sales summary page 
+
+const loadSalesSummary = async (req, res) => {
+    console.log(loadSalesSummary,'summary keriikntta..');
+    try {
+       const orderDat = await Order.find({})
+       .populate({
+        path:'userId',
+        select: 'name'
+       }) 
+       .populate('products.product')
+       console.log(orderDat[0].products)
+       const newProduct = await Product.find({})
+       res.render('admin/salesSummary' , { orderDat, newProduct })
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+// filter sale and download report
+
+const filterSaleYear = async (req,res) => {
+    try {
+        let filter = {};
+
+    if (req.query.filter) {
+      const filterType = req.query.filter;
+
+      switch (filterType) {
+        case 'week':
+          filter = {
+            purchaseDate: {
+              $gte: new Date(new Date() - 7 * 24 * 60 * 60 * 1000),
+            },
+          };
+          break;
+
+        case 'month':
+          filter = {
+            purchaseDate: {
+              $gte: new Date(new Date() - 30 * 24 * 60 * 60 * 1000),
+            },
+          };
+          break;
+
+        case 'year':
+          filter = {
+            purchaseDate: {
+              $gte: new Date(new Date() - 365 * 24 * 60 * 60 * 1000),
+            },
+          };
+          break;
+
+        case 'custom':
+          if (req.query.fromDate && req.query.toDate) {
+            filter = {
+              purchaseDate: {
+                $gte: new Date(req.query.fromDate),
+                $lte: new Date(req.query.toDate),
+              },
+            };
+          }
+          break;
+
+        default:
+          break;
+      }
+    }
+
+    const orderDat = await Order.find(filter)
+      .populate({
+        path: 'userId',
+        select: 'name',
+      })
+      .populate('products.product');
+
+      console.log(orderDat.products)
+
+    // Generate Excel
+    const excelPath = path.join(__dirname, 'downloads', 'sales_report.xlsx');
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Sales Report');
+
+    // Add headers
+    worksheet.addRow(['Order Date', 'Product Name', 'Quantity', 'Price', 'Total Price']);
+
+    // Add data
+    orderDat.forEach((order) => {
+      order.products.forEach((product) => {
+        worksheet.addRow([
+          order.purchaseDate.toLocaleString('en-US'),
+          product.name,
+          product.quantity,
+          `$${product.price.toFixed(2)}`,
+          `$${(product.quantity * product.price).toFixed(2)}`,
+        ]);
+      });
+    });
+
+    const excelPromise = workbook.xlsx.writeFile(excelPath)
+      .then(() => excelPath)
+      .catch((err) => {
+        console.log(err);
+        throw new Error('Error generating Excel');
+      });
+
+    // Wait for the promise to resolve
+    try {
+      const excelPath = await excelPromise;
+
+      // Send the Excel file using express-zip
+      res.zip([{ path: excelPath, name: 'sales_report.xlsx' }]);
+    } catch (error) {
+      console.log(error);
+      res.render('500');
+    }
+
+    } catch (error) {
+     console.log(error.mesaage);   
+    }
+}
+
 module.exports = {
     loadLogin,
     adminVerify,
     loadDashboard,
+    chartFilterWeek,
+    chartFilterMonth,
+    chartFilterYear,
     logoutAdmin,
     loadUserManagement,
     blockUser,
@@ -373,4 +565,6 @@ module.exports = {
     deleteExistImage,
     loadOrder,
     updateOrderStatus,
+    loadSalesSummary,
+    filterSaleYear,
 }

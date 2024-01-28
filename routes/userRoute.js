@@ -11,7 +11,6 @@ userRoute.set('views', './views/users')
 const { isLogin, isLogout } = require('../middlewares/userAuth')
 
 
-
 userRoute.use(session({
     secret: "sessionSecret",
     resave: false,
