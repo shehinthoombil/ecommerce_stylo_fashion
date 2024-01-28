@@ -75,29 +75,27 @@
                             </div>
 
                             <div class="row">
+                                <div class="col-lg-4 grid-margin stretch-card">
+                                    <div class="row">
+                                        <div class="card">
+                                            <div class="card-body">
 
+                                                <h4 class="card-title">Sales Report</h4>
 
-                                <div class="col-lg-6 grid-margin stretch-card">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <h4 class="card-title">Sales Report</h4>
-                                            <canvas id="myChart" class="chart embed-responsive-item" style="height:200px"></canvas>
-
-                                        </div>
-
-                                        <div class="d-flex justify-content-mt-3">
-                                            <h6 class="mb-3">Filter Report :</h6>
-                                            <div>
-                                                <button id="daily" onclick="filterData('day')"
-                                                    class="btn btn-inverse-info ml-0 px-4">Daily</button>
+                                                <canvas id="myChart" class="chart embed-responsive-item"
+                                                    style="width: 100%; height: 300px;"></canvas>
+                                            </div>
+                                            <!-- <div class="d-flex justify-content-mt-3"> -->
+                                            <div class="d-flex justify-content-between mt-3">
+                                                <h6 class="mb-3">Filter Report :</h6>
                                                 <button id="weekly" onclick="filterData('week')"
-                                                    class="btn btn-inverse-info ml-3 px-4">Weekly</button>
+                                                    class="btn btn-inverse-info ml-0 px-4">Weekly</button>
+                                                <button id="monthly" onclick="filterData('month')"
+                                                    class="btn btn-inverse-info ml-3 px-4">Monthly</button>
                                                 <button id="yearly" onclick="filterData('year')"
                                                     class="btn btn-inverse-info ml-3 px-4">Yearly</button>
                                             </div>
                                         </div>
-
-
                                     </div>
                                 </div>
                             </div>
@@ -246,6 +244,7 @@
                         </script>
                         <script>
                             const filterData = async (range) => {
+                                console.log(filterData, 'fiterkk keri');
                                 try {
                                     // Update your logic to fetch data based on the selected range
                                     let totalData;
@@ -282,24 +281,26 @@
                                 myPieChart.update();
                             };
 
-                                const fetchWeekData = async () => {
-                                    const response = await fetch('/admin/chartWeek');
-                                    const data = await response.json();
-                                    console.log(data);
-                                    return data;
-                                };
-                                const fetchMonthData = async () => {
-                                    const response = await fetch('/admin/chartMonth');
-                                    const data = await response.json();
-                                    console.log(data);
-                                    return data;
-                                };
-                                const fetchYearData = async () => {
-                                    const response = await fetch('/admin/chartYear');
-                                    const data = await response.json();
-                                    console.log(data);
-                                    return data;
-                                };
+                            const fetchWeekData = async () => {
+                                const response = await fetch('/admin/chartWeek');
+                                const data = await response.json();
+                                console.log(data);
+                                return data;
+
+
+                            };
+                            const fetchMonthData = async () => {
+                                const response = await fetch('/admin/chartMonth');
+                                const data = await response.json();
+                                console.log(data);
+                                return data;
+                            };
+                            const fetchYearData = async () => {
+                                const response = await fetch('/admin/chartYear');
+                                const data = await response.json();
+                                console.log(data);
+                                return data;
+                            };
 
                         </script>
 
