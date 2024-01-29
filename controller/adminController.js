@@ -6,6 +6,10 @@ const Order = require('../model/orderModel')
 const Address = require('../model/addressModel')
 const { log } = require("console");
 const { name } = require("ejs");
+const PDFDocument = require('pdfkit');
+const ExcelJS = require('exceljs');
+const zip =  require('express-zip');
+
 
 
 //load login
@@ -441,11 +445,14 @@ const loadSalesSummary = async (req, res) => {
 // filter sale and download report
 
 const filterSaleYear = async (req,res) => {
+    console.log(filterSaleYear , 'filtereport kerri' )
     try {
         let filter = {};
+        console.log(filter ,'filterikk vechu' );
 
     if (req.query.filter) {
       const filterType = req.query.filter;
+      console.log(filterType ,'filtertype vechu' );
 
       switch (filterType) {
         case 'week':
@@ -495,7 +502,7 @@ const filterSaleYear = async (req,res) => {
       })
       .populate('products.product');
 
-      console.log(orderDat.products)
+      console.log(orderDat.products , 'orderdata products kitti')
 
     // Generate Excel
     const excelPath = path.join(__dirname, 'downloads', 'sales_report.xlsx');
