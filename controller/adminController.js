@@ -4,6 +4,7 @@ const Category = require('../model/categoryModel')
 const Product = require('../model/productModel');
 const Order = require('../model/orderModel')
 const Address = require('../model/addressModel')
+const path = require('path');
 const { log } = require("console");
 const { name } = require("ejs");
 const PDFDocument = require('pdfkit');
@@ -501,50 +502,57 @@ const filterSaleYear = async (req,res) => {
         select: 'name',
       })
       .populate('products.product');
+    
 
-      console.log(orderDat.products , 'orderdata products kitti')
+    // console.log(orderDat.products , 'orderdata products kitti')
+    // console.log(orderDat ,'orderdatas');
+    //  console.log(orderDat[0].products , 'orderdata products kitti2')
 
     // Generate Excel
     const excelPath = path.join(__dirname, 'downloads', 'sales_report.xlsx');
+    console.log(excelPath);
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Sales Report');
-
+    console.log("1");
     // Add headers
     worksheet.addRow(['Order Date', 'Product Name', 'Quantity', 'Price', 'Total Price']);
-
+    console.log("2");
     // Add data
-    orderDat.forEach((order) => {
+    const ord = orderDat.forEach((order) => {
+        
       order.products.forEach((product) => {
-        worksheet.addRow([
+          console.log(product.product.name);
+          worksheet.addRow([
           order.purchaseDate.toLocaleString('en-US'),
-          product.name,
-          product.quantity,
-          `$${product.price.toFixed(2)}`,
-          `$${(product.quantity * product.price).toFixed(2)}`,
+          product.product.name,
+          product.product.quantity,
+          `$${product.product.price.toFixed(2)}`,
+          `$${(product.product.quantity * product.product.price).toFixed(2)}`,
         ]);
       });
     });
-
+    console.log(ord+"1111");
     const excelPromise = workbook.xlsx.writeFile(excelPath)
       .then(() => excelPath)
       .catch((err) => {
         console.log(err);
         throw new Error('Error generating Excel');
       });
-
+      
     // Wait for the promise to resolve
     try {
       const excelPath = await excelPromise;
-
+      console.log("4");
       // Send the Excel file using express-zip
       res.zip([{ path: excelPath, name: 'sales_report.xlsx' }]);
     } catch (error) {
       console.log(error);
-      res.render('500');
+    //   res.render('500');
     }
 
     } catch (error) {
      console.log(error.mesaage);   
+    //  res.render('500'); 
     }
 }
 
