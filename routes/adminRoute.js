@@ -1,6 +1,7 @@
 const express = require("express");
 const adminRoute = express();
 const adminController = require('../controller/adminController')
+const offerController = require('../controller/offerController')
 const imageUpload = require('../middlewares/imgUploads')
 
 const session = require("express-session");
@@ -48,5 +49,14 @@ adminRoute.get('/chartYear', adminController.chartFilterYear);
 //sales
 adminRoute.get('/salesSummary', adminController.loadSalesSummary);
 adminRoute.get('/sales',adminController.filterSaleYear)
+
+//product offers
+adminRoute.get('/offers', offerController.loadOffers)
+adminRoute.get('/addOff', offerController.loadAddOffer)
+adminRoute.post('/addOfferDB', offerController.addOffers)
+adminRoute.get('/deleteOff', offerController.deleteOffer)
+//category offers
+adminRoute.get('/offersCat', offerController.loadCategoryOffers)
+adminRoute.get('/addoffersCat', offerController.loadAddCategoryOffer)
 
 module.exports = adminRoute

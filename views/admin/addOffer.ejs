@@ -1,0 +1,90 @@
+<%- include('../partials/admin/header') %>
+
+    <div class="col-12 grid-margin stretch-card">
+        <%- include('../partials/admin/sidePanel') %>
+
+            <div class="container-fluid mt-3">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Add New Offers</h4>
+                               
+                                <form action="/admin/addOfferDB" method="post" >
+                                    
+                                    <div class="form-group">
+                                        <label for="product">Product Name</label>
+                                        <select class="form-control" id="product" name="product" required>
+                                        
+                                        <% product.forEach((item)=> { %>
+                                            <% if (item.is_deleted === false) { %>
+                                                <option value="<%= item.name %>" required>
+                                                    <%= item.name %>
+                                                </option>
+                                                <% } %>
+                                                    <% }); %>
+
+                                        <!-- <span class="error-message text-danger" id="signin-error"></span> -->
+                                    </select>
+                                    </div><!-- End .form-group -->
+
+                                    <div class="form-group">
+                                        <label for="percentage">Percentage of Offer</label>
+                                        <select class="form-control" id="percentage"
+                                            name="percentage" rows="1">
+                                            <option value="5">5%</option>
+                                            <option value="10">10%</option>
+                                            <option value="15">15%</option>
+                                            <option value="20">20%</option>
+                                            <option value="25">25%</option>
+                                            <option value="30">30%</option>
+                                            <option value="35">35%</option>
+                                            <option value="40">40%</option>
+                                            <option value="45">45%</option>
+                                            <option value="50">50%</option>
+                                        <!-- <span class="error-message text-danger" id="description-error"></span> -->
+                                    </select>
+                                    </div><!-- End .form-group -->
+
+                                    <div class="form-group">
+                                        <label for="product">Ending Date</label>
+                                        <input type="date" class="form-control" id="EndingDate" name="EndingDate">
+                                        <p id="dateValidation" style="color: red;"></p>
+                                    </div>
+                                    
+
+                                    <div class="form-footer">
+                                        <button type="submit" id="submitBtn" class="btn btn-outline-primary-2 bg-primary">
+                                            <span>Submit</span>
+                                            <i class="icon-long-arrow-right"></i>
+                                        </button>
+                                        <button class="btn btn-dark">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+            <script>
+                $(document).ready(function () {
+                    $('#EndingDate').on('input', function () {
+                        const selectedDate = new Date($(this).val());
+                        const currentDate = new Date();
+        
+        
+                        if (selectedDate <= currentDate) {
+        
+                            $('#submitBtn').prop('disabled', true);
+                            $('#dateValidation').text('Selected date must be greater than the current date');
+                        } else {
+        
+                            $('#submitBtn').prop('disabled', false);
+                            $('#dateValidation').text('');
+                        }
+                    });
+                });
+            </script>
+        
+            <%- include('../partials/admin/footer') %>

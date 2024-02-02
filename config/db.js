@@ -3,7 +3,7 @@ require('dotenv').config()
 
 
 const dbConnect = () => mongoose.set('strictQuery', true).connect(process.env.MONGO_URI)
-.then(() => console.log('DB Connected'))
+.then(() => console.log('DB Connected Successfully'))
 .catch((error)=>console.log(error))
 
 module.exports = { 

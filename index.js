@@ -14,10 +14,8 @@ app.use((req, res, next) => {
   next();
 });
 app.use(nocache())
-
 //for user routes
 const userRoute = require('./routes/userRoute')
-
 //for admin routes
 const adminRoute = require('./routes/adminRoute')
 

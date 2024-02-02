@@ -319,7 +319,6 @@ const addProduct = async (req, res) => {
             price,
             images: photos,
         });
-
         // Save the product to the database
         await newProduct.save();
 

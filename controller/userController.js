@@ -38,19 +38,19 @@ const loadRegister = async (req, res) => {
 
 const loadHome = async (req, res) => {
     try {
-        let user 
+        let user
 
         const userDB = await User.findOne({ _id: req.session.user_id });
 
         if (userDB) {
-           
+
             user = userDB.name;
-           return res.render('home', { user });
-        }else{
+            return res.render('home', { user });
+        } else {
             res.render('home', { user });
         }
 
-        
+
 
     } catch (error) {
         console.log(error.message);
@@ -142,20 +142,20 @@ const sendVerifyMail = async (name, email) => {
 
 const resendOTP = async (req, res) => {
     try {
-  
-     const otp = await Math.floor(10000 + Math.random() * 90000);
-      console.log(otp)
-      sendVerifyMail(nameResend, email2, user_id);
-      res.render('userOTP', { message: 'A new OTP has been sent to your email.' });
 
-  
+        const otp = await Math.floor(10000 + Math.random() * 90000);
+        console.log(otp)
+        sendVerifyMail(nameResend, email2, user_id);
+        res.render('userOTP', { message: 'A new OTP has been sent to your email.' });
+
+
     }
-  
+
     catch (error) {
-      console.log(error);
-      res.render('500')
+        console.log(error);
+        res.render('500')
     }
-  }
+}
 
 // email verifying or OTP verify
 
@@ -207,7 +207,7 @@ const verifyLogin = async (req, res) => {
         const password = req.body.password;
 
         const userData = await User.findOne({ email: email });
-        
+
 
         if (userData) {
 
@@ -261,7 +261,7 @@ const productList = async (req, res) => {
         if (req.query.search) {
             search = req.query.search;
         }
-
+        
         // Pagination in product
         var page = 1;
         if (req.query.page) {
@@ -337,8 +337,8 @@ const loadCart = async (req, res) => {
                     });
                     let datatotal = hasCart.products.map((products) => {
                         return products.price * products.count;
-                      });
-                    res.render('cart', { cartItems: hasCart, totalSum,datatotal });
+                    });
+                    res.render('cart', { cartItems: hasCart, totalSum, datatotal });
                 } else {
                     res.render('cart', { cartItems: [] }); // Render with an empty cart if no products are found
                 }
@@ -422,7 +422,7 @@ const updateCartQuantity = async (req, res) => {
                     const newCount = await Cart.updateOne(
                         { userId: userId, "products.productId": productId },
                         { $inc: { "products.$.count": 1 } },
-                    );                    
+                    );
                     console.log(newCount + "count onn maathram koodunnu");
                     console.log("Count increased");
                     res.json({ result: true });
