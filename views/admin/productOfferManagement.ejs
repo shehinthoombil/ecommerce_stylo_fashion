@@ -1,0 +1,71 @@
+<%- include('../partials/admin/header') %>
+    <div class="container-scroller">
+        <%- include('../partials/admin/sidePanel') %>
+            <div class="container-fluid page-body-wrapper">
+                <div class="main-panel">
+                    <div class="content-wrapper">
+                        <div class="row">
+                            <div class="col-12 grid-margin">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="display-flex justify-content-between">
+                                            <h4 class="card-title">Product Offer Management</h4>
+
+                                            <a href="/admin/addOff" class="btn-primary" type="button">+ ADD OFFERS</a>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+
+                                                        <th> S.No </th>
+                                                        <!-- <th> Image </th> -->
+                                                        <th> Product Name</th>
+                                                        <th> Offers %</th>
+                                                        <th> Ending Date</th>
+                                                        <!-- <th> Price</th> -->
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% if (offerDB && offerDB.length > 0) { %>
+                                                        <% for (let i = 0; i < offerDB.length; i++) { %>
+                                                            <tr>
+                                                                <td>
+                                                                    <%= i + 1 %>
+                                                                </td>
+                                                                <td>
+                                                                    <%= offerDB[i].productname %>
+                                                                </td>
+                                                                <td>
+                                                                    <%= offerDB[i].percentage %>
+                                                                </td>
+                                                                <td>
+                                                                    <%= offerDB[i].expiryDate.toLocaleDateString('en-US',
+                                                                        { year: 'numeric', month: 'short', day: '2-digit' }).replace(/\//g, '-') %>
+                                                                </td>
+                                                                <td>
+                                                                    <a href="/admin/deleteOff?id=<%= offerDB[i]._id %>" class="delete-link">
+                                                                        <i class="bi bi-trash-fill"></i>
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                        <% } %>
+                                                    <% } else { %>
+                                                        <tr>
+                                                            <td colspan="5">Offers Not Found</td>
+                                                        </tr>
+                                                    <% } %>
+                                                </tbody>
+                                                
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    <%- include('../partials/admin/footer') %>
