@@ -104,7 +104,7 @@ const deleteOffer = async (req, res) => {
 
 const loadCategoryOffers = async (req,res) => {
     try {
-        const categoryOffers = await CategoryOffer.find({}).lean(). // lean for populate
+        const categoryOffers = await CategoryOffer.find({}).lean() // lean for populate
         res.render('admin/categoryOfferManagement' , { categoryOffers})
     } catch (error) {
         console.log(error.message)
@@ -122,6 +122,40 @@ const loadAddCategoryOffer = async (req,res)=> {
     }
 }
 
+//add offers on category
+
+const addCategoryOffer = async (req, res) => {
+    try {
+        const categoryData = await Category.findOne({ name: req.body.categories })
+        console.log(req.body);
+        if (!categoryData) {
+            console.log('Category not found');
+            return res.redirect('/admin/offersCat');
+        }
+
+        const percent = req.body.percentage;
+        const newCategoryOffer = new CategoryOffer({
+            categoryname:req.body.categories,
+            category:categoryData._id,
+            percentage: percent,
+            expiryDate: req.body.EndingDate,
+        })
+        console.log(newCategoryOffer)
+        await newCategoryOffer.save();
+        const catDB = await Product.findOne({ categories: req.body.categories})
+        console.log(catDB,'catdb')
+
+        const offerPrice = Math.floor((catDB.price * percent) / 100);
+        const updateProductPrice = await Product.updateOne({ category: req.body.categories }, { $set: { discountPricecat: catDB.price - offerPrice } })
+        console.log(updateProductPrice);
+        console.log('Category Offer added successfully');
+
+        res.redirect('/admin/offersCat');
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
 module.exports = {
     loadOffers,
     loadAddOffer,
@@ -129,5 +163,6 @@ module.exports = {
     deleteOffer,
     loadCategoryOffers,
     loadAddCategoryOffer, 
+    addCategoryOffer,
 
 }

@@ -1,0 +1,192 @@
+<%- include('../partials/admin/header') %>
+
+    <div class="col-12 grid-margin stretch-card">
+        <%- include('../partials/admin/sidePanel') %>
+            <div class="container-fluid mt-3">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Add New Coupons</h4>
+
+                                <form action="/admin/addCouponDB" method="post">
+
+                                    <div class="form-group">
+                                        <label for="couponname"> Name of Coupon</label>
+                                        <input type="text" class="form-control" id="couponname" placeholder="Name"
+                                            name="couponname">
+                                        <span class="error-message text-danger" id="couponnameError"></span>
+                                    </div><!-- End .form-group -->
+
+                                    <div class="form-group">
+                                        <label for="couponcode"> Coupon Code</label>
+                                        <input type="text" class="form-control" id="couponcode"
+                                            placeholder="Coupon Code" name="couponcode">
+                                        <span class="error-message text-danger" id="couponcodeError"></span>
+                                    </div><!-- End .form-group -->
+
+                                    <div class="form-group">
+                                        <label for="discountamount">Discount Amount</label>
+                                        <div class="input-group" id="discountamount">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">₹</span>
+                                            </div>
+                                            <input type="text" class="form-control"
+                                                aria-label="Amount (to the nearest dollar)" name="discountamount">
+                                        </div>
+                                        <span id="discountamountError"></span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="criteriaamount">Criteria Amount</label>
+                                        <div class="input-group" id="criteriaamount">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">₹</span>
+                                            </div>
+                                            <input type="text" class="form-control"
+                                                aria-label="Amount (to the nearest dollar)" name="criteriaamount">
+                                        </div>
+                                        <span id="criteriaamountError"></span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="userslimit"> Users Limit</label>
+                                        <input type="text" class="form-control" id="userslimit"
+                                            placeholder="Users Limit" name="userslimit">
+                                        <span class="error-message text-danger" id="userslimitError"></span>
+                                    </div><!-- End .form-group -->
+
+                                    <div class="form-group">
+                                        <label for="description"> Description</label>
+                                        <input type="text" class="form-control" id="description"
+                                            placeholder="Description" name="description">
+                                        <span class="error-message text-danger" id="descriptionError"></span>
+                                    </div><!-- End .form-group -->
+
+                                    <div class="form-group">
+                                        <label for="activationdate"> Activation Date</label>
+                                        <input type="date" class="form-control" id="activationdate"
+                                            placeholder="activationdate" name="activationdate">
+                                        <span class="error-message text-danger" id="activationdateError"></span>
+                                    </div><!-- End .form-group -->
+
+                                    <div class="form-group">
+                                        <label for="expirydate"> Expiry Date</label>
+                                        <input type="date" class="form-control" id="expirydate" placeholder="expirydate"
+                                            name="expirydate">
+                                        <span class="error-message text-danger" id="expirydateError"></span>
+                                    </div><!-- End .form-group -->
+
+                                    <div class="form-footer">
+                                        <button type="submit" class="btn btn-outline-primary-2 bg-primary">
+                                            <span>Submit</span>
+                                            <i class="icon-long-arrow-right"></i>
+                                        </button>
+                                        <button class="btn btn-dark">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+            <script>
+                $(document).ready(function () {
+                    function showError(inputId, errorMessage) {
+                        $("#" + inputId + "Error").text(errorMessage).css("color", "red");
+                    }
+
+                    function clearError(inputId) {
+                        $("#" + inputId + "Error").text("");
+                    }
+
+                    function updateSubmitButton() {
+                        var isValid = true;
+
+                        // Validate Name of Coupon
+                        var couponname = $("#couponname").val();
+                        if (couponname.length < 1 || couponname.length > 15) {
+                            showError("couponname", "Name must be between 1 and 15 characters.");
+                            isValid = false;
+                        } else {
+                            clearError("couponname");
+                        }
+
+                        // Validate Coupon Code
+                        var couponcode = $("#couponcode").val();
+                        if (couponcode.length < 1 || couponcode.length > 10 || !/^[a-zA-Z0-9]+$/.test(couponcode)) {
+                            showError("couponcode", "Coupon Code must be between 1 and 10 characters or numbers.");
+                            isValid = false;
+                        } else {
+                            clearError("couponcode");
+                        }
+
+                        // Validate Discount Amount and Criteria Amount
+                        var discountamount = parseFloat($("#discountamount input").val());
+                        var criteriaamount = parseFloat($("#criteriaamount input").val());
+
+                        if (isNaN(discountamount) || isNaN(criteriaamount) || discountamount < 0 || discountamount > criteriaamount) {
+                            showError("discountamount", "Discount Amount must be smaller than Criteria Amount and cannot be negative.");
+                            isValid = false;
+                        } else {
+                            clearError("discountamount");
+                        }
+
+                        // Validate Criteria Amount
+                        if (criteriaamount <= 0) {
+                            showError("criteriaamount", "Criteria Amount cannot be zero.");
+                            isValid = false;
+                        } else {
+                            clearError("criteriaamount");
+                        }
+
+                        // Validate Users Limit
+                        var userslimit = parseInt($("#userslimit").val());
+                        if (isNaN(userslimit) || userslimit <= 0) {
+                            showError("userslimit", "Users Limit cannot be zero.");
+                            isValid = false;
+                        } else {
+                            clearError("userslimit");
+                        }
+
+                        // Validate Activation Date and Expiry Date
+                        var activationdate = new Date($("#activationdate").val());
+                        var expirydate = new Date($("#expirydate").val());
+
+                        var currentDate = new Date();
+                        if (activationdate < currentDate) {
+                            showError("activationdate", "Activation Date must be greater than the present date.");
+                            isValid = false;
+                        } else {
+                            clearError("activationdate");
+                        }
+
+                        if (expirydate <= activationdate) {
+                            showError("expirydate", "Expiry Date must be greater than Activation Date.");
+                            isValid = false;
+                        } else {
+                            clearError("expirydate");
+                        }
+
+                        // Enable or disable the submit button
+                        $("button[type='submit']").prop('disabled', !isValid);
+                    }
+
+                    // Attach event listeners to form inputs
+                    $("form input, form select").on('input', function () {
+                        updateSubmitButton();
+                    });
+
+                    // Attach event listener to form submission
+                    $("form").submit(function () {
+                        return validateForm();
+                    });
+
+                    // Initial validation on page load
+                    updateSubmitButton();
+                });
+            </script>
+
+            <%- include('../partials/admin/footer') %>
