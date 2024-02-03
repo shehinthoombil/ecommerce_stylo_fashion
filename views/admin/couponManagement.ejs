@@ -1,0 +1,46 @@
+<%- include('../partials/admin/header') %>
+    <div class="container-scroller">
+        <%- include('../partials/admin/sidePanel') %>
+            <div class="container-fluid page-body-wrapper">
+                <div class="main-panel">
+                    <div class="content-wrapper">
+                        <div class="row">
+                            <div class="col-12 grid-margin">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="display-flex justify-content-between">
+                                            <h4 class="card-title">Coupon Management</h4>
+                                            <a href="/admin/loadAddCoupon" class="btn-primary" type="button">+ADD COUPONS</a>
+                                        </div>
+                                        
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        
+                                                        <th> S.No </th>
+                                                        <th> Coupon Name</th>
+                                                        <th> Code</th>
+                                                        <th> Disc.Amount</th>
+                                                        <th> Active Date</th>
+                                                        <th> Expiry Date</th>
+                                                        <th> Min Sale</th>
+                                                        <th> Status</th>
+
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                   
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    <%- include('../partials/admin/footer') %>
