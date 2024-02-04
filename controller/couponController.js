@@ -38,15 +38,23 @@ const addCoupon = async (req,res) => {
         })
         await data.save()
         console.log(data);
-        res.redirect('admin/loadCoupon')
+        res.redirect('loadCoupon')
 
     } catch (error) {
         console.log(error.message);
     }
 }
 
+//calculate discount on coupon 
+const calculateDiscountedTotal = (total, discountAmount) => {
+    // Your discount calculation logic here
+    return total - discountAmount;
+}; 
+
 module.exports = {
     loadCoupon,
     loadAddCoupon,
     addCoupon,
+    calculateDiscountedTotal,
+    
 }

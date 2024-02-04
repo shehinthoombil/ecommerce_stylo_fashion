@@ -31,7 +31,54 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                   
+                                                    <% function formatDate(date) { %>
+                                                        <% if (date) { %>
+                                                          <%= date.toLocaleDateString('en-US', { year: 'numeric' , month: 'short' , day: '2-digit'
+                                                            }).replace(/\//g, '-' ) %>
+                                                            <% } else { %>
+                                                              N/A
+                                                              <% } %>
+                                
+                                                                <% } %>
+                                
+
+                                                  <% for(let i=0; i < coupon.length; i++) { %>
+                                                    <tr>
+                                                        <td>
+                                                            <%= i + 1 %>
+                                                        </td>
+                                                      <td>
+                                                        <%= coupon[i].couponname %>
+                                                      </td>
+                                                      <td>
+                                                        <%= coupon[i].couponcode %>
+                                                      </td>
+                                                      <td>
+                                                        <%= coupon[i].discountamount %>
+                                                      </td>
+                                                      <td>
+                                                        <%= formatDate(coupon[i].activationdate) %>
+                                                      </td>
+                                                      <td>
+                                                        <%= formatDate(coupon[i].expirydate) %>
+                                                      </td>
+                                                      <td>
+                                                        <%= coupon[i].criteriaamount %>
+                                                      </td>
+                                                      <td class="<%= coupon[i].status === 1 ? 'text-danger' : 'text-success' %>">
+                                                        <%= coupon[i].status===1 ? 'Blocked' : 'Active' %>
+                                                      </td>
+                
+                                                      <td>
+                                                        <a href="/admin/loadEditCoupon?id=<%= coupon[i]._id %>"><i
+                                                            class="bi bi-pencil-square"></i></a>
+                                                      </td>
+                                                      <td>
+                                                        <a href="/admin/deleteCoupon?id=<%= coupon[i]._id %>" class=" delete-link"><i
+                                                            class="bi bi-trash3"></i></a>
+                                                    </td>
+                                                    </tr>
+                                                 <% } %>
                                                 </tbody>
                                             </table>
                                         </div>
