@@ -31,8 +31,9 @@ const coupondata = new mongoose.Schema({
         required: true
     },
     status: {
-        type: Number,
-        required: true
+        type: String,
+        // required: true
+        default:'active'
     },
     claimedusers: [{
         type: Array,
