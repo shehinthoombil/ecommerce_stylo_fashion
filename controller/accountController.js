@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt')
 const nodemailer = require('nodemailer');
 const product = require('../model/productModel');
 const Order = require('../model/orderModel');
+
 // load myAccount dasboard 
 const loadMyAccount = async (req, res) => {
     try {
@@ -13,16 +14,16 @@ const loadMyAccount = async (req, res) => {
         let addressId = req.query.id;
         if (req.session.user_id) {
             const user = await User.findOne({ _id: req.session.user_id });
-            const addresses = await Address.find({ User: req.session.user_id });
+            const addresses = await Address.find({ userId : req.session.user_id });
             const orderData = await Order.find({userId: req.session.user_id})
             .populate('products.product')
             .sort({ purchaseDate: -1 });
-            console.log("nnn"+orderData);
+            console.log("orderdata vannu"+addresses);
             if (user) {
                 userName = user.name;
                 UserAddress = addresses;
                 userDB = user
-                return res.render('account', { UserAddress, userName ,userDB, orderData});
+                return res.render('account', { UserAddress, userName ,userDB, orderData });
               }
         }
         

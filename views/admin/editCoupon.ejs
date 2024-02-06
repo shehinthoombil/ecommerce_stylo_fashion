@@ -1,0 +1,100 @@
+<%- include('../partials/admin/header') %>
+
+    <div class="col-12 grid-margin stretch-card">
+        <%- include('../partials/admin/sidePanel') %>
+
+            <div class="container-fluid mt-3">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Edit Coupons</h4>
+                                <form action="/admin/editCouponDB?id=<%= coupon._id %>" method="post">
+                                    <div class="form-group">
+                                        <input type="hidden" name="coupon_id" value="<%= coupon._id %>">
+                                        <label for="couponname">Name Of Coupon</label>
+                                        <input type="text" class="form-control" id="couponname" placeholder="Name"
+                                            name="couponname" value="<%= coupon.couponname %> %>">
+                                        <span class="error-message text-danger" id="signin-error"></span>
+                                    </div><!-- End .form-group -->
+
+                                    <div class="form-group">
+                                        <input type="hidden" name="coupon_id" value="<%= coupon._id %>">
+
+                                        <label for="couponcode">Coupon Code</label>
+                                        <input type="text" class="form-control" id="couponcode"
+                                            placeholder="Coupon Code" name="couponcode"
+                                            value="<%= coupon.couponcode %>">
+                                        <span class="error-message text-danger" id="signin-error"></span>
+                                    </div><!-- End .form-group -->
+
+                                    <div class="form-group">
+                                        <label for="discountamount">Discount Amount</label>
+                                        <div class="input-group" id="discountamount">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">₹</span>
+                                            </div>
+                                            <input type="text" class="form-control"
+                                                aria-label="Amount (to the nearest dollar)" name="discountamount"
+                                                value="<%= coupon.discountamount %>">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="criteriaamount">Criteria Amount</label>
+                                        <div class="input-group" id="criteriaamount">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">₹</span>
+                                            </div>
+                                            <input type="text" class="form-control"
+                                                aria-label="Amount (to the nearest dollar)" name="criteriaamount"
+                                                value="<%= coupon.criteriaamount %>">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="userslimit">Users Limit</label>
+                                        <input type="text" class="form-control" id="userslimit"
+                                            placeholder="Users Limit" name="userslimit"
+                                            value="<%= coupon.userslimit %>">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="description">Description</label>
+                                        <input type="text" class="form-control" id="description"
+                                            placeholder="Description" name="description"
+                                            value="<%= coupon.description %>">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="activationdate">Activation Date</label>
+                                        <input type="date" class="form-control" id="activationdate"
+                                            name="activationdate" value="<%= coupon.activationdate %>">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="expirydate">Expiry Date</label>
+                                        <input type="date" class="form-control" id="expirydate" name="expirydate"
+                                            value="<%= coupon.expirydate %>">
+                                    </div>
+
+
+
+
+                                    <div class="form-footer">
+                                        <button type="submit" class="btn btn-outline-primary-2 bg-primary">
+                                            <span>Submit</span>
+                                            <i class="icon-long-arrow-right"></i>
+                                        </button>
+                                        <button class="btn btn-dark">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <%- include('../partials/admin/footer') %>

@@ -23,6 +23,15 @@ const productSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    discountPricepro: {
+        type: Number,
+        
+    },
+    discountPricecat: {
+        type: Number,
+        
+    },
+
     images: {
         type: [String],
         required: true

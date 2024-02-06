@@ -8,7 +8,7 @@ const cartSchema = new mongoose.Schema({
     },
     userName: {
         type: String,
-        required: true,
+        // required: true,
     },
     total: {
         type: Number,
@@ -28,6 +28,7 @@ const cartSchema = new mongoose.Schema({
             sum: {
                 type: Number,
                 required: true,
+                
             },
             price: {
                 type: Number,

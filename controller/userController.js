@@ -6,6 +6,8 @@ const { env } = require('process');
 const randormstring = require("randomstring");
 const Product = require('../model/productModel')
 const Category = require('../model/categoryModel');
+const Offers = require('../model/productOfferModel');
+const CategoryOffer = require('../model/categoryOfferModel');
 const mongoose = require('mongoose');
 const { log } = require('console');
 
@@ -290,12 +292,25 @@ const productList = async (req, res) => {
             ]
         }).countDocuments();
 
+        const availableCategories = await Category.find()
+        // console.log(availableCategories , 'categories und');
+        const discount = await Offers.find({ })
+        const discountcategory = await CategoryOffer.find({ });
+        const productData = await Product.find({ });
+        const renderData = { products: productData, discPrice: discount, discCat: discountcategory, availableCategories };
+    
+        console.log(renderData.discPrice);
         res.render('productList', {
+            // products: productData, 
+            // discPrice: discount,
+            //  discCat: discountcategory, 
+            //  availableCategories,
             ProductDB,
             categories,
             totalPages: Math.ceil(count / limit),  //Ex:- count of document/limit (9/6 = 1.5 => 2)
             currentPage: page,  //page 1
-            title: 'productList'
+            title: 'productList',
+            renderData,  
         });
 
     } catch (error) {
@@ -306,10 +321,16 @@ const productList = async (req, res) => {
 //product details
 const productDetails = async (req, res) => {
     try {
+
         const id = req.query.id
         const productDB = await Product.findOne({ _id: id })
         // console.log(productDB);
-        res.render('productDetails', { productDB })
+
+        const discount = await Offers.find({  })
+        const discountcategory = await CategoryOffer.find({  });
+
+
+        res.render('productDetails', { productDB, discPrice: discount, discCat: discountcategory })
     } catch (error) {
         console.log(error.message);
     }
@@ -354,38 +375,60 @@ const loadCart = async (req, res) => {
 // cart
 const addToCart = async (req, res) => {
     try {
+        console.log("--------------------------------");
         const { productId } = req.body;
         const userId = req.session.user_id;
-
-
 
         // Retrieve user and product details
         const user = await User.findById(userId);
         const productDetails = await Product.findById(productId);
 
-
-
         const product = {
             productId,
-            sum: productDetails.price, // No need to multiply by 1
-            price: productDetails.price
+            // sum: productDetails.price, // No need to multiply by 1
+            // price: productDetails.price
+            sum: productDetails.discountPricepro || productDetails.price,
+            price: productDetails.discountPricepro || productDetails.price
         };
 
         const hasCart = await Cart.findOne({ userId });
-        console.log(hasCart);
+        
         if (hasCart) {
             // Add product to existing cart
             hasCart.products.push(product);
             await hasCart.save();
         } else {
-            // Create a new cart if it doesn't exist
-            const newCartItem = new Cart({
-                userId,
-                userName: user.name,
-                products: [product]
-            });
-            await newCartItem.save();
+            console.log("11111111");
+            const discountPrices = [productDetails.discountPricepro, productDetails.price, productDetails.discountPricecat];
+            const validDiscounts = discountPrices.filter(discount => discount !== null && discount !== undefined);
+  
+            let smallestDiscount = validDiscounts ? Math.min(...validDiscounts) : undefined;
+            console.log(smallestDiscount + "Smallest discount");
+            const cartItem = {
+              productId: productId,
+              count: 1,
+              price: smallestDiscount ? smallestDiscount : productDetails.price,
+            };
+            console.log('cartitems discount');
+
+            // // Create a new cart if it doesn't exist
+            // const newCartItem = new Cart({
+            //     userId,
+            //     userName: user.name,
+            //     products: [product],
+                
+            // });
+            // const newData = await newCartItem.save();
+            const newCart = await Cart.findOneAndUpdate(
+                { userId: userId },
+                { $set: { userId: userId }, $push: { products: cartItem } },
+                { upsert: true, new: true }
+              );
+
+            console.log(newCart , 'new cart items');
+            
         }
+        console.log("+++++++++++++++++++++++++++++");
 
         // After updating the cart, redirect or render the view
         res.redirect('/productList');

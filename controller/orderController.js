@@ -5,6 +5,7 @@ const product = require('../model/productModel');
 const Cart = require('../model/cartModel')
 const Address = require('../model/addressModel')
 const Order = require('../model/orderModel');
+const Coupon = require('../model/couponModel')
 const Razorpay = require('razorpay')
 
 //razorpay instance
@@ -70,11 +71,12 @@ const loadCheckout = async (req, res) => {
     let userName;
     let UserAddress;
     let addressId = req.query.id;
-
+    
+    const coupon = await Coupon.find({  })
     if (req.session.user_id) {
       const user = await User.findOne({ _id: req.session.user_id });
       const addresses = await Address.find({ User: req.session.user_id });
-
+      
       if (user) {
         userName = user.name;
         accountDetails = user;
@@ -85,10 +87,13 @@ const loadCheckout = async (req, res) => {
     const userId = req.session.user_id;
     const cartData = await Cart.findOne({ userid: userId }).populate("products.productId");
 
+
     let totalSum = 0;
     let datatotal = []; // Declare datatotal outside the if block
 
     if (cartData && Array.isArray(cartData.products)) {
+      const discAmount = coupon.discountamount
+
       // Calculate totalSum outside the loop
       cartData.products.forEach(product => {
         product.sum = product.count * product.price;
@@ -105,7 +110,8 @@ const loadCheckout = async (req, res) => {
       console.log("----------------------" + updatedCart);
     }
 
-    res.render('checkout', { userName, accountDetails, UserAddress, cartData, datatotal, totalSum });
+    res.render('checkout', { userName, accountDetails, UserAddress, datatotal, totalSum, cartData,coupon });
+    // res.render('checkout', { userName, accountDetails, UserAddress, datatotal, totalSum, cartData: cartData, coupon, discAmount });
 
   } catch (error) {
     console.log(error.message);

@@ -57,13 +57,29 @@
                             </div><!-- End .toolbox-right -->
                         </div><!-- End .toolbox -->
 
+                        <!-- PRODUCTS -->
                         <div class="products mb-3">
 
                             <div class="row justify-content-center">
-                                <% for(let i=0;i<ProductDB.length;i++) { %>
+                               
+                                    <% ProductDB.forEach((product, i)=> { %>
                                     <div class="col-6 col-md-4 col-lg-4 product-item" data-category="<%= ProductDB[i].category %>">
                                         <div class="product product-7 text-center">
                                             <figure class="product-media">
+                                                <% const productDiscount = renderData.discPrice.find(x=> x.product.toString() ===
+                                                    product._id.toString()); %>
+                                                
+
+                                                    <% let smallestPrice=Math.min(ProductDB[i].price,
+                                                        ProductDB[i].discountPricepro || Infinity, ProductDB[i].discountPricecat
+                                                        || Infinity); %>
+
+                                                        <% if (productDiscount) { %>
+                                                             <span class="product-label label-new">
+                                                                   <%= productDiscount.percentage %>% off
+                                                                </span>
+                                                        <% } %>
+
                                                 <span class="product-label label-new">New</span>
                                                 <a href="/productDetails?id=<%= ProductDB[i]._id %>">
                                                     <img src="/images/products/<%= ProductDB[i].images[0] %>"
@@ -82,7 +98,7 @@
                                                 </div><!-- End .product-action-vertical -->
 
                                                 <div class="product-action">
-                                                    <a href="#" class="btn-product btn-cart"><span>add to
+                                                    <a href="/cart" class="btn-product btn-cart"><span>Go to
                                                             cart</span></a>
                                                 </div><!-- End .product-action -->
                                             </figure><!-- End .product-media -->
@@ -94,13 +110,21 @@
                                                 <h3 class="product-title"><a href="product.html"><%= ProductDB[i].name %></a></h3>
                                                 <!-- End .product-title -->
                                                 <div class="product-price">
-                                                    <span class="new-price">$<%= ProductDB[i].price %></span>
-                                                    <!-- <span class="old-price">$84.00</span> -->
-                                                </div><!-- End .product-price -->
+                                                    <!-- <span class="new-price">$<%= ProductDB[i].price %></span> -->
+                                                    <% if (smallestPrice && smallestPrice < product.price) { %>
+                                                        <strike>₹<%= product.price %></strike>
+                                                   </div><!-- End .product-price -->
+                                                   <div class="product-price">
+                                                    <b>$<%= smallestPrice %></b>
+                                                    <% } else { %>
+                                                        $<%= ProductDB[i].price %>
+                                                            <% } %>
+                                                </div>
+
                                             </div><!-- End .product-body -->
                                         </div><!-- End .product -->
                                     </div><!-- End .col-sm-6 col-lg-4 -->
-                                    <%}%>
+                                    <%})%>
                             </div><!-- End .row -->
                         </div><!-- End .products -->
 
