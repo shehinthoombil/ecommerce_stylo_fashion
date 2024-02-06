@@ -26,14 +26,72 @@
 							<i class="icon-long-arrow-right"></i>
 						</button>
 					</a>
+					<i class="bi bi-plus-square-dotted" data-toggle="modal" data-target="#filtersModal"></i>
+
+
+
 					<!-- add coupons -->
 					<div class="checkout-discount">
-						<form action="#">
-							<input type="text" class="form-control" required id="checkout-discount-input">
+						<form action="/applyCoupon" id="applyCouponForm" method="post">
+							<input type="text" class="form-control" required id="checkout-discount-input"
+								name="couponCode">
 							<label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here
 									to enter your code</span></label>
+							<button type="submit" class="btn btn-primary">Apply Coupon</button>
 						</form>
 					</div><!-- End .checkout-discount -->
+
+
+					<!-- Filters Modal -->
+					
+					<div class="modal fade" id="filtersModal" tabindex="-1" role="dialog"
+						aria-labelledby="filtersModalLabel" aria-hidden="true">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="filtersModalLabel">Available Coupons</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body">
+									<!-- Coupon List -->
+
+									<% for(let i=0; i< coupon.length; i++) { %>
+										<div class="card mb-3">
+											<div class="card-body">
+												<h5 class="card-title">
+													<%= coupon[i].couponname %>
+												</h5>
+												<p class="card-text">Code: <%= coupon[i].couponcode %>
+												</p>
+												<p class="card-text">Discount: ₹<%= coupon[i].discountamount %>
+												</p>
+												<p class="card-text">
+													<%= coupon[i].description %>
+												</p>
+												<p class="card-text">Minimum Purchase: <%= coupon[i].criteriaamount %>
+												</p>
+
+											</div>
+										</div>
+										<% } %>
+								</div>
+								<div class="modal-footer">
+
+								</div>
+							</div>
+						</div>
+					</div>
+
+
+
+
+
+
+
+					<!-- ordaer place -->
+
 					<form action="/orderPlace?id=<%= %>" method="post" id="myform">
 						<div class="row">
 							<div class="col-lg-9">
@@ -117,12 +175,13 @@
 																</td>
 															</tr><!-- End .summary-subtotal -->
 															<tr>
-																<td>Coupon Discount</td>
-																<td>- ₹</td>
+																<td id="couponDiscount">Coupon Discount</td>
+																<td id="couponDiscountAmount">-₹<%coupon.discountamount %>
+																</td>
 															</tr>
 															<tr class="summary-total">
 																<td>Total:</td>
-																<td>$<%= totalSum %>
+																<td id="total">$<%= totalSum %>
 																</td>
 															</tr><!-- End .summary-total -->
 										</tbody>
@@ -215,7 +274,7 @@
 						method: 'POST',
 						data: formData,
 						success: function (response) {
-							console.log(response,"responseorder vann");
+							console.log(response, "responseorder vann");
 							if (response.success === true) {
 								console.log('hi');
 								window.location.href = '/orderSuccess';
@@ -243,7 +302,7 @@
 			});
 
 			function razorpayPayment(order) {
-				console.log(order,"hello");
+				console.log(order, "hello");
 				var options = {
 					"key": "rzp_test_ykdEV4zuE7mjJQ", // Enter the Key ID generated from the Dashboard
 					"amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
@@ -273,7 +332,7 @@
 			function verifyPayment(payment, order) {
 				console.log("verifyPayment kk keri");
 				const amount2 = document.getElementById("total").value;
-				console.log(amount2,"amount 2 :");
+				console.log(amount2, "amount 2 :");
 				$.ajax({
 					url: '/verifyPayment',
 					method: "post",
@@ -298,7 +357,52 @@
 				})
 			}
 
-		})
+		});
+
+		// In your client-side script
+		$(document).ready(function () {
+			$('#applyCouponForm').submit(function (event) {
+				event.preventDefault();
+				var formData = $(this).serializeArray();
+
+				$.ajax({
+					url: '/applyCoupon',
+					method: 'POST',
+					data: formData,
+					success: function (response) {
+						if (response.success === true) {
+							// Update the total amount on the page
+							$('#total').text('$' + response.discountedTotal);
+							$('#couponDiscountAmount').text('- ₹' + response.couponDiscountAmount);
+							Swal.fire({
+								icon: 'success',
+								title: 'Coupon Applied!',
+								text: 'The coupon has been applied successfully.',
+							});
+						} else if (response.alreadyClaimed === true) {
+							// Show a SweetAlert for already claimed coupon
+							Swal.fire({
+								icon: 'error',
+								title: 'Oops...',
+								text: 'You have already claimed this coupon.',
+							});
+						} else {
+							// Show a SweetAlert for other errors
+							Swal.fire({
+								icon: 'error',
+								title: 'Oops...',
+								text: response.message,
+							});
+						}
+					},
+					error: function (error) {
+						console.error('Error:', error);
+					}
+				});
+			});
+		});
+
+
 
 
 	</script>

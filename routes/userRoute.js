@@ -5,6 +5,7 @@ const path = require("path")
 const userController = require('../controller/userController');
 const accountController = require('../controller/accountController');
 const orderController = require('../controller/orderController');
+const couponController = require('../controller/couponController')
 const config = require("../config/config");
 userRoute.set('view engine', 'ejs')
 userRoute.set('views', './views/users')
@@ -66,6 +67,7 @@ userRoute.get('/contactUs', isLogin, userController.loadContactUs)
 //payment 
 userRoute.post('/verifyPayment', isLogin, orderController.verifyPayment)
 
-
+//coupon
+userRoute.post('/applyCoupon', isLogin, couponController.applyCoupon)
 
 module.exports = userRoute

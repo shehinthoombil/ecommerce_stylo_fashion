@@ -65,5 +65,9 @@ adminRoute.post('/addOfferCatDB', offerController.addCategoryOffer)
 adminRoute.get('/loadCoupon', couponController.loadCoupon)
 adminRoute.get('/loadAddCoupon', couponController.loadAddCoupon)
 adminRoute.post('/addCouponDB', couponController.addCoupon)
+adminRoute.get('/loadEditCoupon', couponController.loadEditCoupon)
+adminRoute.post('/editCouponDB', couponController.editCoupon);
+adminRoute.get('/deleteCoupon', couponController.deleteCoupon);
+
 
 module.exports = adminRoute
