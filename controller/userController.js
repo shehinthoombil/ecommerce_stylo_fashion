@@ -373,9 +373,74 @@ const loadCart = async (req, res) => {
 
 
 // cart
+// const addToCart = async (req, res) => {
+//     try {
+//         console.log("product cartilkk add aayi");
+//         const { productId } = req.body;
+//         const userId = req.session.user_id;
+
+//         // Retrieve user and product details
+//         const user = await User.findById(userId);
+//         const productDetails = await Product.findById(productId);
+
+//         const product = {
+//             productId,
+//             // sum: productDetails.price, // No need to multiply by 1
+//             // price: productDetails.price
+//             sum: productDetails.discountPricepro || productDetails.price,
+//             price: productDetails.discountPricepro || productDetails.price
+//         };
+
+//         const hasCart = await Cart.findOne({ userId });
+        
+//         if (hasCart) {
+//             // Add product to existing cart
+//              hasCart.products.push(product);
+//             await hasCart.save();
+//         } else {
+//             console.log("hascart cart vechu");
+//             const discountPrices = [productDetails.discountPricepro, productDetails.price, productDetails.discountPricecat];
+//             const validDiscounts = discountPrices.filter(discount => discount !== null && discount !== undefined);
+  
+//             let smallestDiscount = validDiscounts ? Math.min(...validDiscounts) : undefined;
+//             console.log(smallestDiscount + "Smallest discount");
+//             const cartItem = {
+//               productId: productId,
+//               count: 1,
+//               price: smallestDiscount ? smallestDiscount : productDetails.price,
+//             };
+//             console.log('cartitems discount');
+
+//             // // Create a new cart if it doesn't exist
+//             // const newCartItem = new Cart({
+//             //     userId,
+//             //     userName: user.name,
+//             //     products: [product],
+                
+//             // });
+//             // const newData = await newCartItem.save();
+//             const newCart = await Cart.findOneAndUpdate(
+//                 { userId: userId },
+//                 { $set: { userId: userId }, $push: { products: cartItem } },
+//                 { upsert: true, new: true }
+//               );
+
+//             console.log(newCart , 'new cart items');
+            
+//         }
+//         console.log("+++++++++++++++++++++++++++++");
+
+//         // After updating the cart, redirect or render the view
+//         res.redirect('/productList');
+//     } catch (error) {
+//         console.error(error.message);
+//         return res.status(500).json({ error: 'Internal Server Error' });
+//     }
+// };
+
+
 const addToCart = async (req, res) => {
     try {
-        console.log("--------------------------------");
         const { productId } = req.body;
         const userId = req.session.user_id;
 
@@ -383,60 +448,51 @@ const addToCart = async (req, res) => {
         const user = await User.findById(userId);
         const productDetails = await Product.findById(productId);
 
-        const product = {
-            productId,
-            // sum: productDetails.price, // No need to multiply by 1
-            // price: productDetails.price
-            sum: productDetails.discountPricepro || productDetails.price,
-            price: productDetails.discountPricepro || productDetails.price
-        };
-
         const hasCart = await Cart.findOne({ userId });
         
         if (hasCart) {
-            // Add product to existing cart
-            hasCart.products.push(product);
-            await hasCart.save();
-        } else {
-            console.log("11111111");
-            const discountPrices = [productDetails.discountPricepro, productDetails.price, productDetails.discountPricecat];
+            // Check if the product already exists in the cart
+            const existingProductIndex = hasCart.products.findIndex(item => item.productId.toString() === productId);
+
+            if (existingProductIndex !== -1) {
+                // If the product already exists, increment its quantity
+                hasCart.products[existingProductIndex].count += 1;
+            } else {
+                const discountPrices = [productDetails.discountPricepro, productDetails.price, productDetails.discountPricecat];
             const validDiscounts = discountPrices.filter(discount => discount !== null && discount !== undefined);
-  
-            let smallestDiscount = validDiscounts ? Math.min(...validDiscounts) : undefined;
-            console.log(smallestDiscount + "Smallest discount");
+                let smallestDiscount = validDiscounts ? Math.min(...validDiscounts) : undefined;
+                // If the product doesn't exist, add it to the cart
+                hasCart.products.push({
+                    productId: productId,
+                    count: 1,
+                    // sum: productDetails.discountPricepro || productDetails.price,
+                    price: smallestDiscount ? smallestDiscount : productDetails.price,
+                });
+            }
+            await hasCart.save();
+
+        } else {
+            // If the user doesn't have a cart, create a new one and add the product
             const cartItem = {
-              productId: productId,
-              count: 1,
-              price: smallestDiscount ? smallestDiscount : productDetails.price,
+                productId: productId,
+                count: 1,
+                price: productDetails.discountPricepro || productDetails.price
             };
-            console.log('cartitems discount');
-
-            // // Create a new cart if it doesn't exist
-            // const newCartItem = new Cart({
-            //     userId,
-            //     userName: user.name,
-            //     products: [product],
-                
-            // });
-            // const newData = await newCartItem.save();
-            const newCart = await Cart.findOneAndUpdate(
-                { userId: userId },
-                { $set: { userId: userId }, $push: { products: cartItem } },
-                { upsert: true, new: true }
-              );
-
-            console.log(newCart , 'new cart items');
-            
+            const newCart = new Cart({
+                userId: userId,
+                products: [cartItem]
+            });
+            await newCart.save();
         }
-        console.log("+++++++++++++++++++++++++++++");
 
-        // After updating the cart, redirect or render the view
+        // Redirect or render the view after updating the cart
         res.redirect('/productList');
     } catch (error) {
         console.error(error.message);
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
 
 //update quantity to cart
 

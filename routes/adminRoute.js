@@ -60,6 +60,7 @@ adminRoute.get('/deleteOff', offerController.deleteOffer)
 adminRoute.get('/offersCat', offerController.loadCategoryOffers)
 adminRoute.get('/addoffersCat', offerController.loadAddCategoryOffer)
 adminRoute.post('/addOfferCatDB', offerController.addCategoryOffer)
+adminRoute.get('/deletecatOff', offerController.deleteCategoryOffer)
 
 //coupon
 adminRoute.get('/loadCoupon', couponController.loadCoupon)
