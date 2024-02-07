@@ -33,11 +33,11 @@ const loadAddOffer = async (req, res) => {
 
 const addOffers = async (req, res) => {
     try {
-        const productData = await Product.findOne({ productname: req.body.product });
+        const productData = await Product.findOne({ name: req.body.product });
         console.log(productData, 'productdatakitti offernn');
         
         if(!productData) {
-            console.log('Product not found');
+            // console.log('Product not found');
             return res.redirect('/admin/offers');
         }
         const percent = req.body.percentage
@@ -47,16 +47,16 @@ const addOffers = async (req, res) => {
             percentage: percent,
             expiryDate: req.body.EndingDate,
         });
-        console.log(newOffer, 'newone');
+        // console.log(newOffer, 'newone');
 
         await newOffer.save();
         const productDB = await Product.findOne({ _id: productData._id })
-        console.log(productDB);
+        // console.log(productDB);
 
         const offerPrice = Math.floor((productDB.price * percent) / 100);
         const updateProductPrice = await Product.updateOne({ _id: productData._id }, { $set: { discountPricepro: productDB.price - offerPrice } })
-        console.log(updateProductPrice);
-        console.log('Offer added successfully');
+        // console.log(updateProductPrice);
+        // console.log('Offer added successfully');
 
         res.redirect('/admin/offers');
        
@@ -145,8 +145,8 @@ const addCategoryOffer = async (req, res) => {
         const catDB = await Product.findOne({ categories: req.body.categories})
         console.log(catDB,'catdb')
 
-        const offerPrice = Math.floor((catDB.price * percent) / 100);
-        const updateProductPrice = await Product.updateOne({ category: req.body.categories }, { $set: { discountPricecat: catDB.price - offerPrice } })
+        const offerPrice = Math.floor(catDB.price-(catDB.price * percent) / 100);
+        const updateProductPrice = await Product.updateMany({ category: req.body.categories }, { $set: { discountPricecat: catDB.price - offerPrice } })
         console.log(updateProductPrice);
         console.log('Category Offer added successfully');
 
@@ -156,6 +156,43 @@ const addCategoryOffer = async (req, res) => {
     }
 }
 
+//delete category offer
+
+const deleteCategoryOffer = async (req, res) => {
+    try {
+        
+        const currentData = await CategoryOffer.findOne({ _id: req.query.id });
+
+        const productDB = await Product.find({ category: currentData.categoryname });
+
+        console.log(productDB);
+
+        if (productDB.length > 0) {
+            console.log('Offer is not expired');
+
+            // Iterate through each product and update the discountPricecat field
+            for (const product of productDB) {
+                if (product.discountPricecat) {
+                    // Delete the field
+                    product.discountPricecat = null
+
+                    // Save the updated document
+                    await product.save();
+                    console.log(product);
+                }
+            }
+        }
+
+
+        await CategoryOffer.deleteOne({ _id: req.query.id });
+
+        res.redirect('/admin/offersCat');
+    } catch (error) {
+        console.log(error.message);
+        res.render('500')
+    }
+};
+
 module.exports = {
     loadOffers,
     loadAddOffer,
@@ -164,5 +201,6 @@ module.exports = {
     loadCategoryOffers,
     loadAddCategoryOffer, 
     addCategoryOffer,
+    deleteCategoryOffer,
 
 }
