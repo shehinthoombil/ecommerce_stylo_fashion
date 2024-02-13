@@ -81,13 +81,14 @@
                                             Infinity, productDB.discountPricecat || Infinity); %>
                                             <div class="product-price">
                                                 <% if (smallestPrice && smallestPrice < productDB.price) { %>
-                                                    <strike>₹<%= productDB.price %></strike>
+                                                    <strike>$<%= productDB.price %></strike>
                                             </div>
                                             <div class="product-price">
-                                                <b>₹<%= smallestPrice %></b>
+                                                <b> $<%= smallestPrice %> </b>
                                                 <% } else { %>
-                                                    ₹<%= productDB.price %>
+                                                    $<%= productDB.price %>
                                                         <% } %>
+                                                
                                             </div>
 
                                         </div><!-- End .product-price -->

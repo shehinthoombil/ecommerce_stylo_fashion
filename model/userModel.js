@@ -35,8 +35,32 @@ const userSchema = new mongoose.Schema({
     is_block: {
         type:Number,
         default:0
-    
+    },
+    wallet: {
+        type: Number,
+        default: 0
+    },
+    walletHistory: [{
+            date: {
+                type:Date,
+                default: Date.now 
+            },
+            amount: {
+                type:Number
+            },
+            message:{
+                type:String
+            },
+            type: {
+                type: String,
+                default: 'credit' 
+            }
+
+    }],
+    referalCode: {
+        type:String,
     }
+
     
 })
 

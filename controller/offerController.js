@@ -7,9 +7,9 @@ const CategoryOffer = require('../model/categoryOfferModel')
 
 // load product offer management
 const loadOffers = async (req,res) => {
+    
     try {
         const offerDB = await Offers.find({}).lean();
-        console.log(offerDB,'offerdb');
         res.render('admin/productOfferManagement' , { offerDB })
     } catch (error) {
         console.log(error.message);
@@ -123,38 +123,50 @@ const loadAddCategoryOffer = async (req,res)=> {
 }
 
 //add offers on category
-
 const addCategoryOffer = async (req, res) => {
     try {
-        const categoryData = await Category.findOne({ name: req.body.categories })
-        console.log(req.body);
+        // Find the category based on the provided name
+        const categoryData = await Category.findOne({ name: req.body.categories });
         if (!categoryData) {
             console.log('Category not found');
             return res.redirect('/admin/offersCat');
         }
 
+        // Extract the percentage discount from the request body
         const percent = req.body.percentage;
+
+        // Create a new CategoryOffer document
         const newCategoryOffer = new CategoryOffer({
-            categoryname:req.body.categories,
-            category:categoryData._id,
+            categoryname: req.body.categories,
+            category: categoryData._id,
             percentage: percent,
             expiryDate: req.body.EndingDate,
-        })
-        console.log(newCategoryOffer)
-        await newCategoryOffer.save();
-        const catDB = await Product.findOne({ categories: req.body.categories})
-        console.log(catDB,'catdb')
+        });
 
-        const offerPrice = Math.floor(catDB.price-(catDB.price * percent) / 100);
-        const updateProductPrice = await Product.updateMany({ category: req.body.categories }, { $set: { discountPricecat: catDB.price - offerPrice } })
-        console.log(updateProductPrice);
+        // Save the new CategoryOffer to the database
+        await newCategoryOffer.save();
+
+        // Find all products in the specified category
+        const productsInCategory = await Product.find({ category: req.body.categories });
+
+        // Update the discounted price for each product in the category
+        for (const product of productsInCategory) {
+            // Calculate the discounted price for the current product
+            const offerPrice = Math.floor(product.price - (product.price * percent / 100));
+
+            // Update the product's discounted price in the database
+            await Product.updateOne({ _id: product._id }, { $set: { discountPricecat: offerPrice } });
+        }
+
         console.log('Category Offer added successfully');
 
         res.redirect('/admin/offersCat');
     } catch (error) {
-        console.log(error.message)
+        console.log(error.message);
+        res.status(500).send('Internal Server Error');
     }
-}
+};
+
 
 //delete category offer
 

@@ -5,6 +5,7 @@ const nodemailer = require('nodemailer');
 const product = require('../model/productModel');
 const Order = require('../model/orderModel');
 
+
 // load myAccount dasboard 
 const loadMyAccount = async (req, res) => {
     try {
@@ -18,12 +19,15 @@ const loadMyAccount = async (req, res) => {
             const orderData = await Order.find({userId: req.session.user_id})
             .populate('products.product')
             .sort({ purchaseDate: -1 });
+            const walletHistory  =  user.walletHistory
+            const walletBalance  = user.wallet
             console.log("orderdata vannu"+addresses);
             if (user) {
                 userName = user.name;
                 UserAddress = addresses;
                 userDB = user
-                return res.render('account', { UserAddress, userName ,userDB, orderData });
+        
+                return res.render('account', { UserAddress,walletHistory,walletBalance, userName ,userDB, orderData });
               }
         }
         
@@ -162,6 +166,7 @@ const addAddress = async (req, res) => {
     }
 }
 
+// edit and updating user profile 
   const userDetails = async(req,res) =>{
     try {
         const hashedPassword = await securePassword(req.body.confirmPassword);
@@ -179,11 +184,30 @@ const addAddress = async (req, res) => {
         console.log(error.message)
     }
   }
+
+
+  //wallet
+
+  const showWallet = async(req,res) => {
+    try {
+      const user = await User.findById({ _id: req.session.user_id })
+
+
+      const walletBalance = user.wallet
+      const walletHistory = user.walletHistory
+      console.log(walletHistory,"wallet history kitti..");
+      console.log(user);
+      res.render('/wallet', {user, walletBalance, walletHistory, success:req.flash('success') })
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
 module.exports = {
     loadMyAccount,
     loadEditaddress,
     loadAddAddress,
     addAddress,
     editAddress,
-    userDetails
+    userDetails,
+    showWallet,
 };
