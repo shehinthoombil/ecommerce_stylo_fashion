@@ -52,6 +52,9 @@ userRoute.get('/addAddress',isLogin,accountController.loadAddAddress)
 userRoute.post('/addAddress',isLogin,accountController.addAddress)
 userRoute.post('/updateDetails',isLogin,accountController.userDetails)
 
+//wallet
+userRoute.get('/wallet',isLogin, accountController.showWallet)
+
 //checkout and order
 userRoute.get('/checkout',isLogin, orderController.loadCheckout)
 userRoute.post('/orderPlace', isLogin, orderController.placeOrder)
@@ -69,5 +72,7 @@ userRoute.post('/verifyPayment', isLogin, orderController.verifyPayment)
 
 //coupon
 userRoute.post('/applyCoupon', isLogin, couponController.applyCoupon)
+
+
 
 module.exports = userRoute

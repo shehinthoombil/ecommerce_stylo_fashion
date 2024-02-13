@@ -3,7 +3,7 @@ const Cart = require('../model/cartModel')
 const bcrypt = require('bcrypt')
 const nodemailer = require("nodemailer");
 const { env } = require('process');
-const randormstring = require("randomstring");
+const randomString = require("randomstring");
 const Product = require('../model/productModel')
 const Category = require('../model/categoryModel');
 const Offers = require('../model/productOfferModel');
@@ -61,6 +61,23 @@ const loadHome = async (req, res) => {
     }
 };
 
+//referal code generator
+
+function generateReferalCode() {
+    
+    const Rcode = randomString.generate({
+        length: 8
+    })
+    return User.findOne({ referalCode:Rcode  })
+      .then(existingRefer => {
+        if (existingRefer) {
+            return generateCouponCode();// If the code is not unique, generate a new one recursively
+        }
+        return Rcode; // Return the unique code
+        });
+  }
+
+
 
 // inserting or create new user in database
 
@@ -77,18 +94,53 @@ const insertUser = async (req, res) => {
             return res.status(500).send("Failed to hash the password");
         }
 
+      //referal code seting new user
+      const myReferCode =await generateReferalCode()
+      console.log(myReferCode,"referral vannallo...")
+
         const user = new User({
             name: req.body.newUsername,
             email: req.body.newEmail,
             mobile: req.body.newMobile,
             password: spassword,
+            referalCode:myReferCode,
             is_verified: 0,
             is_block: 0,
         })
         const userData = await user.save()
         console.log(userData);
 
+         
+        if(req.body.referalCode){
+            console.log(req.body.referalCode)
+            const referedUser = await User.findOne({referalCode:req.body.referalCode})
+            if(referedUser){
+                  const wHistory = {
+                    date:Date.now(),
+                    amount:200,
+                    message:'Invitation bonus via referal code'
+                  }
+                  referedUser.wallet+=200
+                  referedUser.walletHistory.push(wHistory)
+                  await referedUser.save()
+                  console.log(referedUser);
+  
+                  const W_history = {
+                     date:Date.now(),
+                     amount:100,
+                     message:'referal bonus'
+                  }
+                  user.wallet +=100
+                  user.walletHistory.push(W_history)
+                  await user.save()
+              }
+  
+          }
 
+
+
+
+// OTP 
         if (userData) {
             sendVerifyMail(req.body.newUsername, req.body.newEmail)
 
@@ -292,6 +344,7 @@ const productList = async (req, res) => {
             ]
         }).countDocuments();
 
+        
         const availableCategories = await Category.find()
         // console.log(availableCategories , 'categories und');
         const discount = await Offers.find({ })
@@ -373,6 +426,7 @@ const loadCart = async (req, res) => {
 
 
 // cart
+
 // const addToCart = async (req, res) => {
 //     try {
 //         console.log("product cartilkk add aayi");
