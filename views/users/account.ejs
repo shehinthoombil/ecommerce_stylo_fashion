@@ -49,12 +49,14 @@
 							<div class="tab-content">
 								<div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel"
 									aria-labelledby="tab-dashboard-link">
-									<form method="post" action="/updateDetails" id="accountForm">
-										<h3>Account Info</h3>
 
-										<div class="text-right">
-											<i class="fas fa-edit" id="editIcon"></i>
-										</div>
+									<h3>Account Info</h3>
+
+									<div class="text-right">
+										<i class="fas fa-edit" id="editIcon"></i>
+									</div>
+									<form method="post" action="/updateDetails" id="accountForm">
+										
 
 										<div class="form-group">
 											<label for="name">Name:</label>
@@ -183,38 +185,54 @@
 
 								<div class="tab-pane fade" id="tab-wallet" role="tabpanel"
 									aria-labelledby="tab-wallet-link">
+
+									<h5 class="card-title">Wallet Balance :<%=walletBalance %> <span
+												class="text-success">/-</span></h5><br>
 									<p>Wallet History</p>
-									<h5 class="card-title">Wallet Balance:<%=walletBalance %> <span
-												class="text-success">/-</span></h5>
 
+									<div class="card-body">
+										<div class="table-responsive">
 
-									<table class="table table-cart table-mobile">
-										<thead>
-											<tr>
-												<th style="width: 40%;">Date</th>
-												<th style="width: 15%;">Amount</th>
-												<th style="width: 20%;">Messages</th>
-												<th style="width: 20%;">Type</th>
-												<th style="width: 20%;"></th>
-											</tr>
+											<table class="table table-cart table-mobile">
+												<thead>
+													<tr>
+														<th style="width: 40%;">Date</th>
+														<th style="width: 15%;">Amount</th>
+														<th style="width: 20%;">Messages</th>
+														<th style="width: 20%;">Type</th>
 
-										</thead>
-										<tbody>
-											<% walletHistory.forEach((history)=> { %>
-												<tr>
-													<th scope="row">
-														<%= history.date.toDateString() %>
-													</th>
-													<td>
-														<%= history.amount %>
-													</td>
-													<td>
-														<%= history.message %>
-													</td>
-												</tr>
-												<% }) %>
-										</tbody>
-									</table>
+													</tr>
+
+												</thead>
+												<tbody>
+													<% walletHistory.forEach((history)=> { %>
+														<tr>
+															<th scope="row">
+																<%= history.date.toLocaleString('en-US',
+																{ year: 'numeric' ,
+																month: 'short' ,
+																day: '2-digit' ,
+																hour: '2-digit' ,
+																minute: '2-digit' ,
+																second: '2-digit'
+																}).replace(/,/, ''
+																).replace(/\//g, '-' ) %>
+															</th>
+															<td>
+																<%= history.amount %>
+															</td>
+															<td>
+																<%= history.message %>
+															</td>
+															<td>
+																<%= history.type %>
+															</td>
+														</tr>
+														<% }) %>
+												</tbody>
+											</table>
+										</div>
+									</div>
 								</div><!-- .End .tab-pane -->
 
 								<!-- Add address in my account -->
