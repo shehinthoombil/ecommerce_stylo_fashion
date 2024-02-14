@@ -167,7 +167,7 @@ const addAddress = async (req, res) => {
 }
 
 // edit and updating user profile 
-  const userDetails = async(req,res) =>{
+  const updateUserDetails = async(req,res) =>{
     try {
         const hashedPassword = await securePassword(req.body.confirmPassword);
         let newDetails = {
@@ -179,9 +179,10 @@ const addAddress = async (req, res) => {
         }
         const newDB = await User.updateOne({ _id: req.session.user_id }, { $set: newDetails });
         console.log(newDB);
-        res.redirect('/myAccount')
+        res.redirect('/')
     } catch (error) {
         console.log(error.message)
+        res.render('/myAccount', { message: 'An error occurred' });
     }
   }
 
@@ -189,15 +190,17 @@ const addAddress = async (req, res) => {
   //wallet
 
   const showWallet = async(req,res) => {
+    console.log('wallet ilkk kerrii..');
     try {
       const user = await User.findById({ _id: req.session.user_id })
-
+      console.log(user, 'useril wallet ind');
 
       const walletBalance = user.wallet
       const walletHistory = user.walletHistory
+      console.log(walletBalance,"wallet balance kitti..");
       console.log(walletHistory,"wallet history kitti..");
-      console.log(user);
-      res.render('/wallet', {user, walletBalance, walletHistory, success:req.flash('success') })
+     
+      res.render('/myAccount', {user, walletBalance, walletHistory, success:req.flash('success') })
     } catch (error) {
       console.log(error.message)
     }
@@ -208,6 +211,6 @@ module.exports = {
     loadAddAddress,
     addAddress,
     editAddress,
-    userDetails,
+    updateUserDetails,
     showWallet,
 };

@@ -50,7 +50,7 @@ userRoute.get('/editAddress',isLogin,accountController.loadEditaddress)
 userRoute.post('/editAddress',isLogin,accountController.editAddress)
 userRoute.get('/addAddress',isLogin,accountController.loadAddAddress)
 userRoute.post('/addAddress',isLogin,accountController.addAddress)
-userRoute.post('/updateDetails',isLogin,accountController.userDetails)
+userRoute.post('/updateDetails',isLogin,accountController.updateUserDetails)
 
 //wallet
 userRoute.get('/wallet',isLogin, accountController.showWallet)

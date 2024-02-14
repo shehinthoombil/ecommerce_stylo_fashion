@@ -42,14 +42,14 @@ const userSchema = new mongoose.Schema({
     },
     walletHistory: [{
             date: {
-                type:Date,
+                type: Date,
                 default: Date.now 
             },
             amount: {
-                type:Number
+                type: Number
             },
             message:{
-                type:String
+                type: String
             },
             type: {
                 type: String,

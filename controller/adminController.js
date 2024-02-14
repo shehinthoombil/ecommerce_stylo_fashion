@@ -286,6 +286,7 @@ const loadProducts = async (req, res) => {
     }
 };
 
+// list or block product
 const listUnlistProduct = async (req, res) => {
     try {
         const product = await Product.findById(req.query.id);

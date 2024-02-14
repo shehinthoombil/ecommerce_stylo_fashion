@@ -220,11 +220,9 @@ const verifyMail = async (req, res) => {
         console.log('User entered OTP:', req.body.otp);
         const use = req.body.usermon
 
-
         if (req.body.otp == otpsend) {
 
             const updateInfo = await User.updateOne({ email: use }, { $set: { is_verified: 1 } })
-
             console.log(updateInfo);
             // res.redirect("/")
             res.render('register', { status: 'success', message: 'Your Account has been created.' });
@@ -253,7 +251,7 @@ const loginLoad = async (req, res) => {
 //verify login in checking email and password
 
 const verifyLogin = async (req, res) => {
-    console.log('OTP verify aayittund')
+    console.log('verify login success')
 
     try {
 
@@ -261,7 +259,6 @@ const verifyLogin = async (req, res) => {
         const password = req.body.password;
 
         const userData = await User.findOne({ email: email });
-
 
         if (userData) {
 
