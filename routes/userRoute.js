@@ -73,6 +73,8 @@ userRoute.post('/verifyPayment', isLogin, orderController.verifyPayment)
 //coupon
 userRoute.post('/applyCoupon', isLogin, couponController.applyCoupon)
 
-
+//wishlist
+userRoute.get('/wishlist', isLogin, userController.loadWishlist)
+userRoute.post('/addToWishlist', isLogin, userController.addtoWishlist)
 
 module.exports = userRoute

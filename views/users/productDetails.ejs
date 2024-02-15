@@ -31,112 +31,163 @@
                         <div class="product-details-top">
                             <div class="row">
                                 <% if(productDB){%>
-                                <div class="col-md-6">
-                                    <div class="product-gallery product-gallery-vertical">
-                                        <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="product-gallery product-gallery-vertical">
+                                            <div class="row">
 
-                                            <figure class="product-main-image">
-                                                <img id="product-zoom" src="/images/products/<%= productDB.images[0] %>"
-                                                    data-zoom-image="/images/products/<%= productDB.images[0] %>"
-                                                    alt="product image">
+                                                <figure class="product-main-image">
+                                                    <img id="product-zoom"
+                                                        src="/images/products/<%= productDB.images[0] %>"
+                                                        data-zoom-image="/images/products/<%= productDB.images[0] %>"
+                                                        alt="product image">
 
-                                                <a href="#" id="btn-product-gallery" class="btn-product-gallery">
-                                                    <i class="icon-arrows"></i>
-                                                </a>
-                                            </figure><!-- End .product-main-image -->
-
-                                            <div id="product-zoom-gallery" class="product-image-gallery">
-
-                                                <% for (let image of productDB.images) { %>
-                                                    <a class="product-gallery-item active" href="#"
-                                                        data-image="/images/products/<%= image %>"
-                                                        data-zoom-image="/images/products/<%= productDB.images[0] %>">
-                                                        <img src="/images/products/<%= image %>" alt="product side">
+                                                    <a href="#" id="btn-product-gallery" class="btn-product-gallery">
+                                                        <i class="icon-arrows"></i>
                                                     </a>
-                                                    <% } %>
-                                            </div><!-- End .product-image-gallery -->
+                                                </figure><!-- End .product-main-image -->
 
-                                        </div><!-- End .row -->
-                                    </div><!-- End .product-gallery -->
-                                </div><!-- End .col-md-6 -->
+                                                <div id="product-zoom-gallery" class="product-image-gallery">
 
-                                <div class="col-md-6">
-                                    <div class="product-details">
-                                        <h1 class="product-title">
-                                            <%= productDB.name %>
-                                        </h1><!-- End .product-title -->
-
-                                        <div class="ratings-container">
-                                            <div class="ratings">
-                                                <div class="ratings-val" style="width: 80%;"></div>
-                                                <!-- End .ratings-val -->
-                                            </div><!-- End .ratings -->
-                                            <a class="ratings-text" href="#product-review-link" id="review-link">( 2
-                                                Reviews )</a>
-                                        </div><!-- End .rating-container -->
-
-
-                                        <div class="product-price">
-                                            <% let smallestPrice=Math.min(productDB.price, productDB.discountPricepro ||
-                                            Infinity, productDB.discountPricecat || Infinity); %>
-                                            <div class="product-price">
-                                                <% if (smallestPrice && smallestPrice < productDB.price) { %>
-                                                    <strike>$<%= productDB.price %></strike>
-                                            </div>
-                                            <div class="product-price">
-                                                <b> $<%= smallestPrice %> </b>
-                                                <% } else { %>
-                                                    $<%= productDB.price %>
+                                                    <% for (let image of productDB.images) { %>
+                                                        <a class="product-gallery-item active" href="#"
+                                                            data-image="/images/products/<%= image %>"
+                                                            data-zoom-image="/images/products/<%= productDB.images[0] %>">
+                                                            <img src="/images/products/<%= image %>" alt="product side">
+                                                        </a>
                                                         <% } %>
-                                                
-                                            </div>
+                                                </div><!-- End .product-image-gallery -->
 
-                                        </div><!-- End .product-price -->
+                                            </div><!-- End .row -->
+                                        </div><!-- End .product-gallery -->
+                                    </div><!-- End .col-md-6 -->
+
+                                    <div class="col-md-6">
+                                        <div class="product-details">
+                                            <h1 class="product-title">
+                                                <%= productDB.name %>
+                                            </h1><!-- End .product-title -->
+
+                                            <div class="ratings-container">
+                                                <div class="ratings">
+                                                    <div class="ratings-val" style="width: 80%;"></div>
+                                                    <!-- End .ratings-val -->
+                                                </div><!-- End .ratings -->
+                                                <a class="ratings-text" href="#product-review-link" id="review-link">( 2
+                                                    Reviews )</a>
+                                            </div><!-- End .rating-container -->
+
+
+                                            <div class="product-price">
+                                                <% let smallestPrice=Math.min(productDB.price,
+                                                    productDB.discountPricepro || Infinity, productDB.discountPricecat
+                                                    || Infinity); %>
+                                                    <div class="product-price">
+                                                        <% if (smallestPrice && smallestPrice < productDB.price) { %>
+                                                            <strike>$<%= productDB.price %></strike>
+                                                    </div>
+                                                    <div class="product-price">
+                                                        <b> $<%= smallestPrice %> </b>
+                                                        <% } else { %>
+                                                            $<%= productDB.price %>
+                                                                <% } %>
+
+                                                    </div>
+
+                                            </div><!-- End .product-price -->
 
 
 
 
-                                        <div class="product-content">
-                                            <p>wear your style get more confident to travel.
-                                                Sed lectus. </p>
-                                        </div><!-- End .product-content -->
+                                            <div class="product-content">
+                                                <p>wear your style get more confident to travel.
+                                                    Sed lectus. </p>
+                                            </div><!-- End .product-content -->
 
-                                        <div class="details-filter-row details-row-size">
-                                            <label for="qty">Qty : <b>
-                                                    <%= productDB.quantity %>
-                                                </b> </label>
+                                            <div class="details-filter-row details-row-size">
+                                                <label for="qty">Qty : <b>
+                                                        <%= productDB.quantity %>
+                                                    </b> </label>
 
-                                        </div><!-- End .details-filter-row -->
+                                            </div><!-- End .details-filter-row -->
 
-                                        <div class="product-details-action">
-                                            <form action="/addToCart/<%= productDB._id %>" method="post">
-                                                <input type="hidden" name="productId" value="<%= productDB._id %>">
-                                                <button type="submit" class="btn-product btn-cart"><span>add to
-                                                        cart</span></button>
-                                            </form>
+                                            <!-- add to cart -->
+                                            <div class="product-details-action">
+                                                <form action="/addToCart/<%= productDB._id %>" method="post">
+                                                    <input type="hidden" name="productId" value="<%= productDB._id %>">
+                                                    <button type="submit" class="btn-product btn-cart"><span>add to
+                                                            cart</span></button>
+                                                </form>
 
-                                            <div class="details-action-wrapper">
+                                                <!-- add to wishlist -->
+
+                                                <div class="details-action-wrapper">
+                                                    <button type="button" class="btn-product btn-wishlist"
+                                                        onclick="addToWishlist('<%= productDB._id %>')">Add to
+                                                        Wishlist</button>
+
+                                                    <!-- <div class="details-action-wrapper">
                                                 <a href="#" class="btn-product btn-wishlist" title="Wishlist"><span>Add
-                                                        to Wishlist</span></a>
-                                                
-                                            </div><!-- End .details-action-wrapper -->
-                                        </div><!-- End .product-details-action -->
+                                                        to Wishlist</span></a> -->
 
-                                        <div class="product-details-footer">
-                                            <div class="product-cat">
-                                                <span>Category: <%= productDB.category %> </span>
+                                                </div><!-- End .details-action-wrapper -->
+                                            </div><!-- End .product-details-action -->
 
-                                            </div><!-- End .product-cat -->
+                                            <div class="product-details-footer">
+                                                <div class="product-cat">
+                                                    <span>Category: <%= productDB.category %> </span>
 
-                                            
-                                        </div><!-- End .product-details-footer -->
-                                    </div><!-- End .product-details -->
-                                </div><!-- End .col-md-6 -->
+                                                </div><!-- End .product-cat -->
+
+
+                                            </div><!-- End .product-details-footer -->
+                                        </div><!-- End .product-details -->
+                                    </div><!-- End .col-md-6 -->
                             </div><!-- End .row -->
                         </div><!-- End .product-details-top -->
                     </div><!-- End .container -->
                     <% } %>
                 </div><!-- End .page-content -->
             </main><!-- End .main -->
+
+            <script>
+                // Function to handle adding to wishlist via AJAX
+                function addToWishlist(productId) {
+                    console.log(productId,'WISHLIST KERRi');
+                    $.ajax({
+                        url: '/addToWishlist',
+                        type: 'POST',
+                        data: { id: productId },
+                        success: function (data) {
+                            if (data.result) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Added to Wishlist!',
+                                    text: 'Product has been added to your Wishlist successfully!',
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'info',
+                                    title: 'Failed to Add to Wishlist',
+                                    text: 'Product may already be in the Wishlist.',
+                                });
+                            }
+                        },
+                        error: function () {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Error adding to Wishlist. Please try again later.',
+                            });
+                        }
+                    });
+                }
+
+
+
+
+
+            </script>
+
+            </script>
 
             <%- include('../partials/user/footer.ejs') %>

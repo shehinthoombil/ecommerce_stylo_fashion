@@ -1,0 +1,94 @@
+<%-include('../partials/user/header.ejs') %>
+    <main class="main">
+        <div class="page-header text-center" style="background-image: url('userAssets/images/page-header-bg.jpg')">
+            <div class="container">
+                <h1 class="page-title">Wishlist<span>Shop</span></h1>
+            </div><!-- End .container -->
+        </div><!-- End .page-header -->
+        <nav aria-label="breadcrumb" class="breadcrumb-nav">
+            <div class="container">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item"><a href="#">Shop</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Wishlist</li>
+                </ol>
+            </div><!-- End .container -->
+        </nav><!-- End .breadcrumb-nav -->
+
+        <div class="page-content">
+            <div class="container">
+                <% if(wishlist){ %>
+                    <table class="table table-wishlist table-mobile">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Stock Status</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+
+                        <% for(let i=0 ; i < wishlist.length ; i++){ %>
+                            <% const product=wishlist[i].productid %>
+
+                                <% for(let j=0 ;j < product.length ; j++){ %>
+                                    <% const pro=product[j] %>
+
+                                        <tbody>
+                                            <tr>
+                                                <td class="product-col">
+                                                    <div class="product">
+                                                        <figure class="product-media">
+                                                            <a href="#">
+                                                                <img src="images/products/<%= pro.images[0] %>"
+                                                                    alt="Product image">
+                                                            </a>
+                                                        </figure>
+
+                                                        <h3 class="product-title">
+                                                            <a href="#">
+                                                                <%= pro.name %>
+                                                            </a>
+                                                        </h3><!-- End .product-title -->
+                                                    </div><!-- End .product -->
+                                                </td>
+                                                <% if(pro.discountPricepro){ %>
+                                                    <td class="price-col">₹<%= pro.discountPricepro %>
+                                                    </td>
+                                                    <% } else { %>
+                                                        <td class="price-col">₹<%= pro.price %>
+                                                        </td>
+                                                        <% } %>
+                                                            <td class="stock-col">
+                                                                <% if(pro.quantity==0 ){ %>
+                                                                    <span class="out-of-stock">Out of stock</span>
+                                                                    <% } else { %>
+                                                                        <span class="in-stock">In stock</span>
+                                                                        <% } %>
+                                                            </td>
+                                                            <td class="product-details-action">
+                                                                <form action="/addToCart/<%= pro._id %>" method="post">
+                                                                    <input type="hidden" name="productId" value="<%= pro._id %>">
+                                                                    <button type="submit" class="btn-product btn-cart"><span>Add to
+                                                                            Cart</span></button>
+                                                                </form>
+
+                                                            </td>
+                                                            <td class="remove-col"><a href="/deleteWishproduct"><button
+                                                                        class="btn-remove"><i
+                                                                            class="icon-close"></i></button></a></td>
+                                            </tr>
+
+                                        </tbody>
+                                        <% } %>
+                                            <% } %>
+                    </table><!-- End .table table-wishlist -->
+                    <% }else { %>
+                        <h4 style="color: rgb(252, 0, 0);"> I AM EMPTY ! PLEASE ADD SOME PRODUCTS !</h4>
+                        <% } %>
+            </div><!-- End .container -->
+        </div><!-- End .page-content -->
+    </main><!-- End .main -->
+
+    <%- include('../partials/user/footer.ejs') %>

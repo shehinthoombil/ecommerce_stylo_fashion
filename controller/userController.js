@@ -8,6 +8,7 @@ const Product = require('../model/productModel')
 const Category = require('../model/categoryModel');
 const Offers = require('../model/productOfferModel');
 const CategoryOffer = require('../model/categoryOfferModel');
+const Wishlist = require('../model/wishlistModel')
 const mongoose = require('mongoose');
 const { log } = require('console');
 
@@ -383,9 +384,12 @@ const productDetails = async (req, res) => {
         res.render('productDetails', { productDB, discPrice: discount, discCat: discountcategory })
     } catch (error) {
         console.log(error.message);
+        res.render('500')
     }
 
 }
+
+
 
 
 // load cart
@@ -634,6 +638,78 @@ const removeCartProduct = async (req, res) => {
     }
 };
 
+//load wishlist page
+
+const loadWishlist = async (req, res) => {
+    try {
+        
+        const user = req.session.user_id;
+        let userName;
+        let wishlist
+        if (user) {
+          const userData = await User.findOne({ _id: user });
+    
+          if (!userData) {
+            console.log('User not found');
+            return res.status(404).render('error', { errorMessage: 'User not found' });
+          }
+    
+          userName = userData.name;
+    
+          wishlist = await Wishlist.find({ userId: user }).populate('productid');
+    
+          res.render('wishlist', { wishlist, userName });
+        } else {
+          console.log('User not authenticated');
+          res.render('wishlist', { wishlist: wishlist || [], userName });
+        }
+        
+    } catch (error) {
+        console.error(error.message);
+
+        res.render('500')
+    }
+}
+
+// add product to whishlist
+
+const addtoWishlist = async (req,res) =>{
+    console.log('kerrWW');
+    try {
+        const user = req.session.user_id;
+        console.log(user , " userW");
+        const pro_id = req.body.id;
+        const wishlist = await Wishlist.findOne({ userId: user });
+        console.log(wishlist, 'wishlist');
+        const checkwishlistdata = await Wishlist.findOne({ userId: user, productid: pro_id });
+
+        if (user) {
+            if (wishlist) {
+              if (checkwishlistdata) {
+                res.json({ result: false });
+              } else {
+                await Wishlist.updateOne({ userId: user }, { $push: { productid: pro_id } });
+                res.json({ result: true });
+              }
+            } else {
+              const data = new Wishlist({
+                userId: user,
+                productid: [pro_id],
+              });
+      
+              await data.save();
+              res.json({ result: true });
+            }
+          } else {
+            res.json({ result: false });
+          }
+
+    } catch (error) {
+        console.log(error.message);
+         res.render('500')
+    }
+}
+
 //load contactUs page
 
 const loadContactUs = async (req, res) => {
@@ -667,5 +743,7 @@ module.exports = {
     addToCart,
     updateCartQuantity,
     removeCartProduct,
+    loadWishlist,
+    addtoWishlist,
     loadContactUs,
 }
