@@ -65,18 +65,18 @@ const loadHome = async (req, res) => {
 //referal code generator
 
 function generateReferalCode() {
-    
+
     const Rcode = randomString.generate({
         length: 8
     })
-    return User.findOne({ referalCode:Rcode  })
-      .then(existingRefer => {
-        if (existingRefer) {
-            return generateCouponCode();// If the code is not unique, generate a new one recursively
-        }
-        return Rcode; // Return the unique code
+    return User.findOne({ referalCode: Rcode })
+        .then(existingRefer => {
+            if (existingRefer) {
+                return generateCouponCode();// If the code is not unique, generate a new one recursively
+            }
+            return Rcode; // Return the unique code
         });
-  }
+}
 
 
 
@@ -95,53 +95,53 @@ const insertUser = async (req, res) => {
             return res.status(500).send("Failed to hash the password");
         }
 
-      //referal code seting new user
-      const myReferCode =await generateReferalCode()
-      console.log(myReferCode,"referral vannallo...")
+        //referal code seting new user
+        const myReferCode = await generateReferalCode()
+        console.log(myReferCode, "referral vannallo...")
 
         const user = new User({
             name: req.body.newUsername,
             email: req.body.newEmail,
             mobile: req.body.newMobile,
             password: spassword,
-            referalCode:myReferCode,
+            referalCode: myReferCode,
             is_verified: 0,
             is_block: 0,
         })
         const userData = await user.save()
         console.log(userData);
 
-         
-        if(req.body.referalCode){
+
+        if (req.body.referalCode) {
             console.log(req.body.referalCode)
-            const referedUser = await User.findOne({referalCode:req.body.referalCode})
-            if(referedUser){
-                  const wHistory = {
-                    date:Date.now(),
-                    amount:200,
-                    message:'Invitation bonus via referal code'
-                  }
-                  referedUser.wallet+=200
-                  referedUser.walletHistory.push(wHistory)
-                  await referedUser.save()
-                  console.log(referedUser);
-  
-                  const W_history = {
-                     date:Date.now(),
-                     amount:100,
-                     message:'referal bonus'
-                  }
-                  user.wallet +=100
-                  user.walletHistory.push(W_history)
-                  await user.save()
-              }
-  
-          }
+            const referedUser = await User.findOne({ referalCode: req.body.referalCode })
+            if (referedUser) {
+                const wHistory = {
+                    date: Date.now(),
+                    amount: 200,
+                    message: 'Invitation bonus via referal code'
+                }
+                referedUser.wallet += 200
+                referedUser.walletHistory.push(wHistory)
+                await referedUser.save()
+                console.log(referedUser);
+
+                const W_history = {
+                    date: Date.now(),
+                    amount: 100,
+                    message: 'referal bonus'
+                }
+                user.wallet += 100
+                user.walletHistory.push(W_history)
+                await user.save()
+            }
+
+        }
 
 
 
 
-// OTP 
+        // OTP 
         if (userData) {
             sendVerifyMail(req.body.newUsername, req.body.newEmail)
 
@@ -313,7 +313,7 @@ const productList = async (req, res) => {
         if (req.query.search) {
             search = req.query.search;
         }
-        
+
         // Pagination in product
         var page = 1;
         if (req.query.page) {
@@ -342,14 +342,14 @@ const productList = async (req, res) => {
             ]
         }).countDocuments();
 
-        
+
         const availableCategories = await Category.find()
         // console.log(availableCategories , 'categories und');
-        const discount = await Offers.find({ })
-        const discountcategory = await CategoryOffer.find({ });
-        const productData = await Product.find({ });
+        const discount = await Offers.find({})
+        const discountcategory = await CategoryOffer.find({});
+        const productData = await Product.find({});
         const renderData = { products: productData, discPrice: discount, discCat: discountcategory, availableCategories };
-    
+
         console.log(renderData.discPrice);
         res.render('productList', {
             // products: productData, 
@@ -361,7 +361,7 @@ const productList = async (req, res) => {
             totalPages: Math.ceil(count / limit),  //Ex:- count of document/limit (9/6 = 1.5 => 2)
             currentPage: page,  //page 1
             title: 'productList',
-            renderData,  
+            renderData,
         });
 
     } catch (error) {
@@ -377,8 +377,8 @@ const productDetails = async (req, res) => {
         const productDB = await Product.findOne({ _id: id })
         // console.log(productDB);
 
-        const discount = await Offers.find({  })
-        const discountcategory = await CategoryOffer.find({  });
+        const discount = await Offers.find({})
+        const discountcategory = await CategoryOffer.find({});
 
 
         res.render('productDetails', { productDB, discPrice: discount, discCat: discountcategory })
@@ -447,7 +447,7 @@ const loadCart = async (req, res) => {
 //         };
 
 //         const hasCart = await Cart.findOne({ userId });
-        
+
 //         if (hasCart) {
 //             // Add product to existing cart
 //              hasCart.products.push(product);
@@ -456,7 +456,7 @@ const loadCart = async (req, res) => {
 //             console.log("hascart cart vechu");
 //             const discountPrices = [productDetails.discountPricepro, productDetails.price, productDetails.discountPricecat];
 //             const validDiscounts = discountPrices.filter(discount => discount !== null && discount !== undefined);
-  
+
 //             let smallestDiscount = validDiscounts ? Math.min(...validDiscounts) : undefined;
 //             console.log(smallestDiscount + "Smallest discount");
 //             const cartItem = {
@@ -471,7 +471,7 @@ const loadCart = async (req, res) => {
 //             //     userId,
 //             //     userName: user.name,
 //             //     products: [product],
-                
+
 //             // });
 //             // const newData = await newCartItem.save();
 //             const newCart = await Cart.findOneAndUpdate(
@@ -481,7 +481,7 @@ const loadCart = async (req, res) => {
 //               );
 
 //             console.log(newCart , 'new cart items');
-            
+
 //         }
 //         console.log("+++++++++++++++++++++++++++++");
 
@@ -504,7 +504,7 @@ const addToCart = async (req, res) => {
         const productDetails = await Product.findById(productId);
 
         const hasCart = await Cart.findOne({ userId });
-        
+
         if (hasCart) {
             // Check if the product already exists in the cart
             const existingProductIndex = hasCart.products.findIndex(item => item.productId.toString() === productId);
@@ -514,7 +514,7 @@ const addToCart = async (req, res) => {
                 hasCart.products[existingProductIndex].count += 1;
             } else {
                 const discountPrices = [productDetails.discountPricepro, productDetails.price, productDetails.discountPricecat];
-            const validDiscounts = discountPrices.filter(discount => discount !== null && discount !== undefined);
+                const validDiscounts = discountPrices.filter(discount => discount !== null && discount !== undefined);
                 let smallestDiscount = validDiscounts ? Math.min(...validDiscounts) : undefined;
                 // If the product doesn't exist, add it to the cart
                 hasCart.products.push({
@@ -642,28 +642,28 @@ const removeCartProduct = async (req, res) => {
 
 const loadWishlist = async (req, res) => {
     try {
-        
+
         const user = req.session.user_id;
         let userName;
         let wishlist
         if (user) {
-          const userData = await User.findOne({ _id: user });
-    
-          if (!userData) {
-            console.log('User not found');
-            return res.status(404).render('error', { errorMessage: 'User not found' });
-          }
-    
-          userName = userData.name;
-    
-          wishlist = await Wishlist.find({ userId: user }).populate('productid');
-    
-          res.render('wishlist', { wishlist, userName });
+            const userData = await User.findOne({ _id: user });
+
+            if (!userData) {
+                console.log('User not found');
+                return res.status(404).render('error', { errorMessage: 'User not found' });
+            }
+
+            userName = userData.name;
+
+            wishlist = await Wishlist.find({ userId: user }).populate('productid');
+
+            res.render('wishlist', { wishlist, userName });
         } else {
-          console.log('User not authenticated');
-          res.render('wishlist', { wishlist: wishlist || [], userName });
+            console.log('User not authenticated');
+            res.render('wishlist', { wishlist: wishlist || [], userName });
         }
-        
+
     } catch (error) {
         console.error(error.message);
 
@@ -673,40 +673,59 @@ const loadWishlist = async (req, res) => {
 
 // add product to whishlist
 
-const addtoWishlist = async (req,res) =>{
-    console.log('kerrWW');
+const addtoWishlist = async (req, res) => {
+    console.log('wishkkkerri')
     try {
         const user = req.session.user_id;
-        console.log(user , " userW");
+        console.log(user, " userW");
         const pro_id = req.body.id;
         const wishlist = await Wishlist.findOne({ userId: user });
-        console.log(wishlist, 'wishlist');
+        console.log(wishlist, 'wishlistdb');
         const checkwishlistdata = await Wishlist.findOne({ userId: user, productid: pro_id });
+        console.log(checkwishlistdata, 'datas');
 
         if (user) {
             if (wishlist) {
-              if (checkwishlistdata) {
-                res.json({ result: false });
-              } else {
-                await Wishlist.updateOne({ userId: user }, { $push: { productid: pro_id } });
-                res.json({ result: true });
-              }
+                if (checkwishlistdata) {
+                    res.json({ result: false });
+                } else {
+                    await Wishlist.updateOne({ userId: user }, { $push: { productid: pro_id } });
+                    res.json({ result: true });
+                }
             } else {
-              const data = new Wishlist({
-                userId: user,
-                productid: [pro_id],
-              });
-      
-              await data.save();
-              res.json({ result: true });
+                const data = new Wishlist({
+                    userId: user,
+                    productid: [pro_id],
+                });
+
+                await data.save();
+                res.json({ result: true });
             }
-          } else {
+        } else {
             res.json({ result: false });
-          }
+        }
 
     } catch (error) {
         console.log(error.message);
-         res.render('500')
+        res.render('500')
+    }
+}
+
+//delete ishlist product
+
+const deleteWishproduct = async (req, res) => {
+    console.log('delete wish');
+    try {
+        const user = req.session.user_id;
+        const pro_id = req.query.id;
+        console.log(user, 'usernd');
+        console.log(pro_id, 'product ind');
+        await Wishlist.updateOne({ userId: user }, { $pull: { productid: pro_id } });
+        res.redirect('/wishlist')
+
+    } catch (error) {
+        console.log(error.message)
+        res.render('500')
     }
 }
 
@@ -745,5 +764,6 @@ module.exports = {
     removeCartProduct,
     loadWishlist,
     addtoWishlist,
+    deleteWishproduct,
     loadContactUs,
 }

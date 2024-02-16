@@ -76,5 +76,6 @@ userRoute.post('/applyCoupon', isLogin, couponController.applyCoupon)
 //wishlist
 userRoute.get('/wishlist', isLogin, userController.loadWishlist)
 userRoute.post('/addToWishlist', isLogin, userController.addtoWishlist)
+userRoute.get('/deleteWishproduct', isLogin, userController.deleteWishproduct)
 
 module.exports = userRoute
