@@ -16,6 +16,10 @@ const orderDetails = new mongoose.Schema({
           required: true,
           ref: "Product",
         },
+        productPrice : {
+          type: Number,
+          required: true
+        },
         count: {
           type: Number,
           default: 1

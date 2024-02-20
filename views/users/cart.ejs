@@ -34,8 +34,9 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <% for (let i = 0; i < cartItems.products.length; i++) { %>
-                                        <% const cart = cartItems.products[i]; %>
+                                    
+                                    <% for (let i = 0; cartItems?.products && i < cartItems?.products?.length; i++) { %>
+                                        <% const cart = cartItems?.products[i]; %>
                                         <tr>
                                             <td class="product-col">
                                                 <div class="product">
@@ -81,7 +82,7 @@
                                         </tr>
                                     <% } %>
                                 </tbody>
-                                
+                               
                                 
                             </table><!-- End .table table-wishlist -->
 

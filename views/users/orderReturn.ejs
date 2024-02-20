@@ -1,0 +1,79 @@
+<%- include('../partials/user/header.ejs') %>
+
+
+
+<div id="site-main" class="site-main">
+    <div id="main-content" class="main-content">
+        <div id="primary" class="content-area">
+            <div id="title" class="page-title">
+                <div class="section-container">
+                    <div class="content-title-heading">
+                        <h1 class="text-title-heading"></h1>
+                    </div>
+                    <div class="breadcrumbs"></div>
+                </div>
+            </div>
+
+            <div id="content" class="site-content" role="main">
+                <div class="section-padding">
+                    <div class="section-container p-l-r">
+                        <div class="shop-checkout">
+                            <div style="background-color: rgb(236, 236, 236); color: white; padding: 15px; text-align: center; width: 80%; margin: 0 auto;">
+                                <h2>Your order has been cancelled!</h2>
+                                <div class="container">
+                                    <div class="success-icon" id="successIcon">&#10003;</div>
+                                    <div class="success-message" id="successMessage">Order Return Requested!</div>
+                                    <a href="/" class="back-to-home">Back to Home</a>
+                                  </div>
+                                <p class="text-dark">Thank you for shopping with us.</p>
+                                <button onclick="window.location.href='/productList'" style="background-color: #c96; color: rgb(0, 0, 0); padding: 10px 20px; border: none; cursor: pointer;">Continue Shopping</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- #content -->
+        </div><!-- #primary -->
+    </div><!-- #main-content -->
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/tsparticles-confetti@2.12.0/tsparticles.confetti.bundle.min.js"></script>
+
+<script>
+    // Display the success message and icon after a delay
+    setTimeout(function () {
+      document.getElementById('successIcon').style.display = 'block';
+      document.getElementById('successMessage').style.display = 'block';
+    }, 500);
+  </script>
+  <script>const end = Date.now() + 3 * 1000;
+
+    // go Buckeyes!
+    const colors = ["#bb0000", "#ffffff"];
+
+    (function frame() {
+      confetti({
+        particleCount: 2,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0 },
+        colors: colors,
+      });
+
+      confetti({
+        particleCount: 2,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1 },
+        colors: colors,
+      });
+
+      if (Date.now() < end) {
+        requestAnimationFrame(frame);
+      }
+    })();</script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<%- include('../partials/user/footer.ejs') %>

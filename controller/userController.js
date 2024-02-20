@@ -113,7 +113,8 @@ const insertUser = async (req, res) => {
 
 
         if (req.body.referalCode) {
-            console.log(req.body.referalCode)
+            console.log(req.body.referalCode , 'referalcode varunnu')
+
             const referedUser = await User.findOne({ referalCode: req.body.referalCode })
             if (referedUser) {
                 const wHistory = {
@@ -413,6 +414,7 @@ const loadCart = async (req, res) => {
                     let datatotal = hasCart.products.map((products) => {
                         return products.price * products.count;
                     });
+                    console.log(hasCart,'hascart aan');
                     res.render('cart', { cartItems: hasCart, totalSum, datatotal });
                 } else {
                     res.render('cart', { cartItems: [] }); // Render with an empty cart if no products are found

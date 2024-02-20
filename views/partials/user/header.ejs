@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Stylo - Bootstrap eCommerce Template</title>
+    <title>Stylo </title>
     <meta name="keywords" content="HTML5 Template">
     <meta name="description" content="Molla - Bootstrap eCommerce Template">
     <meta name="author" content="p-themes">
@@ -33,9 +33,9 @@
     <link rel="stylesheet" href="userAssets/css/plugins/nouislider/nouislider.css">
     <!-- Main CSS File -->
     <link rel="stylesheet" href="userAssets/css/style.css">
-     <!-- Include SweetAlert2 CSS and JS from CDN -->
-     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Include SweetAlert2 CSS and JS from CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
 
 </head>
 
@@ -47,11 +47,11 @@
                 <div class="container">
                     <div class="header-left">
                         <button class="mobile-menu-toggler">
-                            <span class="sr-only">Toggle mobile menu</span>
+                            <span class="sr-only"> mobile menu</span>
                             <i class="icon-bars"></i>
                         </button>
 
-                        <a href="index.html" class="logo">
+                        <a href="/" class="logo">
                             <img src="userAssets/images/stylologo.png" alt="Molla Logo" width="105" height="25">
                         </a>
 
@@ -67,22 +67,20 @@
                                 <li>
                                     <a href="/contactUs" class="sf-with-ul">CONTACT US</a>
 
-                                   
                                 </li>
-                                
                                 <li>
                                     <a href="/myAccount" class="sf-with-ul">ACCOUNT</a>
 
                                 </li>
                                 <li>
-                                    <% if(typeof user !=='undefined'){%>
+                                    <% if(typeof user !=='undefined' ){%>
                                         <a href="/logout" class="sf-with-ul">LOGOUT</a>
-                                    </li>
-                                    <% }else{%>    
-                                        <li>
-                                            <a href="/login" class="sf-with-ul">LOGIN</a>
                                 </li>
-                                <% } %>    
+                                <% }else{%>
+                                    <li>
+                                        <a href="/login" class="sf-with-ul">LOGIN</a>
+                                    </li>
+                                    <% } %>
                             </ul><!-- End .menu -->
                         </nav><!-- End .main-nav -->
                     </div><!-- End .header-left -->
@@ -94,21 +92,23 @@
                                     <i class="icon-search"></i></a> -->
                                 <div class="header-search-wrapper show">
                                     <label for="q" class="sr-only">Search</label>
-                                    <input type="search" class="form-control" name="search" id="search" placeholder="Search in..."
-                                        required>
+                                    <input type="search" class="form-control" name="search" id="search"
+                                        placeholder="Search in..." required>
+                                    <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
                                 </div><!-- End .header-search-wrapper -->
                             </form>
                         </div><!-- End .header-search -->
-                        
+
                         <a href="/wishlist" class="wishlist-link">
                             <i class="icon-heart-o"></i>
-                            <!-- <span class="wishlist-count">1</span> -->
+                            <!-- <span class="wishlist-count"></span> -->
                         </a>
 
                         <div class="dropdown cart-dropdown">
                             <!-- <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" -->
-                            <a href="/cart" class="dropdown-toggle" role="button"  aria-haspopup="true" aria-expanded="false" data-display="static"
-                                aria-haspopup="true" aria-expanded="false" data-display="static">
+                            <a href="/cart" class="dropdown-toggle" role="button" aria-haspopup="true"
+                                aria-expanded="false" data-display="static" aria-haspopup="true" aria-expanded="false"
+                                data-display="static">
                                 <i class="icon-shopping-cart"></i>
                                 <!-- <span class="cart-count"></span> -->
                             </a>

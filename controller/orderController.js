@@ -225,6 +225,7 @@ const placeOrder = async (req, res) => {
         product: cartProduct.productId,  // Set the 'product' field to 'productId'
         count: cartProduct.count,
         total: cartProduct.totalPrice,
+        productPrice: cartProduct.price
         // status: 'Pending',  // You may adjust the default value as needed
       });
     }
@@ -236,7 +237,7 @@ const placeOrder = async (req, res) => {
       purchaseDate: new Date(),
       totalAmount: totalAmount, // Use the totalAmount variable
       status: status,
-      paymentMethod: paymentMethod,
+      paymentMethod: paymentMethod,    
       paymentStatus: 'paid',
       // paymentStatus: 'pending',
       shippingFee: '0',
@@ -386,7 +387,79 @@ const cancelOrder = async (req, res) => {
   }
 }
 
+//load return orderpage
 
+const returnOrder = async (req, res) => {
+  try {
+    res.render('orderReturn')
+  } catch (error) {
+    console.log(error.message)
+    res.render('500')
+  }
+}
+
+//return order
+const orderReturnPOST = async (req, res) => {
+  console.log('returnkk keri..')
+  try {
+    const type = req.body.type;
+    const id = req.body.id;
+
+    if (type === 'order') {
+      // Handle order return
+      const order = await Order.findOne({ _id: id });
+      const count = order.products[0].count;
+      const tAmount = order.totalAmount
+      const user = order.userId;
+      console.log(user,'order user ID');
+      const walletData = await User.findOne({ userId: user })
+      const balWallet = walletData.balance
+      if (order) {
+        order.status = 'Returned';
+        await order.save();
+        for (const orderProduct of order.products) {
+          const proDB = await product.findOne({ _id: orderProduct.product });
+          if (proDB) {
+            proDB.quantity += count;
+            await proDB.save();
+          }
+        }
+        const newTransaction = {
+          date: new Date(),
+          amount: tAmount,
+          message:'Order returned',
+          type: 'credit',
+        };
+
+        // const updatedWallet = await User.updateOne(
+        //   { userId: user },
+        //   { $push: { items: newTransaction }, $set: { balance: balWallet + tAmount } }, { upsert: true }
+        // );
+
+        const updatedWallet = await User.findOneAndUpdate(
+          { _id: user },
+          { $push: { walletHistory: newTransaction }, $inc: { wallet: tAmount } },
+          { new: true, upsert: true }
+        );
+
+          console.log(updatedWallet,'updated aayath');
+
+        res.json({ success: true });
+
+      }
+
+      else {
+        res.status(400).json({ error: 'Order not found' });
+      }
+
+    } else {
+      res.status(400).json({ error: 'Invalid request type' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.render('500')
+  }
+}
 
 
 
@@ -399,5 +472,7 @@ module.exports = {
   orderSuccess,
   OrderCancelPage,
   cancelOrder,
+  returnOrder,
+  orderReturnPOST,
 
 }
