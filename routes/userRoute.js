@@ -62,6 +62,8 @@ userRoute.get('/orderSuccess', isLogin, orderController.orderSuccess)
 userRoute.get('/order-Cancel', isLogin, orderController.OrderCancelPage)
 userRoute.post('/cancelOrder', isLogin, orderController.cancelOrder)
 userRoute.get('/orderCancel', isLogin, orderController.OrderCancelPage)
+userRoute.get('/returnPage', isLogin, orderController.returnOrder)
+userRoute.post('/returnOrder', isLogin, orderController.orderReturnPOST)
 
 //contactUs
 

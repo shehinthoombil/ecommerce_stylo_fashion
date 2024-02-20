@@ -172,7 +172,7 @@ const addAddress = async (req, res) => {
         const hashedPassword = await securePassword(req.body.confirmPassword);
         let newDetails = {
             name:req.body.name,
-            email:req.body.email,
+            // email:req.body.email,
             mobile:req.body.mobile,
             password:hashedPassword
            
