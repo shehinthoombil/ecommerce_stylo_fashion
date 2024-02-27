@@ -203,7 +203,7 @@ const placeOrder = async (req, res) => {
     const userId = req.session.user_id;
     const addressId = req.body.selectedAddress;
     const paymentMethod = req.body['payment-method'];
-    const status = paymentMethod === 'cod' ? 'placed' : 'pending';
+    const status = paymentMethod === 'cod' || paymentMethod === 'Wallet' ? 'placed' : 'pending';
     
     const statusLevel = status === 'placed' ? 1 : 0;
     console.log('status level working');
@@ -249,7 +249,28 @@ const placeOrder = async (req, res) => {
     const successPageURL = '/orderSuccess';
     // res.redirect('/orderSuccess');
 
-    if (paymentMethod === 'online') {
+    if (paymentMethod === 'Wallet') {
+      const walletData = await User.findOne({ userId: user })
+      const balWallet = walletData.wallet
+
+      if (balWallet >= totalAmount) {
+        const newTransaction = {
+          date: new Date(),
+          amount: totalAmount,
+          message:'Ordered wallet',
+          type: 'debit',
+        };
+        const updatedWallet = await User.updateOne(
+          { _id: user },
+          { $push: { walletHistory: newTransaction }, $set: { wallet: balWallet - totalAmount } },
+          // { new: true, upsert: true }
+        );
+          console.log(updatedWallet,'updated aayath');
+          return res.json({ success: true, orderId: savedOrder._id });
+      } else {
+        res.json({ error: 'Insufficient funds in wallet' });
+      }
+    } else if (paymentMethod === 'online') {
       
       const options = {
         amount: totalAmount * 100,

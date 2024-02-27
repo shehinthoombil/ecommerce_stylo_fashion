@@ -1,6 +1,57 @@
 <%- include('../partials/user/header.ejs') %>
 
+<style>
 
+  .container {
+    text-align: center;
+  }
+
+  .success-message {
+    display: none;
+    color: #28a745;
+    font-size: 24px;
+    font-weight: bold;
+    animation: fadeIn 1s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  .success-icon {
+    color: #28a745;
+    font-size: 64px;
+    margin-bottom: 20px;
+    animation: bounceIn 1s ease-in-out;
+  }
+
+  @keyframes bounceIn {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+      transform: translateY(0);
+    }
+
+    40% {
+      transform: translateY(-20px);
+    }
+
+    60% {
+      transform: translateY(-10px);
+    }
+  }
+
+ 
+</style>
 
 <div id="site-main" class="site-main">
     <div id="main-content" class="main-content">
@@ -19,7 +70,7 @@
                     <div class="section-container p-l-r">
                         <div class="shop-checkout">
                             <div style="background-color: rgb(236, 236, 236); color: white; padding: 15px; text-align: center; width: 80%; margin: 0 auto;">
-                                <h2>Your order has been cancelled!</h2>
+                                <h2>Your order has been Returned!</h2>
                                 <div class="container">
                                     <div class="success-icon" id="successIcon">&#10003;</div>
                                     <div class="success-message" id="successMessage">Order Return Requested!</div>

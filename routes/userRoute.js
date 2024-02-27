@@ -22,8 +22,8 @@ userRoute.use(session({
 userRoute.get('/', userController.loadHome)
 
 //REGISTER //LOGIN //LOGOUT
-userRoute.get('/register', userController.loadRegister) 
-userRoute.post('/register', userController.insertUser)
+userRoute.get('/register',isLogout, userController.loadRegister) 
+userRoute.post('/register',isLogout, userController.insertUser)
 userRoute.get('/login', isLogout, userController.loginLoad)
 userRoute.post('/login', isLogout, userController.verifyLogin)
 
@@ -34,9 +34,20 @@ userRoute.get('/logout', isLogin, userController.logoutUser)
 userRoute.post('/verify', userController.verifyMail)
 userRoute.post('/resendOtp', userController.resendOTP)
 
+//Forgot password and reset
+userRoute.get('/loadreset', userController.loadResetPassEmail)
+userRoute.post('/reset-password', userController.resetPasswordEmailLink)
+userRoute.post('/verify', userController.verifyMail)
+userRoute.get('/loadpassReset', userController.loadpassReset)
+userRoute.post('/resetpassPost', userController.resetPasswordPost)
+
+
 //shop or product list
-userRoute.get('/productList',isLogin, userController.productList)
+userRoute.get('/productList', userController.productList)
 userRoute.get('/productDetails', userController.productDetails)
+//filter
+userRoute.post('/filter', userController.filterPrice)
+
 
 //cart
 userRoute.get('/cart',isLogin, userController.loadCart)

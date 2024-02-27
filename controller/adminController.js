@@ -1,5 +1,6 @@
 const Admin = require("../model/adminModel")
 const User = require('../model/userModel')
+const bcrypt = require('bcrypt')
 const Category = require('../model/categoryModel')
 const Product = require('../model/productModel');
 const Offers = require('../model/productOfferModel');
@@ -213,17 +214,33 @@ const editCategory = async (req, res) => {
     }
 }
 
+//email validating with regex
+function validateEmail(email) {
+    const regex = /^[^\s@]+([\._][^\s@]+)*@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  }
 
 //verify admin and  load dashboard of admin
 const adminVerify = async (req, res) => {
     try {
+        console.log('verifykk kerri');
         const { email, password } = req.body
 
+        if (!validateEmail(email)) {
+            return res.render('admin/signIn', { message: 'Invalid email format or password' });
+          }
+    
         const admin = await Admin.findOne({ email });
-
+        console.log(admin);
         if (admin) {
-            if (password === admin.password) {
-                res.redirect('/admin/dashboard')
+          
+            const passwordMatch = await bcrypt.compare(password, admin.password);
+            console.log('passmatching');
+            if (passwordMatch) {
+                req.session.admin_id = admin._id;
+                req.session.save();
+                console.log(req.session.admin_id, 'adminsessionid')
+                return res.redirect('/admin/dashboard');
             }
         } else {
             res.render('admin/signIn', { message: "Email and password are incorrect." })
@@ -238,6 +255,7 @@ const adminVerify = async (req, res) => {
 
 const logoutAdmin = async (req, res) => {
     try {
+        req.session.admin_id = false;
         res.redirect('/admin')
     } catch (error) {
         console.log(error.message);
@@ -390,6 +408,24 @@ const deleteExistImage = async (req, res) => {
     }
 }
 
+//delete product
+const deleteProduct = async (req, res) => {
+    try {
+  
+  
+      const currentData = await Product.findOne({ _id: req.query.id });
+  
+      if (!currentData) {
+        return res.status(404).send('Product not found');
+      }
+      await Product.deleteOne({ _id: req.query.id});
+      res.redirect('/admin/product/products');
+    } catch (error) {
+      console.log(error.message);
+      res.render('500')
+    }
+  };
+
 //load order page
 
 const loadOrder = async (req, res) => {
@@ -436,7 +472,7 @@ const loadSalesSummary = async (req, res) => {
         path:'userId',
         select: 'name'
        }) 
-       .populate('products.product')
+       .populate('products.product');
        console.log(orderDat[0].products)
        const newProduct = await Product.find({})
        res.render('admin/salesSummary' , { orderDat, newProduct })
@@ -580,6 +616,7 @@ module.exports = {
     editProduct,
     listUnlistProduct,
     deleteExistImage,
+    deleteProduct,
     loadOrder,
     updateOrderStatus,
     loadSalesSummary,

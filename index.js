@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser')
 require('dotenv').config()
 const app = express()
 config.dbConnect()
+const { log } = require('console');
 
 // nocache
 app.use((req, res, next) => {
@@ -27,6 +28,13 @@ app.set('view engine', 'ejs');
 
 app.use('/', userRoute)
 app.use('/admin',adminRoute)
+app.get('*', (req, res) => {
+  try {
+    res.render('404')
+  } catch (error) {
+    console.log(error.message);
+  }
+})
 
 //payment route
 const paymentRoute = require('./routes/userRoute');

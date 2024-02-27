@@ -2,12 +2,19 @@
 
     <div class="col-12 grid-margin stretch-card">
         <%- include('../../partials/admin/sidePanel') %>
+
+        <style>
+            .error {
+              color: red;
+            }
+          </style>
+
             <div class="container-fluid mt-3">
                 <div class="row justify-content-center">
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Basic form elements</h4>
+                                <h4 class="card-title">Add new Products</h4>
                                 <!-- <form class="forms-sample" action="/admin/categories" method="post"
                                     enctype="multipart/form-data">
                                     <div class="form-group">
@@ -45,7 +52,7 @@
                                     <button class="btn btn-dark">Cancel</button>
                                                                         </div>
                                 </form> -->
-                                <form action="/admin/product/addProduct" method="post" enctype="multipart/form-data"\>
+                                <form action="/admin/product/addProduct" method="post" enctype="multipart/form-data">
                                     <div class="form-group">
                                         <label for="singin-email-2"> Product Name</label>
                                         <input type="text" class="form-control" id="singin-email-2" name="name">
@@ -66,15 +73,15 @@
                                     </div><!-- End .form-group -->
 
                                     <div class="form-group">
-                                        <label for="singin-password-2">Quantity</label>
-                                        <textarea type="description" class="form-control" id="singin-description-2"
+                                        <label for="exampleInputEmail3">Quantity</label>
+                                        <textarea type="text" class="form-control" id="exampleInputEmail3"
                                             name="quantity"></textarea>
                                         <span class="error-message text-danger" id="description-error"></span>
                                     </div><!-- End .form-group -->
 
                                     <div class="form-group">
-                                        <label for="singin-password-2">Price</label>
-                                        <textarea type="description" class="form-control" id="singin-description-2"
+                                        <label for="price">Price</label>
+                                        <textarea type="description" class="form-control" id="price"
                                             name="price"></textarea>
                                         <span class="error-message text-danger" id="description-error"></span>
                                     </div><!-- End .form-group -->
@@ -99,6 +106,7 @@
                                         </div>
                                     </div>
 
+                                    <div id="errorMessages"></div>
                                     <div class="form-footer">
                                         <button type="submit" class="btn btn-outline-primary-2 bg-primary">
                                             <span>Add</span>
@@ -111,6 +119,58 @@
                     </div>
                 </div>
             </div>
+
+            <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+            <script>
+                $(document).ready(function () {
+            
+                  function updateSubmitButton() {
+                    var submitButton = $('button[type="submit"]');
+                    var name = $('#singin-email-2').val();
+                    var quantity = $('#exampleInputEmail3').val();
+                    var price = $('#price').val();
+                    var errorMessages = $('#errorMessages');
+            
+                    // Validate conditions
+                    var isProNameValid = name.length > 0 && name.length <= 20;
+                    var isQtyValid = !isNaN(quantity) && quantity >= 0;
+                    var isPriceValid = !isNaN(price) && price >= 0;
+                  
+            
+                    // Show or hide error messages
+                    errorMessages.empty();
+                    if (!isProNameValid) {
+                      errorMessages.append('<span class="error" id="e1">Name must be between 1 and 20 characters.</span><br>');
+                    }
+                    if (!isQtyValid) {
+                      errorMessages.append('<span class="error" id="e2">Quantity must be a non-negative number.</span><br>');
+                    }
+                    if (!isPriceValid) {
+                      errorMessages.append('<span class="error" id="e3">Price must be a non-negative number.</span><br>');
+                    }
+                    // Enable or disable the submit button
+                    submitButton.prop(
+                      'disabled',
+                      !(isProNameValid && isQtyValid && isPriceValid)
+                    );
+                  }
+            
+                  // Attach event listeners to form inputs
+                  $('#singin-email-2, #exampleInputEmail3, #price').on(
+                    'input',
+                    function () {
+                      updateSubmitButton();
+                    }
+                  );
+            
+                  // Initial validation on page load
+                  updateSubmitButton();
+                });
+              </script>
+
+
+
             <script>
                 // function hideErrorMessage() {
                 //     var errorMessageElement = document.getElementById('error-message');
@@ -165,6 +225,5 @@
                         reader.readAsDataURL(file);
                     }
                 }
-
             </script>
             <%- include('../../partials/admin/footer') %>
