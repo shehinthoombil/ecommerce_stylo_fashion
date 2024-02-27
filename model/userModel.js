@@ -36,6 +36,17 @@ const userSchema = new mongoose.Schema({
         type:Number,
         default:0
     },
+    
+    resetPasswordToken: {
+        type: String,
+        default: null
+    },
+    resetPasswordExpires: {
+        type: Date,
+        default: null
+    },
+
+
     wallet: {
         type: Number,
         default: 0
@@ -62,6 +73,6 @@ const userSchema = new mongoose.Schema({
     }
 
     
-})
+});
 
 module.exports = mongoose.model('user',userSchema)

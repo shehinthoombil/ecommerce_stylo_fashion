@@ -62,7 +62,7 @@
                                     <div class="form-group">
                                         <label for="singin-email-2"> category name*</label>
                                         <input type="text" class="form-control" id="singin-email-2" name="name">
-                                        <span class="error-message text-danger" id="signin-error"></span>
+                                        <span class="error-message text-danger" id="signin-error" style="color: red;"></span>
                                     </div><!-- End .form-group -->
 
                                     <div class="form-group">
@@ -95,12 +95,10 @@
                                     </div>
 
                                     <div class="form-footer">
-                                        <button type="submit" class="btn btn-outline-primary-2 bg-primary">
+                                        <button type="submit" id="submitButton" class="btn btn-outline-primary-2 bg-primary">
                                             <span>Add</span>
                                             <i class="icon-long-arrow-right"></i>
                                         </button>
-
-
 
                                     </div>
                                 </form>
@@ -109,6 +107,36 @@
                     </div>
                 </div>
             </div>
+
+            <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+            <script>
+                function validateCategoryName() {
+                    document.getElementById('singin-email-2').addEventListener('input', validateCategoryName);
+                  const categoryNameInput = document.getElementById('singin-email-2');
+                  const categoryNameError = document.getElementById('signin-error');
+                  const submitButton = document.getElementById('submitButton');
+            
+                  const categoryName = categoryNameInput.value.trim();
+            
+                  // Validate category name
+                  const isValidCategoryName = /^[a-zA-Z0-9]+[a-zA-Z0-9\s]*[a-zA-Z0-9]+$/.test(categoryName);
+            
+                  if (categoryName === '') {
+                    categoryNameError.textContent = 'Category name cannot be empty.';
+                  } else if (!isValidCategoryName) {
+                    categoryNameError.textContent = 'Invalid category name. It must not contain spaces at the beginning or end, special characters, and be between 1 to 15 characters.';
+                  } else {
+                    categoryNameError.textContent = '';
+                  }
+            
+                  // Enable/disable the submit button based on validation
+                  submitButton.disabled = !isValidCategoryName;
+                }
+                validateCategoryName();
+            
+              </script>
+
             <script>
                 // function hideErrorMessage() {
                 //     var errorMessageElement = document.getElementById('error-message');

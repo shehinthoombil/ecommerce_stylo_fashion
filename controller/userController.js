@@ -42,18 +42,15 @@ const loadRegister = async (req, res) => {
 const loadHome = async (req, res) => {
     try {
         let user
-
-        const userDB = await User.findOne({ _id: req.session.user_id });
-
-        if (userDB) {
-
-            user = userDB.name;
-            return res.render('home', { user });
+        if (req.session.user_id) {
+            const userDB = await User.findOne({ _id: req.session.user_id });
+            if (userDB) {
+                user = userDB.name;
+                return res.render('home', { user });
+            }
         } else {
             res.render('home', { user });
         }
-
-
 
     } catch (error) {
         console.log(error.message);
@@ -113,7 +110,7 @@ const insertUser = async (req, res) => {
 
 
         if (req.body.referalCode) {
-            console.log(req.body.referalCode , 'referalcode varunnu')
+            console.log(req.body.referalCode, 'referalcode varunnu')
 
             const referedUser = await User.findOne({ referalCode: req.body.referalCode })
             if (referedUser) {
@@ -199,7 +196,7 @@ const sendVerifyMail = async (name, email) => {
 const resendOTP = async (req, res) => {
     try {
 
-        const otp = await Math.floor(10000 + Math.random() * 90000);
+        otp = await Math.floor(10000 + Math.random() * 90000);
         console.log(otp)
         sendVerifyMail(nameResend, email2, user_id);
         res.render('userOTP', { message: 'A new OTP has been sent to your email.' });
@@ -297,6 +294,199 @@ const verifyLogin = async (req, res) => {
     }
 }
 
+//load reset password email page
+const loadResetPassEmail = async (req, res) => {
+    try {
+        res.render('verifyEmail')
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
+//send reset passsword to email
+const resetPasswordEmailLink = async (req, res) => {
+    try {
+        // Retrieve the email from the form submission
+        const email = req.body.email;
+        console.log(email);
+        // Check if the email exists in the user database
+        const user = await User.findOne({ email });
+        console.log(user);
+        if (!user) {
+            // If the email is not found, send an error message
+            return res.status(400).json({ error: 'Email not found' });
+        }
+        const generateUniqueToken = (length = 32) => {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let token = '';
+            for (let i = 0; i < length; i++) {
+                const randomIndex = Math.floor(Math.random() * characters.length);
+                token += characters.charAt(randomIndex);
+
+            }
+            console.log(token, 'token created aayi')
+            return token;
+        };
+        const storeTokenInDatabase = async (userId, token, expiration) => {
+            try {
+                const user = await User.findOneAndUpdate(
+                    { _id: userId },
+                    { resetPasswordToken: token, resetPasswordExpires: expiration }
+                );
+                if (!user) {
+                    console.error('User not found for storing token.');
+                }
+            } catch (error) {
+                console.error('Error storing token in the database:', error);
+            }
+        };
+        const token = generateUniqueToken();
+        const tokenExpiration = new Date(Date.now() + 3600000);
+        console.log(token, 'unique token');
+        storeTokenInDatabase(user._id, token, tokenExpiration);
+        console.log(storeTokenInDatabase, 'store token in database')
+
+        const resetPasswordLink = `http://localhost:3000/loadpassReset?token=${token}`;
+        console.log(resetPasswordLink, 'resetlink')
+
+        const transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 587,
+            secure: false,
+            requireTLS: true,
+            auth: {
+                user: process.env.emailUser,
+                pass: process.env.emailPassword
+            }
+
+        });
+        console.log(transporter, 'transporter')
+
+
+
+        const mailOptions = {
+            from: process.env.emailUser,
+            to: user.email,
+            subject: 'Password Reset Request',
+            html: `   <html>
+        <head>
+          <style>
+            /* Add your custom email styles here */
+            body {
+              font-family: Arial, sans-serif;
+              background-color: #f3f3f3;
+            }
+            .email-container {
+              max-width: 600px;
+              margin: 0 auto;
+              background-color: #ffffff;
+              padding: 20px;
+              border-radius: 5px;
+              box-shadow: 0px 0px 10px #ccc;
+            }
+            .header {
+              background-color: #007BFF;
+              color: #fff;
+              text-align: center;
+              padding: 20px;
+              border-radius: 5px 5px 0 0;
+            }
+            .content {
+              padding: 20px;
+            }
+            .button-container {
+              text-align: center;
+            }
+            .button {
+              background-color: #007BFF;
+              color: #fff; 
+              border: none;
+              padding: 10px 20px;
+              border-radius: 5px;
+              text-decoration: none;
+              display: inline-block;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="email-container">
+            <div class="header">
+              <h1>Password Reset Request</h1>
+            </div>
+            <div class="content">
+              <p>Hello ${user.name},</p>
+              <p>We received a request to reset your password. Click the button below to reset your password:</p>
+              <div class="button-container">
+                <a href= "${resetPasswordLink}" class="button">Reset Password</a>
+              </div>
+              <p>If you didn't request a password reset, please ignore this email. Your password will remain unchanged.</p>
+              <br>
+              <p>Regards,Team <b>Stylo</b><p>
+            </div>
+          </div>
+        </body>
+      </html>
+        `
+        };
+
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error('Email sending failed:', error);
+                return res.status(500).json({ error: 'Email sending failed' });
+            } else {
+                console.log('Email sent:', info.response);
+                return res.json({ success: true });
+            }
+        });
+    } catch (error) {
+        console.log(error.message);
+        res.render('500')
+    }
+};
+
+//load reset password page
+const loadpassReset = async (req, res) => {
+    console.log('load pass')
+    try {
+        const token = req.query.token;
+        console.log(token, 'token kitti reset pass'); // Pass the token to the view
+        res.render('resetPassword', { token })
+    } catch (error) {
+        console.log(error.message);
+        res.render('500')
+    }
+}
+
+// reset password post
+const resetPasswordPost = async (req, res) => {
+    try {
+        const { token, newPassword } = req.body;
+        console.log(token);
+
+        const user = await User.findOne({
+            resetPasswordToken: token,
+            resetPasswordExpires: { $gt: Date.now() },
+        });
+        console.log(user);
+        if (!user) {
+            return res.status(400).json({ error: 'Invalid or expired token' });
+        }
+        const hashedPassword = await securePassword(newPassword);
+        // Reset the user's password
+        user.password = hashedPassword;
+        user.resetPasswordToken = null;
+        user.resetPasswordExpires = null;
+        await user.save();
+        req.session.passwordUpdateSuccess = true;
+        res.redirect('/register');
+    } catch (error) {
+        console.error(error);
+        res.render('500')
+    }
+}
+
+
 //logout user
 
 const logoutUser = async (req, res) => {
@@ -350,6 +540,7 @@ const productList = async (req, res) => {
         const discountcategory = await CategoryOffer.find({});
         const productData = await Product.find({});
         const renderData = { products: productData, discPrice: discount, discCat: discountcategory, availableCategories };
+        const user = req.session.user_id
 
         console.log(renderData.discPrice);
         res.render('productList', {
@@ -363,6 +554,7 @@ const productList = async (req, res) => {
             currentPage: page,  //page 1
             title: 'productList',
             renderData,
+            user,
         });
 
     } catch (error) {
@@ -370,19 +562,46 @@ const productList = async (req, res) => {
     }
 };
 
+//filter price
+const filterPrice = async (req, res) => {
+    try {
+        const minamountfrombody = req.body.minamount;
+        const maxamountfrombody = req.body.maxamount;
+
+        const minamountstr = minamountfrombody.replace("$", "");
+        const maxamountstr = maxamountfrombody.replace("$", "");
+
+        const minamount = parseInt(minamountstr);
+        const maxamount = parseInt(maxamountstr);
+
+        const ProductDB = await Product.find({
+            price: { $gte: minamount, $lte: maxamount },
+        })
+        // console.log(products, 'price filternde');
+        // const isLoggedIn = (await req.session.user_id) ? true : false;
+        const categories = await Category.find({});
+        res.render("productList", { ProductDB, categories });
+
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+
 //product details
 const productDetails = async (req, res) => {
     try {
 
         const id = req.query.id
         const productDB = await Product.findOne({ _id: id })
+        const user = req.session.user_id
         // console.log(productDB);
 
         const discount = await Offers.find({})
         const discountcategory = await CategoryOffer.find({});
 
 
-        res.render('productDetails', { productDB, discPrice: discount, discCat: discountcategory })
+        res.render('productDetails', { productDB, discPrice: discount, discCat: discountcategory, user })
     } catch (error) {
         console.log(error.message);
         res.render('500')
@@ -397,6 +616,8 @@ const productDetails = async (req, res) => {
 const loadCart = async (req, res) => {
     try {
         const userId = req.session.user_id;
+
+
 
         if (userId) {
             const user = await User.findById(userId);
@@ -414,10 +635,10 @@ const loadCart = async (req, res) => {
                     let datatotal = hasCart.products.map((products) => {
                         return products.price * products.count;
                     });
-                    console.log(hasCart,'hascart aan');
-                    res.render('cart', { cartItems: hasCart, totalSum, datatotal });
+                    console.log(hasCart, 'hascart aan');
+                    res.render('cart', { cartItems: hasCart, totalSum, datatotal, user: userId });
                 } else {
-                    res.render('cart', { cartItems: [] }); // Render with an empty cart if no products are found
+                    res.render('cart', { cartItems: [], user: userId }); // Render with an empty cart if no products are found
                 }
             }
         }
@@ -660,10 +881,10 @@ const loadWishlist = async (req, res) => {
 
             wishlist = await Wishlist.find({ userId: user }).populate('productid');
 
-            res.render('wishlist', { wishlist, userName });
+            res.render('wishlist', { wishlist, userName, user });
         } else {
             console.log('User not authenticated');
-            res.render('wishlist', { wishlist: wishlist || [], userName });
+            res.render('wishlist', { wishlist: wishlist || [], userName, user });
         }
 
     } catch (error) {
@@ -735,7 +956,8 @@ const deleteWishproduct = async (req, res) => {
 
 const loadContactUs = async (req, res) => {
     try {
-        res.render('contactUs')
+
+        res.render('contactUs', { user: req.session.user_id })
     } catch (error) {
         console.log(error.message);
     }
@@ -755,10 +977,15 @@ module.exports = {
     sendVerifyMail,
     resendOTP,
     verifyMail,
+    loadResetPassEmail,
+    resetPasswordEmailLink,
+    loadpassReset,
+    resetPasswordPost,
     loginLoad,
     verifyLogin,
     logoutUser,
     productList,
+    filterPrice,
     productDetails,
     loadCart,
     addToCart,

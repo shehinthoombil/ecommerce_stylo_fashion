@@ -61,55 +61,62 @@
                         <div class="products mb-3">
 
                             <div class="row justify-content-center">
-                               
-                                    <% ProductDB.forEach((product, i)=> { %>
-                                    <div class="col-6 col-md-4 col-lg-4 product-item" data-category="<%= ProductDB[i].category %>">
+
+                                <% ProductDB.forEach((product, i)=> { %>
+                                    <div class="col-6 col-md-4 col-lg-4 product-item"
+                                        data-category="<%= ProductDB[i].category %>">
                                         <div class="product product-7 text-center">
                                             <figure class="product-media">
-                                                <% const productDiscount = renderData.discPrice.find(x=> x.product.toString() ===
+                                                <% const productDiscount=renderData.discPrice.find(x=>
+                                                    x.product.toString() ===
                                                     product._id.toString()); %>
-                                                
+
 
                                                     <% let smallestPrice=Math.min(ProductDB[i].price,
-                                                        ProductDB[i].discountPricepro || Infinity, ProductDB[i].discountPricecat
-                                                        || Infinity); %>
+                                                        ProductDB[i].discountPricepro || Infinity,
+                                                        ProductDB[i].discountPricecat || Infinity); %>
 
                                                         <% if (productDiscount) { %>
-                                                             <span class="product-label label-new">
-                                                                   <%= productDiscount.percentage %>% off
-                                                                </span>
-                                                        <% } %>
+                                                            <span class="product-label label-new">
+                                                                <%= productDiscount.percentage %>% off
+                                                            </span>
+                                                            <% } %>
 
-                                                <span class="product-label label-new">New</span>
-                                                <a href="/productDetails?id=<%= ProductDB[i]._id %>">
-                                                    <img src="/images/products/<%= ProductDB[i].images[0] %>"
-                                                        alt="Product image" class="product-image">
-                                                </a>
+                                                                <span class="product-label label-new">New</span>
+                                                                <a href="/productDetails?id=<%= ProductDB[i]._id %>">
+                                                                    <img src="/images/products/<%= ProductDB[i].images[0] %>"
+                                                                        alt="Product image" class="product-image">
+                                                                </a>
 
-                                                <div class="product-action-vertical">
-                                                    <a href="/wishlist" style="cursor: pointer;"
-                                                        class="btn-product-icon btn-wishlist btn-expandable"><span>Go
-                                                            to wishlist</span></a>
-                                                </div><!-- End .product-action-vertical -->
+                                                                <div class="product-action-vertical">
+                                                                    <a href="/wishlist" style="cursor: pointer;"
+                                                                        class="btn-product-icon btn-wishlist btn-expandable"><span>Go
+                                                                            to wishlist</span></a>
+                                                                </div><!-- End .product-action-vertical -->
 
-                                                <div class="product-action">
-                                                    <a href="/cart" class="btn-product btn-cart"><span>Go to
-                                                            cart</span></a>
-                                                </div><!-- End .product-action -->
+                                                                <div class="product-action">
+                                                                    <a href="/cart"
+                                                                        class="btn-product btn-cart"><span>Go to
+                                                                            cart</span></a>
+                                                                </div><!-- End .product-action -->
                                             </figure><!-- End .product-media -->
 
                                             <div class="product-body">
                                                 <div class="product-cat">
-                                                    <a href="#"><%= ProductDB[i].category %></a>
+                                                    <a href="#">
+                                                        <%= ProductDB[i].category %>
+                                                    </a>
                                                 </div><!-- End .product-cat -->
-                                                <h3 class="product-title"><a href="product.html"><%= ProductDB[i].name %></a></h3>
+                                                <h3 class="product-title"><a href="product.html">
+                                                        <%= ProductDB[i].name %>
+                                                    </a></h3>
                                                 <!-- End .product-title -->
                                                 <div class="product-price">
                                                     <!-- <span class="new-price">$<%= ProductDB[i].price %></span> -->
                                                     <% if (smallestPrice && smallestPrice < product.price) { %>
                                                         <strike>$<%= product.price %></strike>
-                                                   </div><!-- End .product-price -->
-                                                   <div class="product-price">
+                                                </div><!-- End .product-price -->
+                                                <div class="product-price">
                                                     <b>$<%= smallestPrice %></b>
                                                     <% } else { %>
                                                         $<%= ProductDB[i].price %>
@@ -148,9 +155,11 @@
                                         <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
                                             <a class="page-link page-link-next"
                                                 href="<%= currentPage < totalPages ? '/productList?page=' + (currentPage + 1) : '#' %>"
-                                                aria-label="Next" tabindex="<%= currentPage === totalPages ? '-1' : '0' %>"
+                                                aria-label="Next"
+                                                tabindex="<%= currentPage === totalPages ? '-1' : '0' %>"
                                                 aria-disabled="<%= currentPage === totalPages %>">
-                                                Next <span aria-hidden="true"><i class="icon-long-arrow-right"></i></span>
+                                                Next <span aria-hidden="true"><i
+                                                        class="icon-long-arrow-right"></i></span>
                                             </a>
                                         </li>
                             </ul>
@@ -172,24 +181,81 @@
                                     </a>
                                 </h3><!-- End .widget-title -->
 
-                                    
+
                                 <div class="collapse show" id="widget-1">
                                     <div class="widget-body">
                                         <div class="filter-items filter-items-count">
-                                            <% categories.forEach((category, index) =>{ %>
-                                            <div class="filter-item">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="category-<%=index+1%>">
-                                                    <label class="custom-control-label" for="category-<%=index+1%>"><%=category.name%></label>
-                                                </div><!-- End .custom-checkbox -->
-                                                <span class="item-count">3</span>
-                                            </div><!-- End .filter-item -->
-                                            <% }); %>
-                                   
+                                            <% categories.forEach((category, index)=>{ %>
+                                                <div class="filter-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" class="custom-control-input"
+                                                            id="category-<%=index+1%>">
+                                                        <label class="custom-control-label" for="category-<%=index+1%>">
+                                                            <%=category.name%>
+                                                        </label>
+                                                    </div><!-- End .custom-checkbox -->
+                                                    <span class="item-count">3</span>
+                                                </div><!-- End .filter-item -->
+                                                <% }); %>
+
                                         </div><!-- End .filter-items -->
                                     </div><!-- End .widget-body -->
                                 </div><!-- End .collapse -->
                             </div><!-- End .widget -->
+
+
+                            <!-- FILTER in Price Range -->
+                            
+                            <!-- <div class="widget widget-collapsible">
+                                <h3 class="widget-title">
+                                    <a data-toggle="collapse" href="#widget-5" role="button" aria-expanded="true"
+                                        aria-controls="widget-5">
+                                        Price
+                                    </a>
+                                </h3><!-- End .widget-title -->
+
+                                <!-- <div class="collapse show" id="widget-5">
+                                    <div class="widget-body">
+                                        <div class="filter-price">
+                                            <div class="filter-price-text">
+                                                Price Range:
+                                                <span id="filter-price-range">$0 - $750</span>
+                                            </div><!-- End .filter-price-text -->
+
+
+                                            
+                                             <!-- <div id="price-slider" class="noUi-target noUi-ltr noUi-horizontal">
+                                                 <div class="noUi-base">
+                                                    <div class="noUi-connects">
+                                                        <div class="noUi-connect"
+                                                            style="transform: translate(0%, 0px) scale(0.3, 1);"></div>
+                                                    </div>
+                                                     <div class="noUi-origin"
+                                                        style="transform: translate(-100%, 0px); z-index: 5;">
+                                                        <div class="noUi-handle noUi-handle-lower" data-handle="0"
+                                                            tabindex="0" role="slider" aria-orientation="horizontal"
+                                                            aria-valuemin="0.0" aria-valuemax="100.0"
+                                                            aria-valuenow="0.0" aria-valuetext="$0">
+                                                            <div class="noUi-touch-area"></div>
+                                                            <div class="noUi-tooltip">$0</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="noUi-origin"
+                                                        style="transform: translate(-70%, 0px); z-index: 6;">
+                                                        <div class="noUi-handle noUi-handle-upper" data-handle="1"
+                                                            tabindex="0" role="slider" aria-orientation="horizontal"
+                                                            aria-valuemin="200.0" aria-valuemax="1000.0"
+                                                            aria-valuenow="750.0" aria-valuetext="$300">
+                                                            <div class="noUi-touch-area"></div>
+                                                            <div class="noUi-tooltip">$750</div>
+                                                        </div>
+                                                    </div> 
+                                                </div> 
+                                            </div>  -->
+                                        <!-- </div>
+                                    </div>  
+                                </div>                               
+                            </div> -->
                         </div><!-- End .sidebar sidebar-shop -->
                     </aside><!-- End .col-lg-3 -->
                 </div><!-- End .row -->
@@ -200,41 +266,41 @@
 
     <%- include('../partials/user/footer.ejs') %>
 
-<script>
-     $(document).ready(function () {
-        // Store the initial state of products
-        const initialProducts = $('.product-item');
+        <script>
+            $(document).ready(function () {
+                // Store the initial state of products
+                const initialProducts = $('.product-item');
 
-        // Attach a click event handler to category checkboxes
-        $('[id^="category-"]').on('change', function () {
-            updateProductDisplay();
-        });
-
-         // Function to update the product display based on selected filters
-         function updateProductDisplay() {
-             // Get the selected categories
-             const selectedCategories = $('[id^="category-"]:checked').map(function () {
-                return $(this).siblings('label').text().trim();
-            }).get();
-
-            // Filter products based on selected categories
-            if (selectedCategories.length > 0) {
-                initialProducts.hide();
-
-                initialProducts.each(function () {
-                    const productCategory = $(this).data('category');
-
-                    if (
-                        (selectedCategories.length === 0 || selectedCategories.includes(productCategory))
-                    ) {
-                        $(this).show();
-                    }
+                // Attach a click event handler to category checkboxes
+                $('[id^="category-"]').on('change', function () {
+                    updateProductDisplay();
                 });
-            } else {
-                // If no filters selected, show all products
-                initialProducts.show();
-            }
-        }
-    });
-     
-</script>
+
+                // Function to update the product display based on selected filters
+                function updateProductDisplay() {
+                    // Get the selected categories
+                    const selectedCategories = $('[id^="category-"]:checked').map(function () {
+                        return $(this).siblings('label').text().trim();
+                    }).get();
+
+                    // Filter products based on selected categories
+                    if (selectedCategories.length > 0) {
+                        initialProducts.hide();
+
+                        initialProducts.each(function () {
+                            const productCategory = $(this).data('category');
+
+                            if (
+                                (selectedCategories.length === 0 || selectedCategories.includes(productCategory))
+                            ) {
+                                $(this).show();
+                            }
+                        });
+                    } else {
+                        // If no filters selected, show all products
+                        initialProducts.show();
+                    }
+                }
+            });
+
+        </script>

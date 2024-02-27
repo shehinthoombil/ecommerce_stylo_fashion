@@ -52,16 +52,17 @@
 
 									<h3>Account Info</h3>
 
+									<!-- edit account info -->
 									<div class="text-right">
 										<i class="fas fa-edit" id="editIcon"></i>
 									</div>
+
 									<form method="post" action="/updateDetails" id="accountForm">
-
-
 										<div class="form-group">
 											<label for="name">Name:</label>
 											<input type="text" class="form-control" id="name" name="name"
-												value="<%= userDB.name %>" disabled>
+												value="<%= userDB.name %>">
+											<span id="name-error" style="color: red;"></span>
 										</div>
 
 										<div class="form-group">
@@ -74,6 +75,7 @@
 											<label for="mobile">Mobile:</label>
 											<input type="tel" class="form-control" id="mobile" name="mobile"
 												value="<%= userDB.mobile %>" disabled>
+											<span id="password-match-error" style="color: red;"></span>
 										</div>
 
 										<div class="form-group" id="passwordGroup" style="display: none;">
@@ -332,6 +334,108 @@
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+	
+	<script>
+		    // Add an event listener to the name input for real-time validation
+		    document.getElementById('name').addEventListener('input', function () {
+		        validateName();
+		    });
+
+		    function validateName() {
+		        var nameInput = document.getElementById('name');
+		        var nameError = document.getElementById('name-error');
+		        var submitButton = document.getElementById('submitButton');
+
+		        // Check if the name is empty
+		        if (nameInput.value.trim() === '') {
+		            nameError.textContent = 'Name cannot be empty';
+		            submitButton.disabled = true;
+		            return
+		        }
+
+		        // Check if the name starts or ends with spaces
+		        if (/^\s|\s$/.test(nameInput.value)) {
+		            nameError.textContent = 'Name cannot start or end with spaces';
+		            submitButton.disabled = true;
+		            return
+		        }
+
+		        // Clear name errors
+		        nameError.textContent = '';
+
+		        // Enable the submit button if all checks pass
+		        submitButton.disabled = false;
+		    }
+		</script>
+
+	
+	//<script>
+		//     document.getElementById('editIcon').addEventListener('click', function () {
+		//         // Toggle the visibility of the form fields
+		//         toggleVisibility('password-field');
+		//         toggleVisibility('confirmPasswordGroup');
+		//         toggleVisibility('submitButton');
+		//         toggleReadOnly('name');
+		//         toggleReadOnly('email');
+		//         toggleReadOnly('mobile');
+		//     });
+
+		//     function toggleVisibility(elementId) {
+		//         const element = document.getElementById(elementId);
+		//         element.style.display = element.style.display === 'none' ? 'block' : 'none';
+		//     }
+
+		//     function toggleReadOnly(elementId) {
+		//         const inputElement = document.getElementById(elementId).querySelector('input');
+		//         inputElement.readOnly = !inputElement.readOnly;
+		//     }
+		// </script>
+	
+	//<script>
+		//     // Add an event listener to the new password input for real-time validation
+		//     document.getElementById('currpassword').addEventListener('input', function () {
+		//         validatePassword();
+		//     });
+
+		//     // Add an event listener to the confirm password input for real-time validation
+		//     document.getElementById('newpassword').addEventListener('input', function () {
+		//         validatePassword();
+		//     });
+
+		//     function validatePassword() {
+		//         var newPasswordInput = document.getElementById('currpassword');
+		//         var confirmPasswordInput = document.getElementById('newpassword');
+		//         var passwordMatchError = document.getElementById('password-match-error');
+		//         var submitButton = document.getElementById('submitButton');
+
+		//         // Check if passwords match
+		//         if (newPasswordInput.value !== confirmPasswordInput.value) {
+		//             passwordMatchError.textContent = 'Passwords do not match';
+		//             submitButton.disabled = true;
+		//             return;
+		//         }
+
+		//         // Clear password match error
+		//         passwordMatchError.textContent = '';
+
+		//         // Validate password format
+		//         var passwordFormatRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+])[0-9a-zA-Z!@#$%^&*()_+]{8,}$/;
+		//         if (!passwordFormatRegex.test(newPasswordInput.value)) {
+		//             passwordMatchError.textContent = 'Password must be 8 characters long and include at least one uppercase letter, one lowercase letter, one special character, and one number.';
+		//             submitButton.disabled = true;
+		//             return;
+		//         }
+
+		//         // Clear password format error
+		//         passwordMatchError.textContent = '';
+
+		//         // Enable the submit button if all checks pass
+		//         submitButton.disabled = false;
+		//     }
+		// </script>
+
+
 	<script>
 		document.getElementById('editIcon').addEventListener('click', function () {
 			toggleFormVisibility();
@@ -356,7 +460,20 @@
 			var confirmPasswordGroup = document.getElementById('confirmPasswordGroup');
 			confirmPasswordGroup.style.display = confirmPasswordGroup.style.display === 'none' ? 'block' : 'none';
 		}
+
 	</script>
+
+	<script>
+    document.getElementById('editIcon').addEventListener('click', function () {
+        toggleNameEdit();
+    });
+
+    function toggleNameEdit() {
+        var nameInput = document.getElementById('name');
+        nameInput.readOnly = !nameInput.readOnly;
+    }
+</script>
+
 
 	<script>
 		$(document).ready(function () {

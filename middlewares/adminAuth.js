@@ -1,12 +1,10 @@
 const isLogin = async(req,res,next)=>{
     try {
-        if(req.session.user_id){
-            console.log('session');
+        if(req.session.admin_id){
+            next();  
         }else{
-            res.redirect('/admin');
+            res.redirect('/admin');  
         }
-        next();
-        
     } catch (error) {
         console.log(error.message);
     }
@@ -14,10 +12,14 @@ const isLogin = async(req,res,next)=>{
 
 const isLogout = async(req,res,next) => {
     try {
-        if(req.session.user_id){
-            res.redirect('/admin/adminSign')
+        console.log(req.session.admin_id,'adminsession')
+        if(!req.session.admin_id){
+            console.log('session')
+            next();
+        }else{
+            res.redirect('/admin/dashboard');  
         }
-        next()
+        
     } catch (error) {
         console.log(error.message);
     }

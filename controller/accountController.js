@@ -27,7 +27,7 @@ const loadMyAccount = async (req, res) => {
                 UserAddress = addresses;
                 userDB = user
         
-                return res.render('account', { UserAddress,walletHistory,walletBalance, userName ,userDB, orderData });
+                return res.render('account', { UserAddress,walletHistory,walletBalance, userName ,userDB, orderData,user });
               }
         }
         
