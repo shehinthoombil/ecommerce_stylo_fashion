@@ -346,7 +346,7 @@ const resetPasswordEmailLink = async (req, res) => {
         storeTokenInDatabase(user._id, token, tokenExpiration);
         console.log(storeTokenInDatabase, 'store token in database')
 
-        const resetPasswordLink = `http://localhost:3000/loadpassReset?token=${token}`;
+        const resetPasswordLink = `https://stylofashion.online/loadpassReset?token=${token}`;
         console.log(resetPasswordLink, 'resetlink')
 
         const transporter = nodemailer.createTransport({

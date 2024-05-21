@@ -53,43 +53,46 @@
 									<h3>Account Info</h3>
 
 									<!-- edit account info -->
+									
 									<div class="text-right">
-										<i class="fas fa-edit" id="editIcon"></i>
-									</div>
-
+										<i class="fas fa-edit" id="edit-profile-button"></i>	
+								</div>
 									<form method="post" action="/updateDetails" id="accountForm">
-										<div class="form-group">
-											<label for="name">Name:</label>
+										
+										<div class="mb-3" id="name-field">
+											<label for="name"  class="form-label">Name:</label>
 											<input type="text" class="form-control" id="name" name="name"
-												value="<%= userDB.name %>">
+												value="<%= userDB.name %>"  readonly>
 											<span id="name-error" style="color: red;"></span>
 										</div>
 
-										<div class="form-group">
-											<label for="email">Email:</label>
+										<div class="mb-3"  id="email-field">
+											<label for="email" class="form-label">Email:</label>
 											<input type="email" class="form-control" name="email"
 												value="<%= userDB.email %>" id="email" readonly>
 										</div>
 
-										<div class="form-group">
-											<label for="mobile">Mobile:</label>
-											<input type="tel" class="form-control" id="mobile" name="mobile"
-												value="<%= userDB.mobile %>" disabled>
+										<div class="mb-3" id="mobile-field" >
+											<label for="mobile" class="form-label">Mobile:</label>
+											<input type="text" class="form-control" id="mobile" name="mobile"
+												value="<%= userDB.mobile %>" readonly>
+											
+										</div>
+
+										<div class="mb-3" id="password-field" style="display: none;">
+											<label for="currpassword" class="form-label">New Password:</label>
+											<input type="password" class="form-control" id="currpassword" name="newPassword">
 											<span id="password-match-error" style="color: red;"></span>
 										</div>
 
-										<div class="form-group" id="passwordGroup" style="display: none;">
-											<label for="currpassword">New Password:</label>
-											<input type="password" class="form-control" id="currpassword" disabled>
-										</div>
-
-										<div class="form-group" id="confirmPasswordGroup" style="display: none;">
-											<label for="newpassword">Confirm Password:</label>
+										<div class="mb-3" id="confirm-password-field" style="display: none;">
+											<label for="newpassword" class="form-label">Confirm Password:</label>
 											<input type="password" class="form-control" name="confirmPassword"
-												id="newpassword" disabled>
+												id="newpassword" >
+												<span id="password-match-error" style="color: red;"></span>
 										</div>
 
-										<button type="submit" class="btn btn-primary" id="submitButton"
+										<button type="submit" class="btn btn-primary" id="edit-profile-submit-button"
 											style="display: none;">Submit</button>
 									</form>
 								</div><!-- .End .tab-pane -->
@@ -335,144 +338,147 @@
 
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-	
-	<script>
-		    // Add an event listener to the name input for real-time validation
-		    document.getElementById('name').addEventListener('input', function () {
-		        validateName();
-		    });
-
-		    function validateName() {
-		        var nameInput = document.getElementById('name');
-		        var nameError = document.getElementById('name-error');
-		        var submitButton = document.getElementById('submitButton');
-
-		        // Check if the name is empty
-		        if (nameInput.value.trim() === '') {
-		            nameError.textContent = 'Name cannot be empty';
-		            submitButton.disabled = true;
-		            return
-		        }
-
-		        // Check if the name starts or ends with spaces
-		        if (/^\s|\s$/.test(nameInput.value)) {
-		            nameError.textContent = 'Name cannot start or end with spaces';
-		            submitButton.disabled = true;
-		            return
-		        }
-
-		        // Clear name errors
-		        nameError.textContent = '';
-
-		        // Enable the submit button if all checks pass
-		        submitButton.disabled = false;
-		    }
-		</script>
-
-	
-	//<script>
-		//     document.getElementById('editIcon').addEventListener('click', function () {
-		//         // Toggle the visibility of the form fields
-		//         toggleVisibility('password-field');
-		//         toggleVisibility('confirmPasswordGroup');
-		//         toggleVisibility('submitButton');
-		//         toggleReadOnly('name');
-		//         toggleReadOnly('email');
-		//         toggleReadOnly('mobile');
-		//     });
-
-		//     function toggleVisibility(elementId) {
-		//         const element = document.getElementById(elementId);
-		//         element.style.display = element.style.display === 'none' ? 'block' : 'none';
-		//     }
-
-		//     function toggleReadOnly(elementId) {
-		//         const inputElement = document.getElementById(elementId).querySelector('input');
-		//         inputElement.readOnly = !inputElement.readOnly;
-		//     }
-		// </script>
-	
-	//<script>
-		//     // Add an event listener to the new password input for real-time validation
-		//     document.getElementById('currpassword').addEventListener('input', function () {
-		//         validatePassword();
-		//     });
-
-		//     // Add an event listener to the confirm password input for real-time validation
-		//     document.getElementById('newpassword').addEventListener('input', function () {
-		//         validatePassword();
-		//     });
-
-		//     function validatePassword() {
-		//         var newPasswordInput = document.getElementById('currpassword');
-		//         var confirmPasswordInput = document.getElementById('newpassword');
-		//         var passwordMatchError = document.getElementById('password-match-error');
-		//         var submitButton = document.getElementById('submitButton');
-
-		//         // Check if passwords match
-		//         if (newPasswordInput.value !== confirmPasswordInput.value) {
-		//             passwordMatchError.textContent = 'Passwords do not match';
-		//             submitButton.disabled = true;
-		//             return;
-		//         }
-
-		//         // Clear password match error
-		//         passwordMatchError.textContent = '';
-
-		//         // Validate password format
-		//         var passwordFormatRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+])[0-9a-zA-Z!@#$%^&*()_+]{8,}$/;
-		//         if (!passwordFormatRegex.test(newPasswordInput.value)) {
-		//             passwordMatchError.textContent = 'Password must be 8 characters long and include at least one uppercase letter, one lowercase letter, one special character, and one number.';
-		//             submitButton.disabled = true;
-		//             return;
-		//         }
-
-		//         // Clear password format error
-		//         passwordMatchError.textContent = '';
-
-		//         // Enable the submit button if all checks pass
-		//         submitButton.disabled = false;
-		//     }
-		// </script>
-
 
 	<script>
-		document.getElementById('editIcon').addEventListener('click', function () {
-			toggleFormVisibility();
+		// Add an event listener to the name input for real-time validation
+		document.getElementById('name').addEventListener('input', function () {
+			validateName();
 		});
 
-		function toggleFormVisibility() {
-			var form = document.getElementById('accountForm').elements;
+		function validateName() {
+			var nameInput = document.getElementById('name');
+			var nameError = document.getElementById('name-error');
+			var submitButton = document.getElementById('edit-profile-submit-button');
 
-			for (var i = 0; i < form.length; i++) {
-				if (form[i].type !== 'button' && form[i].type !== 'submit') {
-					form[i].disabled = !form[i].disabled;
-				}
+			// Check if the name is empty
+			if (nameInput.value.trim() === '') {
+				nameError.textContent = 'Name cannot be empty';
+				submitButton.disabled = true;
+				return
 			}
 
-			var submitButton = document.getElementById('submitButton');
-			submitButton.style.display = submitButton.style.display === 'none' ? 'block' : 'none';
+			// Check if the name starts or ends with spaces
+			if (/^\s|\s$/.test(nameInput.value)) {
+				nameError.textContent = 'Name cannot start or end with spaces';
+				submitButton.disabled = true;
+				return
+			}
 
-			// Toggle the display style of password fields
-			var passwordGroup = document.getElementById('passwordGroup');
-			passwordGroup.style.display = passwordGroup.style.display === 'none' ? 'block' : 'none';
+			// Clear name errors
+			nameError.textContent = '';
 
-			var confirmPasswordGroup = document.getElementById('confirmPasswordGroup');
-			confirmPasswordGroup.style.display = confirmPasswordGroup.style.display === 'none' ? 'block' : 'none';
+			// Enable the submit button if all checks pass
+			submitButton.disabled = false;
+		}
+	</script>
+
+
+	<script>
+		document.getElementById('edit-profile-button').addEventListener('click', function () {
+			// Toggle the visibility of the form fields
+			toggleVisibility('password-field');
+            toggleVisibility('confirm-password-field');
+            toggleVisibility('edit-profile-submit-button');
+            toggleReadOnly('name-field');
+            // toggleReadOnly('email-field');
+            toggleReadOnly('mobile-field');
+		});
+
+		function toggleVisibility(elementId) {
+			const element = document.getElementById(elementId);
+			element.style.display = element.style.display === 'none' ? 'block' : 'none';
 		}
 
+		function toggleReadOnly(elementId) {
+			const inputElement = document.getElementById(elementId).querySelector('input');
+			inputElement.readOnly = !inputElement.readOnly;
+		}
 	</script>
 
 	<script>
-    document.getElementById('editIcon').addEventListener('click', function () {
-        toggleNameEdit();
-    });
+		// Add an event listener to the new password input for real-time validation
+		document.getElementById('currpassword').addEventListener('input', function () {
+			validatePassword();
+		});
 
-    function toggleNameEdit() {
-        var nameInput = document.getElementById('name');
-        nameInput.readOnly = !nameInput.readOnly;
-    }
-</script>
+		// Add an event listener to the confirm password input for real-time validation
+		document.getElementById('newpassword').addEventListener('input', function () {
+			validatePassword();
+		});
+
+		function validatePassword() {
+			var newPasswordInput = document.getElementById('currpassword');
+			var confirmPasswordInput = document.getElementById('newpassword');
+			var passwordMatchError = document.getElementById('password-match-error');
+			var submitButton = document.getElementById('edit-profile-submit-button');
+
+			// Check if passwords match
+			if (newPasswordInput.value !== confirmPasswordInput.value) {
+				passwordMatchError.textContent = 'Passwords do not match';
+				submitButton.disabled = true;
+				return;
+			}
+
+			// Clear password match error
+			passwordMatchError.textContent = '';
+
+			// Validate password format
+			var passwordFormatRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+])[0-9a-zA-Z!@#$%^&*()_+]{8,}$/;
+			if (!passwordFormatRegex.test(newPasswordInput.value)) {
+				passwordMatchError.textContent = 'Password must be 8 characters long and include at least one uppercase letter, one lowercase letter, one special character, and one number.';
+				submitButton.disabled = true;
+				return;
+			}
+
+			// Clear password format error
+			passwordMatchError.textContent = '';
+
+			// Enable the submit button if all checks pass
+			submitButton.disabled = false;
+		}
+	</script>
+
+
+
+	//
+	<script>
+		// 	document.getElementById('editIcon').addEventListener('click', function () {
+		// 		toggleFormVisibility();
+		// 	});
+
+		// 	function toggleFormVisibility() {
+		// 		var form = document.getElementById('accountForm').elements;
+
+		// 		for (var i = 0; i < form.length; i++) {
+		// 			if (form[i].type !== 'button' && form[i].type !== 'submit') {
+		// 				form[i].disabled = !form[i].disabled;
+		// 			}
+		// 		}
+
+		// 		var submitButton = document.getElementById('submitButton');
+		// 		submitButton.style.display = submitButton.style.display === 'none' ? 'block' : 'none';
+
+		// 		// Toggle the display style of password fields
+		// 		var passwordGroup = document.getElementById('passwordGroup');
+		// 		passwordGroup.style.display = passwordGroup.style.display === 'none' ? 'block' : 'none';
+
+		// 		var confirmPasswordGroup = document.getElementById('confirmPasswordGroup');
+		// 		confirmPasswordGroup.style.display = confirmPasswordGroup.style.display === 'none' ? 'block' : 'none';
+		// 	}
+
+		// </script>
+
+	//
+	<script>
+		//     document.getElementById('editIcon').addEventListener('click', function () {
+		//         toggleNameEdit();
+		//     });
+
+		//     function toggleNameEdit() {
+		//         var nameInput = document.getElementById('name');
+		//         nameInput.readOnly = !nameInput.readOnly;
+		//     }
+		// </script>
 
 
 	<script>
